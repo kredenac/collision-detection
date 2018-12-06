@@ -14,7 +14,7 @@ static int oldDisplayTime;
 static void onTimerUpdate(int id);
 static void onDisplay(void);
 static void updateDeltaTime(void);
-static void fps(int print);
+static float fps(int print);
 
 int main(int argc, char** argv)
 {
@@ -53,10 +53,59 @@ int main(int argc, char** argv)
     return 0;
 }
 
+//https://www.opengl.org/archives/resources/features/KilgardTechniques/oglpitfall/
+// pokusaj da postavim poziciju za pisanje
+void glWindowPos4fMESAemulate(GLfloat x,GLfloat y,GLfloat z,GLfloat w) {
+   GLfloat fx, fy;
+
+  /* Push current matrix mode and viewport attributes. */
+  glPushAttrib(GL_TRANSFORM_BIT | GL_VIEWPORT_BIT);
+
+    /* Setup projection parameters. */
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+      glLoadIdentity();
+      glMatrixMode(GL_MODELVIEW);
+      glPushMatrix();
+        glLoadIdentity();
+        glDepthRange(z, z);
+        glViewport((int) x - 1, (int) y - 1, 2, 2);
+        /* Set the raster (window) position. */
+        fx = x - (int) x;
+        fy = y - (int) y;
+        glRasterPos4f(fx, fy, 0.0, w);
+      /* Restore matrices, viewport and matrix mode. */
+      glPopMatrix();
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+  glPopAttrib();
+}
+
+// ovu pozivam
+void glWindowPos2fMESAemulate(GLfloat x, GLfloat y)
+{
+  glWindowPos4fMESAemulate(x, y, 0, 1);
+}
+
+// pokusaj 3
+void omgradi(float x, float y, const char *string)
+{
+
+    glWindowPos2fMESAemulate(x, y);
+    int len = (int) strlen(string);
+    glColor3f(1.0f, 0.2f, 0.5f);
+    //loop to display character by character
+    int i;
+    for (i = 0; i < len; i++)
+    {
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, string[i]);
+    }
+};
+
 void onDisplay(void)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    fps(showFps);
+    float fpsCount = fps(showFps);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     positionCam();
@@ -65,6 +114,22 @@ void onDisplay(void)
 
     drawMap();
     drawBullets();
+
+    // begin
+    glDisable(GL_LIGHTING);
+
+    omgradi(0, 0, "zero zero");
+    omgradi(0, 500, "zero 500");
+    omgradi(500, 0, "500 zero");
+    omgradi(500, 500, "500 500");
+
+    char fPointer[55] = "fps: ";
+    sprintf(fPointer, "%f", fpsCount);
+
+    omgradi(100, 0, fPointer);
+
+    glEnable(GL_LIGHTING);
+    // end
 
     glutSwapBuffers();
 }
@@ -108,7 +173,7 @@ void updateDeltaTime(void)
 static int newDisplayTime;
 #define SECOND 1000
 
-void fps(int print)
+float fps(int print)
 {
     newDisplayTime = glutGet(GLUT_ELAPSED_TIME);
     /*proteklo vreme izmedju 2 iscrtavanja*/
@@ -119,13 +184,17 @@ void fps(int print)
     maxTime = diff>maxTime ? diff : maxTime;
     minTime = diff<minTime ? diff : minTime;
     static int frame = 0;
+    static float fps = 0;
     frame++;
-    if (print && timeSum >= SECOND){
-        printf("fps:%.2f minTime=%d maxTime=%d\n",
-            frame * SECOND / (float)timeSum, minTime, maxTime);
+    if (timeSum >= SECOND){
+        fps = frame * SECOND / (float)timeSum;
+        if (print){
+            printf("fps:%.2f minTime=%d maxTime=%d\n", fps, minTime, maxTime);
+        }
         timeSum = 0;
         frame = 0;
         maxTime = 0;
         minTime = SECOND;
     }
+    return fps;
 }
