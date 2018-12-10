@@ -9,6 +9,9 @@
 #include "collision.h"
 #include "draw.h"
 #include "blocks.h"
+
+#include "Comm.h"
+
 int dt;
 static int oldDisplayTime;
 static void onTimerUpdate(int id);
@@ -18,6 +21,11 @@ static float fps(int print);
 
 int main(int argc, char** argv)
 {
+	duck* ducky = new_duck(5);
+	printf("DA LI RADI: %d\n", test());
+	duck_quack(ducky, 1.f);
+	delete_duck(ducky);
+
     glutInit(&argc,argv);
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
 

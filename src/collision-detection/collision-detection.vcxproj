@@ -137,6 +137,7 @@
   <ItemGroup>
     <ClCompile Include="blocks.c" />
     <ClCompile Include="collision.c" />
+    <ClCompile Include="Comm.cpp" />
     <ClCompile Include="draw.c" />
     <ClCompile Include="keyboard.c" />
     <ClCompile Include="main.c" />
@@ -146,6 +147,7 @@
   <ItemGroup>
     <ClInclude Include="blocks.h" />
     <ClInclude Include="collision.h" />
+    <ClInclude Include="Comm.h" />
     <ClInclude Include="draw.h" />
     <ClInclude Include="keyboard.h" />
     <ClInclude Include="miscfunc.h" />
