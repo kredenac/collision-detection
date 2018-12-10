@@ -26,6 +26,10 @@ int main(int argc, char** argv)
 	duck_quack(ducky, 1.f);
 	delete_duck(ducky);
 
+	auto d = Duck(33);
+	d.quack(777);
+
+
     glutInit(&argc,argv);
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
 
@@ -63,8 +67,8 @@ int main(int argc, char** argv)
 
 //https://www.opengl.org/archives/resources/features/KilgardTechniques/oglpitfall/
 // pokusaj da postavim poziciju za pisanje
-void glWindowPos4fMESAemulate(GLfloat x,GLfloat y,GLfloat z,GLfloat w) {
-   GLfloat fx, fy;
+void glWindowPos4fMESAemulate(float x, float y, float z, float w) {
+   float fx, fy;
 
   /* Push current matrix mode and viewport attributes. */
   glPushAttrib(GL_TRANSFORM_BIT | GL_VIEWPORT_BIT);
@@ -89,16 +93,14 @@ void glWindowPos4fMESAemulate(GLfloat x,GLfloat y,GLfloat z,GLfloat w) {
   glPopAttrib();
 }
 
-// ovu pozivam
-void glWindowPos2fMESAemulate(GLfloat x, GLfloat y)
+// wrapepr
+void glWindowPos2fMESAemulate(float x, float y)
 {
   glWindowPos4fMESAemulate(x, y, 0, 1);
 }
 
-// pokusaj 3
-void omgradi(float x, float y, const char *string)
+void textToScreenPos(float x, float y, const char *string)
 {
-
     glWindowPos2fMESAemulate(x, y);
     int len = (int) strlen(string);
     glColor3f(1.0f, 0.2f, 0.5f);
@@ -126,15 +128,15 @@ void onDisplay(void)
     // begin
     glDisable(GL_LIGHTING);
 
-    omgradi(0, 0, "zero zero");
-    omgradi(0, 500, "zero 500");
-    omgradi(500, 0, "500 zero");
-    omgradi(500, 500, "500 500");
+    textToScreenPos(0, 0, "zero zero");
+    textToScreenPos(0, 500, "zero 500");
+    textToScreenPos(500, 0, "500 zero");
+    textToScreenPos(500, 500, "500 500");
 
     char fPointer[55] = "fps: ";
     sprintf(fPointer, "%f", fpsCount);
 
-    omgradi(100, 0, fPointer);
+    textToScreenPos(100, 0, fPointer);
 
     glEnable(GL_LIGHTING);
     // end

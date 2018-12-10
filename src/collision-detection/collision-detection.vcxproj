@@ -135,14 +135,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="blocks.c" />
-    <ClCompile Include="collision.c" />
+    <ClCompile Include="blocks.cpp" />
+    <ClCompile Include="collision.cpp" />
     <ClCompile Include="Comm.cpp" />
-    <ClCompile Include="draw.c" />
-    <ClCompile Include="keyboard.c" />
-    <ClCompile Include="main.c" />
-    <ClCompile Include="miscfunc.c" />
-    <ClCompile Include="player.c" />
+    <ClCompile Include="draw.cpp" />
+    <ClCompile Include="keyboard.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="miscfunc.cpp" />
+    <ClCompile Include="player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="blocks.h" />

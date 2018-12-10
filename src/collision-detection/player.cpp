@@ -1,39 +1,67 @@
 #include "player.h"
 
 const Object playerInit = {
-    .posx = 0,
-    .posy = 0,
-    .posz = 2,
-    .vx = {0, 0},
-    .vy = {0, 0},
-    .vz = {0, 0},
-    .length = 0.4,
-    .height = 1.4,
-    .width = 0.4,
-    .color = {0, 0, 0}
+    //.posx = 
+	0,
+    //.posy = 
+	0,
+    //.posz = 
+	2,
+    //.vx = 
+	{0, 0},
+    //.vy = 
+	{0, 0},
+    //.vz = 
+	{0, 0},
+    //.length = 
+	0.4,
+    //.height = 
+	1.4,
+    //.width = 
+	0.4,
+    //.color = 
+	{0, 0, 0}
 };
 const Object bulletInit = {
-    .posx = 0,
-    .posy = 0,
-    .posz = 0,
-    .vx = {0, 0},
-    .vy = {0, 0},
-    .vz = {0, 0},
-    .length = 0.2,
-    .height = 0.2,
-    .width = 0.2,
-    .color = {1, 1, 1}
+    //.posx =
+	0,
+    //.posy =
+	0,
+    //.posz =
+	0,
+    //.vx = 
+	{0, 0},
+    //.vy = 
+	{0, 0},
+    //.vz = 
+	{0, 0},
+    //.length = 
+	0.2,
+    //.height = 
+	0.2,
+    //.width = 
+	0.2,
+    //.color = 
+	{1, 1, 1}
 };
 State state;
 const State stateInit = {
-    .jumping = 0,
-    .fireColor = WHITE,
-    .bigJump = 0,
-    .goFast = 0,
-    .finishedGame = 0,
-    .newGame = 1,
-    .buildMode=0,
-    .flying=0
+    //.jumping = 
+	0,
+    //.fireColor = 
+	WHITE,
+    //.bigJump = 
+	0,
+    //.goFast = 
+	0,
+    //.finishedGame = 
+	0,
+    //.newGame = 
+	1,
+    //.buildMode=
+	0,
+    //.flying=
+	0
 };
 
 Object player;

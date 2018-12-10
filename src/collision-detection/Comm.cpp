@@ -2,17 +2,25 @@
 
 #include <iostream>
 
-struct duck { };
 
-class Duck : public duck {
-public:
-	Duck(int feet) {};
-	~Duck() {};
 
-	void quack(float volume) 
-	{
-		std::cout << "quack " << volume << std::endl;
-	};
+//class Duck : public duck {
+//public:
+//	Duck(int feet) {};
+//	~Duck() {};
+//
+//	void quack(float volume) 
+//	{
+//		std::cout << "quack " << volume << std::endl;
+//	};
+//};
+
+Duck::Duck(int feet) {};
+Duck::~Duck() {};
+
+void Duck::quack(float volume)
+{
+	std::cout << "quack " << volume << std::endl;
 };
 
 int test()
