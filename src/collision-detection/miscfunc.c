@@ -131,11 +131,20 @@ static int isDefaultMap=1;
 
 void loadMap(int defaultMap)
 {
-    char path[30];
-    char name[20];
+    char path[300];
+    char name[200];
     /*posto bude neko djubre postavim na term nulu*/
     path[0]='\0';
-    strcat(path, "./src/maps/");
+#ifdef _WIN32
+	//get working directory
+	//char pBuf[100];
+	//GetModuleFileName(NULL, pBuf, 100);
+	//printf("%s\n", pBuf);
+	//scanf("%s", pBuf);
+	strcat(path, "../collision-detection/maps/");
+#elif __linux__
+	strcat(path, "./src/maps/");
+#endif
     FILE* f;
     isDefaultMap = defaultMap;
     if (defaultMap) {

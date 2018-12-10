@@ -1,6 +1,7 @@
 #ifndef DRAW_H
 #define DRAW_H
 #include <GL/glut.h>
+#define _USE_MATH_DEFINES
 #include <math.h>
 #include <stdio.h>
 #include "player.h"
