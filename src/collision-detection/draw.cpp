@@ -76,19 +76,32 @@ void initMaterial()
 /*na osnovu boje objekta postavlja materijale pred iscrtavanje*/
 void drawWithColor(Object* o)
 {
-    GLfloat diffuseCoeffs[] = {o->color[0], o->color[1], o->color[2], 1};
-    /*potamnjuje ambinet coeffs*/
-    float s = 0; //0.3;
-    GLfloat ambientCoeffs[] = {o->color[0] * s, o->color[1] * s, o->color[2] * s, 1};
-    const float emissionCoeffs[] = {0.5, 0.5, 0.5, 1};
-    const float emissionCoeffs2[] = {0, 0, 0, 0};
-    if (getColor(o) == WHITE) {
-        glMaterialfv(GL_FRONT, GL_EMISSION, emissionCoeffs);
-    } else {
-        glMaterialfv(GL_FRONT, GL_EMISSION, emissionCoeffs2);
-    }
-    glMaterialfv(GL_FRONT, GL_AMBIENT, ambientCoeffs);
-    glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuseCoeffs);
+	GLfloat diffuseCoeffs[] = { o->color[0], o->color[1], o->color[2], 1 };
+	/*potamnjuje ambinet coeffs*/
+	float s = 0; //0.3;
+	GLfloat ambientCoeffs[] = { o->color[0] * s, o->color[1] * s, o->color[2] * s, 1 };
+	const float emissionCoeffs[] = { 0.5, 0.5, 0.5, 1 };
+	const float emissionCoeffs2[] = { 0, 0, 0, 0 };
+	if (getColor(o) == WHITE) {
+		glMaterialfv(GL_FRONT, GL_EMISSION, emissionCoeffs);
+	}
+	else {
+		glMaterialfv(GL_FRONT, GL_EMISSION, emissionCoeffs2);
+	}
+	glMaterialfv(GL_FRONT, GL_AMBIENT, ambientCoeffs);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuseCoeffs);
+}
+
+void drawWithColor(float r, float g, float b)
+{
+	GLfloat diffuseCoeffs[] = { r, g,b, 1 };
+	/*potamnjuje ambinet coeffs*/
+	float s = 0; //0.3;
+	GLfloat ambientCoeffs[] = { r * s, g * s, b * s, 1 };
+	const float emissionCoeffs2[] = { 0, 0, 0, 0 };
+	glMaterialfv(GL_FRONT, GL_EMISSION, emissionCoeffs2);
+	glMaterialfv(GL_FRONT, GL_AMBIENT, ambientCoeffs);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuseCoeffs);
 }
 
 /*postavlja kameru na poziciju glave igraca i usmerava pogled*/
@@ -183,11 +196,27 @@ void drawBullets(void) {
     }
 }
 
-void drawCube(Object* o) {
+void drawCube(Object* o) 
+{
     drawWithColor(o);
     glPushMatrix();
     glTranslatef(o->posx, o->posy, o->posz);
     glScalef(o->length, o->height, o->width);
     glutSolidCube(1);
     glPopMatrix();
+}
+
+void drawCuboid(Cuboid & c) 
+{
+	if (c.hasCollision()) {
+		drawWithColor(1, 0, 0);
+	}
+	else {
+		drawWithColor(0, 1, 0);
+	}
+	glPushMatrix();
+	glTranslatef(c.pos.x, c.pos.y, c.pos.z);
+	glScalef(c.size.x, c.size.y, c.size.z);
+	glutSolidCube(1);
+	glPopMatrix();
 }

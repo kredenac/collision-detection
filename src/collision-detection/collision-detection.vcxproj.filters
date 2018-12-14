@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Comm.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -37,6 +34,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="blocks.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Cuboid.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicCollision.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -59,7 +65,13 @@
     <ClInclude Include="player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Comm.h">
+    <ClInclude Include="Cuboid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicCollision.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include "player.h"
 #include "blocks.h"
+#include "Cuboid.h"
 
 extern int lightOn[];
 #define MAX_LIGHTS 8
@@ -19,4 +20,5 @@ extern void initMaterial(void);
 extern void psychedelic(int interval);
 extern void setLightPos(int n, float x, float y, float z);
 extern void initLights();
+void drawCuboid(Cuboid & c);
 #endif

@@ -10,7 +10,9 @@
 #include "draw.h"
 #include "blocks.h"
 
-#include "Comm.h"
+#include "Cuboid.h"
+#include "BasicCollision.h"
+#include <vector>
 
 int dt;
 static int oldDisplayTime;
@@ -18,18 +20,21 @@ static void onTimerUpdate(int id);
 static void onDisplay(void);
 static void updateDeltaTime(void);
 static float fps(int print);
+void drawAllText(float fpsCount);
+
+std::vector<Cuboid> cuboids;
 
 int main(int argc, char** argv)
 {
-	duck* ducky = new_duck(5);
-	printf("DA LI RADI: %d\n", test());
-	duck_quack(ducky, 1.f);
-	delete_duck(ducky);
+	//test begin
+	printf("hi\n");
 
-	auto d = Duck(33);
-	d.quack(777);
+	cuboids.push_back(Cuboid(Vector3(0.1f, 0.f, 0.1f)));
+	cuboids.push_back(Cuboid(Vector3(-0.3f, 0.f, 0.1f)));
+	cuboids.push_back(Cuboid(Vector3(-2.1f, 0.f, 0.1f)));
 
-
+	printf("carry on\n");
+	//test end
     glutInit(&argc,argv);
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
 
@@ -125,23 +130,31 @@ void onDisplay(void)
     drawMap();
     drawBullets();
 
-    // begin
-    glDisable(GL_LIGHTING);
+	for (auto cub : cuboids) {
+		drawCuboid(cub);
+	}
 
-    textToScreenPos(0, 0, "zero zero");
-    textToScreenPos(0, 500, "zero 500");
-    textToScreenPos(500, 0, "500 zero");
-    textToScreenPos(500, 500, "500 500");
-
-    char fPointer[55] = "fps: ";
-    sprintf(fPointer, "%f", fpsCount);
-
-    textToScreenPos(100, 0, fPointer);
-
-    glEnable(GL_LIGHTING);
-    // end
+	drawAllText(fpsCount);
 
     glutSwapBuffers();
+}
+
+void drawAllText(float fpsCount)
+{
+	return;
+	glDisable(GL_LIGHTING);
+
+	textToScreenPos(0, 0, "zero zero");
+	textToScreenPos(0, 500, "zero 500");
+	textToScreenPos(500, 0, "500 zero");
+	textToScreenPos(500, 500, "500 500");
+
+	char fPointer[55] = "fps: ";
+	sprintf(fPointer, "%f", fpsCount);
+
+	textToScreenPos(100, 0, fPointer);
+
+	glEnable(GL_LIGHTING);
 }
 
 /*funkcija za azuriranje polozaja objekata i obradu svih dogadjaja*/
@@ -156,6 +169,17 @@ void onTimerUpdate(int id)
     bulletCollision();
     moveBullets();
     checkEvents();
+	// test begin
+
+	for (auto& cub : cuboids) {
+		cub.setColliding(false); // unmark collisions
+		cub.pos.add(0.01f, 0.01f, 0.01f);
+	}
+
+	auto collisionChecker = BasicCollision(cuboids);
+	collisionChecker.markCollisions();
+
+	// test end
 
     glutPostRedisplay();
     glutTimerFunc(UPDATE_TIMER_INTERVAL, onTimerUpdate, TIMER_UPDATE_ID);
