@@ -5,13 +5,12 @@
 class BasicCollision
 {
 public:
-	BasicCollision(std::vector<Cuboid> &items);
+	BasicCollision();
 	~BasicCollision();
 
-	void markCollisions();
+	void markCollisions(std::vector<Cuboid>& items);
 
 private:
-	std::vector<Cuboid> &items;
 	bool areColliding(Cuboid &a, Cuboid &b);
 	bool hasIntervalIntersection(float posA, float sizeA, float posB, float sizeB);
 };

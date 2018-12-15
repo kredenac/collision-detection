@@ -92,16 +92,17 @@ void drawWithColor(Object* o)
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuseCoeffs);
 }
 
-void drawWithColor(float r, float g, float b)
+void drawWithColor(float r, float g, float b, float a = 1.0)
 {
-	GLfloat diffuseCoeffs[] = { r, g,b, 1 };
+	GLfloat diffuseCoeffs[] = { r, g, b, a};
 	/*potamnjuje ambinet coeffs*/
 	float s = 0; //0.3;
-	GLfloat ambientCoeffs[] = { r * s, g * s, b * s, 1 };
+	GLfloat ambientCoeffs[] = { r * s, g * s, b * s, a };
 	const float emissionCoeffs2[] = { 0, 0, 0, 0 };
 	glMaterialfv(GL_FRONT, GL_EMISSION, emissionCoeffs2);
 	glMaterialfv(GL_FRONT, GL_AMBIENT, ambientCoeffs);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuseCoeffs);
+
 }
 
 /*postavlja kameru na poziciju glave igraca i usmerava pogled*/
@@ -206,13 +207,13 @@ void drawCube(Object* o)
     glPopMatrix();
 }
 
-void drawCuboid(Cuboid & c) 
+void drawCuboid(Cuboid & c, float alpha) 
 {
 	if (c.hasCollision()) {
-		drawWithColor(1, 0, 0);
+		drawWithColor(1, 0, 0, alpha);
 	}
 	else {
-		drawWithColor(0, 1, 0);
+		drawWithColor(0, 1, 0, alpha);
 	}
 	glPushMatrix();
 	glTranslatef(c.pos.x, c.pos.y, c.pos.z);

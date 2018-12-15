@@ -12,6 +12,7 @@
 
 #include "Cuboid.h"
 #include "BasicCollision.h"
+#include "Mover.h"
 #include <vector>
 
 int dt;
@@ -24,6 +25,8 @@ void drawAllText(float fpsCount);
 
 std::vector<Cuboid> cuboids;
 
+auto MOVER = Mover(-1, 1, 2, 0, -1, 1);
+
 int main(int argc, char** argv)
 {
 	//test begin
@@ -31,7 +34,9 @@ int main(int argc, char** argv)
 
 	cuboids.push_back(Cuboid(Vector3(0.1f, 0.f, 0.1f)));
 	cuboids.push_back(Cuboid(Vector3(-0.3f, 0.f, 0.1f)));
-	cuboids.push_back(Cuboid(Vector3(-2.1f, 0.f, 0.1f)));
+	cuboids.push_back(Cuboid(Vector3(-1.1f, 0.f, 0.1f)));
+
+	auto v = Vector3(0.1f, 0.f, 0.1f);
 
 	printf("carry on\n");
 	//test end
@@ -51,7 +56,12 @@ int main(int argc, char** argv)
     glutMotionFunc(onMousePressedLook);
     glutMouseFunc(onMouseButton);
 
-    glEnable(GL_CULL_FACE);
+	// to make transparency work
+	glDisable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	// --
+
     /*prilikom skaliranja se poremeti osvetljenje pa me gl_normalize spasi*/
     glEnable(GL_NORMALIZE);
     glutSetCursor(GLUT_CURSOR_NONE);
@@ -71,7 +81,7 @@ int main(int argc, char** argv)
 }
 
 //https://www.opengl.org/archives/resources/features/KilgardTechniques/oglpitfall/
-// pokusaj da postavim poziciju za pisanje
+// sets up gl for writing text
 void glWindowPos4fMESAemulate(float x, float y, float z, float w) {
    float fx, fy;
 
@@ -134,6 +144,9 @@ void onDisplay(void)
 		drawCuboid(cub);
 	}
 
+	auto bounds = MOVER.getBounds();
+	drawCuboid(bounds, 0.1f);
+
 	drawAllText(fpsCount);
 
     glutSwapBuffers();
@@ -173,11 +186,12 @@ void onTimerUpdate(int id)
 
 	for (auto& cub : cuboids) {
 		cub.setColliding(false); // unmark collisions
-		cub.pos.add(0.01f, 0.01f, 0.01f);
 	}
 
-	auto collisionChecker = BasicCollision(cuboids);
-	collisionChecker.markCollisions();
+	MOVER.moveItems(cuboids);
+
+	auto collisionChecker = BasicCollision();
+	collisionChecker.markCollisions(cuboids);
 
 	// test end
 

@@ -1,4 +1,6 @@
 #pragma once
+#include <cmath>
+
 class Vector3
 {
 public:
@@ -19,6 +21,10 @@ public:
 		this->y += y;
 		this->z += z;
 	}
+
+	void normalize();
+
+	void setLength(float length);
 
 	Vector3 operator + (const Vector3& v) const
 	{

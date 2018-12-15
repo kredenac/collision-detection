@@ -1,8 +1,7 @@
 #include "BasicCollision.h"
 
-BasicCollision::BasicCollision(std::vector<Cuboid>& items) : items(items)
+BasicCollision::BasicCollision()
 {
-	printf("original = %d, new = %d\n", &items[0], &this->items[0]);
 }
 
 
@@ -10,12 +9,12 @@ BasicCollision::~BasicCollision()
 {
 }
 
-void BasicCollision::markCollisions()
+void BasicCollision::markCollisions(std::vector<Cuboid>& items)
 {
 	unsigned len = items.size();
 	for (unsigned i = 0; i < len - 1; i++) {
 
-		for (unsigned j = i; j < len; j++) {
+		for (unsigned j = i + 1; j < len; j++) {
 			auto &a = items[i];
 			auto &b = items[j];
 			if (areColliding(a, b)) {
