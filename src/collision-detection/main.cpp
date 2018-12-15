@@ -25,7 +25,7 @@ void drawAllText(float fpsCount);
 
 std::vector<Cuboid> cuboids;
 
-auto MOVER = Mover(-1, 1, 2, 0, -1, 1);
+auto MOVER = Mover(-1, 1, 2, 0.01, 1, -1);
 
 int main(int argc, char** argv)
 {
@@ -75,7 +75,7 @@ int main(int argc, char** argv)
     resetGame();
     oldDisplayTime=dt=glutGet(GLUT_ELAPSED_TIME);
     srand(time(NULL));
-    glutTimerFunc(UPDATE_TIMER_INTERVAL, onTimerUpdate,TIMER_UPDATE_ID);
+    glutTimerFunc(UPDATE_TIMER_INTERVAL, onTimerUpdate, TIMER_UPDATE_ID);
     glutMainLoop();
     return 0;
 }

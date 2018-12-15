@@ -92,13 +92,18 @@ int isequal(float a, float b)
 void saveMap()
 {
     printf("Unesi ime nove mape:\n");
-    char path[30];
-    char name[20];
-    /*posto bude neko djubre postavim na term nulu*/
-    path[0]='\0';
-    strcat(path, "./src/maps/");
-    scanf("%s", name);
-    printf("uneto ime %s\n", name);
+
+	char path[300];
+	char name[200];
+	scanf("%s", name);
+	printf("uneto ime %s\n", name);
+	/*posto bude neko djubre postavim na term nulu*/
+	path[0] = '\0';
+#ifdef _WIN32
+	strcat(path, "../collision-detection/maps/");
+#elif __linux__
+	strcat(path, "./src/maps/");
+#endif
     /*pravi se putanja do novog fajla*/
     strcat(path, name);
     FILE* f = fopen(path, "w");

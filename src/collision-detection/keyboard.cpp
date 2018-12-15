@@ -54,8 +54,6 @@ void onMouseLook(int x, int y)
         deltaY = y - height / 2;
         glutWarpPointer(width / 2, height / 2);
     }
-    /*blokira se pomeranje kamere na pocetku igre*/
-    if (state.newGame) return;
     prevMouseX = x;
     prevMouseY = y;
     viewAzimuth.curr += deltaX * viewAzimuthdt * mouseSensitivity;
@@ -105,9 +103,6 @@ void onKeyHold()
 /*ne treba mi vise al nek stoji za ukras*/
 void onSpecialInputUp(int key, int x, int y)
 {
-    if (state.newGame){
-        return;
-    }
     switch (key) {
         default:
             break;
@@ -116,10 +111,6 @@ void onSpecialInputUp(int key, int x, int y)
 
 void onSpecialInput(int key, int x, int y)
 {
-    if (state.newGame && key != GLUT_KEY_F10){
-        return;
-    }
-
     switch (key) {
         case (GLUT_KEY_F1):
             saveMap();
@@ -192,10 +183,6 @@ void onKeyboardUp(unsigned char key, int x, int y)
 
 void onKeyboard(unsigned char key, int x, int y)
 {
-    /*na samom pocetku blokira se input dok igrac ne ispali boju*/
-    if (state.newGame && key != 'f' && key != 'F' && key != ESC){
-        return;
-    }
     switch (key) {
         case ('f'):
         case ('F'):

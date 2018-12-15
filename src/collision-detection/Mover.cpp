@@ -28,9 +28,9 @@ Cuboid Mover::getBounds() const
 
 void Mover::moveItems(std::vector<Cuboid> &items) const
 {
-	for (auto& x : items) {
-		reflectVelocity(x);
-		x.pos = x.pos + x.vel;
+	for (auto& c : items) {
+		reflectVelocity(c);
+		c.pos = c.pos + c.vel;
 	}
 }
 

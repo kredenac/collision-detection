@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include "player.h"
 
-#define DEFAULT_MAP "hello.map"
+#define DEFAULT_MAP "collision.map"
 
 typedef struct ObjectNode{
     struct ObjectNode* next;

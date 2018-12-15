@@ -26,6 +26,10 @@ void lightSetup()
             glDisable(lights[i]);
         }
     }
+
+	const float globalLightPos[] = { 0., 1.f, -1.9f };
+	glEnable(GL_LIGHT7);
+	glLightfv(GL_LIGHT7, GL_POSITION, globalLightPos);
 }
 
 /*inicijalna svojstva svetlosti*/
@@ -36,7 +40,7 @@ void initLights()
     float lightSpecular[] = {0.2, 0.2, 0.2, 0.0};
     float lightDirection[] = {0, 0, 0};
     int i;
-    for (i = 0; i < MAX_LIGHTS; i++) {
+    for (i = 0; i < MAX_LIGHTS - 1; i++) {
         lightOn[i]=0;
         glLightfv(lights[i], GL_SPOT_DIRECTION, lightDirection);
         glLightfv(lights[i], GL_AMBIENT, lightAmbient);
@@ -48,6 +52,19 @@ void initLights()
         glLightf(lights[i], GL_QUADRATIC_ATTENUATION, 0.01);
         glLightf(lights[i], GL_SPOT_CUTOFF, 180.0);
     }
+	// global light
+	float globalAmbient[] = { 0.3, 0.3, 0.3, 1 };
+	float globalDiffuse[] = { 0.7, 0.7, 0.7, 1 };
+	float globalSpecular[] = { 0.2, 0.2, 0.2, 0.0 };
+	float globalDirection[] = { 0, 0, 0 };
+	glLightfv(GL_LIGHT7, GL_SPOT_DIRECTION, globalDirection);
+	glLightfv(GL_LIGHT7, GL_AMBIENT, globalAmbient);
+	glLightfv(GL_LIGHT7, GL_DIFFUSE, globalDiffuse);
+	glLightfv(GL_LIGHT7, GL_SPECULAR, globalSpecular);
+	glLightf(GL_LIGHT7, GL_CONSTANT_ATTENUATION, 0);
+	glLightf(GL_LIGHT7, GL_LINEAR_ATTENUATION, 0.3);
+	glLightf(GL_LIGHT7, GL_QUADRATIC_ATTENUATION, 0.01);
+	glLightf(GL_LIGHT7, GL_SPOT_CUTOFF, 360.0);
 }
 
 /*postavlja poziciju n-tog GL_LIGHT*/
@@ -78,7 +95,7 @@ void drawWithColor(Object* o)
 {
 	GLfloat diffuseCoeffs[] = { o->color[0], o->color[1], o->color[2], 1 };
 	/*potamnjuje ambinet coeffs*/
-	float s = 0; //0.3;
+	float s = 1.f;
 	GLfloat ambientCoeffs[] = { o->color[0] * s, o->color[1] * s, o->color[2] * s, 1 };
 	const float emissionCoeffs[] = { 0.5, 0.5, 0.5, 1 };
 	const float emissionCoeffs2[] = { 0, 0, 0, 0 };
@@ -96,7 +113,7 @@ void drawWithColor(float r, float g, float b, float a = 1.0)
 {
 	GLfloat diffuseCoeffs[] = { r, g, b, a};
 	/*potamnjuje ambinet coeffs*/
-	float s = 0; //0.3;
+	float s = 0.6;
 	GLfloat ambientCoeffs[] = { r * s, g * s, b * s, a };
 	const float emissionCoeffs2[] = { 0, 0, 0, 0 };
 	glMaterialfv(GL_FRONT, GL_EMISSION, emissionCoeffs2);
