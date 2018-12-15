@@ -6,7 +6,7 @@ const Object playerInit = {
     //.posy = 
 	0,
     //.posz = 
-	2,
+	4,
     //.vx = 
 	{0, 0},
     //.vy = 

@@ -25,18 +25,26 @@ void drawAllText(float fpsCount);
 
 std::vector<Cuboid> cuboids;
 
-auto MOVER = Mover(-1, 1, 2, 0.01, 1, -1);
+Mover MOVER = Mover(0,0,0,0,0,0);
 
 int main(int argc, char** argv)
 {
+	srand(time(NULL));
 	//test begin
 	printf("hi\n");
 
-	cuboids.push_back(Cuboid(Vector3(0.1f, 0.f, 0.1f)));
-	cuboids.push_back(Cuboid(Vector3(-0.3f, 0.f, 0.1f)));
-	cuboids.push_back(Cuboid(Vector3(-1.1f, 0.f, 0.1f)));
+	const float cuboidSize = 0.2f;
+	Vector3 min = Vector3(-2.f, -0.99f, -2.f);
+	Vector3 max = Vector3(2, 2, 2);
 
-	auto v = Vector3(0.1f, 0.f, 0.1f);
+	MOVER = Mover(min, max);
+
+	min = min + cuboidSize;
+	max = max + (-cuboidSize);
+
+	for (unsigned i = 0; i < 100; i++) {
+		cuboids.push_back(Cuboid(Vector3::randVec(min, max), cuboidSize));
+	}
 
 	printf("carry on\n");
 	//test end
@@ -74,7 +82,6 @@ int main(int argc, char** argv)
     glClearColor(0, 0, 0, 0);
     resetGame();
     oldDisplayTime=dt=glutGet(GLUT_ELAPSED_TIME);
-    srand(time(NULL));
     glutTimerFunc(UPDATE_TIMER_INTERVAL, onTimerUpdate, TIMER_UPDATE_ID);
     glutMainLoop();
     return 0;
@@ -108,7 +115,7 @@ void glWindowPos4fMESAemulate(float x, float y, float z, float w) {
   glPopAttrib();
 }
 
-// wrapepr
+// wrapper
 void glWindowPos2fMESAemulate(float x, float y)
 {
   glWindowPos4fMESAemulate(x, y, 0, 1);
@@ -154,13 +161,7 @@ void onDisplay(void)
 
 void drawAllText(float fpsCount)
 {
-	return;
 	glDisable(GL_LIGHTING);
-
-	textToScreenPos(0, 0, "zero zero");
-	textToScreenPos(0, 500, "zero 500");
-	textToScreenPos(500, 0, "500 zero");
-	textToScreenPos(500, 500, "500 500");
 
 	char fPointer[55] = "fps: ";
 	sprintf(fPointer, "%f", fpsCount);
@@ -182,18 +183,15 @@ void onTimerUpdate(int id)
     bulletCollision();
     moveBullets();
     checkEvents();
-	// test begin
 
 	for (auto& cub : cuboids) {
 		cub.setColliding(false); // unmark collisions
 	}
-
-	MOVER.moveItems(cuboids);
+	float delta = dt / (float)UPDATE_INTERVAL;
+	MOVER.moveItems(cuboids, delta);
 
 	auto collisionChecker = BasicCollision();
 	collisionChecker.markCollisions(cuboids);
-
-	// test end
 
     glutPostRedisplay();
     glutTimerFunc(UPDATE_TIMER_INTERVAL, onTimerUpdate, TIMER_UPDATE_ID);

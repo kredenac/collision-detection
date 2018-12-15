@@ -1,21 +1,26 @@
 #pragma once
 #include "Vector3.h"
-#include <cstdlib>
-
 
 
 class Cuboid
 {
 public:
-	Cuboid(Vector3&& pos) : Cuboid(pos, Vector3(1, 1, 1))
+	Cuboid(Vector3& pos, Vector3&& size)
+		: pos(pos), size(size), vel(Vector3::randVec()), m_hasCollision(false)
 	{
+		vel.setLength(0.01f);
 	}
 
-	Cuboid(Vector3& pos, Vector3&& size) 
-		: pos(pos), size(size), vel(randf(), randf(), randf()), m_hasCollision(false)
+	Cuboid(Vector3& pos, float size) 
+		: Cuboid(pos, Vector3(size, size, size))
 	{
 		
 		vel.setLength(0.01f);
+	}
+
+	Cuboid(Vector3&& pos, float size)
+		: Cuboid(pos, size)
+	{
 	}
 
 	~Cuboid();
@@ -58,11 +63,6 @@ public:
 	Vector3 vel;
 
 private:
-	float randf()
-	{
-		return rand() / static_cast <float> (RAND_MAX);
-	}
-
 	bool m_hasCollision;
 };
 

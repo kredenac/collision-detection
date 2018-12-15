@@ -20,5 +20,5 @@ extern void initMaterial(void);
 extern void psychedelic(int interval);
 extern void setLightPos(int n, float x, float y, float z);
 extern void initLights();
-void drawCuboid(Cuboid & c, float alpha = 1.0f);
+void drawCuboid(Cuboid &c, float alpha = 1.0f);
 #endif
