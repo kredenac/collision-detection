@@ -12,6 +12,7 @@
 
 #include "Cuboid.h"
 #include "BasicCollision.h"
+#include "Octree.h"
 #include "Mover.h"
 #include <vector>
 
@@ -98,7 +99,8 @@ void updateCollisions()
 	float delta = dt / (float)UPDATE_INTERVAL;
 	MOVER.moveItems(cuboids, delta);
 
-	auto collisionChecker = BasicCollision();
+	auto bounds = MOVER.getBounds();
+	auto collisionChecker = Octree(bounds.pos, bounds.size); //BasicCollision();
 	collisionChecker.markCollisions(cuboids);
 }
 

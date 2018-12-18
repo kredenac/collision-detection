@@ -6,22 +6,41 @@ class Box
 public:
 	Vector3 pos;
 	Vector3 size;
-protected:
-	Box(Vector3& pos, Vector3& size) : pos(pos), size(size)
+public:
+	Box(const Vector3& pos, const Vector3& size) : pos(pos), size(size)
 	{
+	}
+
+	bool isCollidingWith(const Box &b) const
+	{
+		bool interx = hasIntervalIntersection(pos.x, size.x, b.pos.x, b.size.x);
+		bool intery = hasIntervalIntersection(pos.y, size.y, b.pos.y, b.size.y);
+		bool interz = hasIntervalIntersection(pos.z, size.z, b.pos.z, b.size.z);
+		return interx && intery && interz;
+	}
+
+private:
+	bool hasIntervalIntersection(float posA, float sizeA, float posB, float sizeB) const
+	{
+		float mina, maxa, minb, maxb;
+		mina = posA - sizeA / 2;
+		maxa = posA + sizeA / 2;
+		minb = posB - sizeB / 2;
+		maxb = posB + sizeB / 2;
+		return maxa > minb && mina < maxb;
 	}
 };
 
 class Cuboid : public Box
 {
 public:
-	Cuboid(Vector3& pos, Vector3&& size)
+	Cuboid(const Vector3& pos, Vector3&& size)
 		: Box(pos, size), vel(Vector3::randVec()), m_hasCollision(false)
 	{
 		vel.setLength(0.01f);
 	}
 
-	Cuboid(Vector3& pos, float size) 
+	Cuboid(const Vector3& pos, float size) 
 		: Cuboid(pos, Vector3(size, size, size))
 	{
 		

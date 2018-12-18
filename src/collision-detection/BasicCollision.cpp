@@ -27,18 +27,5 @@ void BasicCollision::markCollisions(std::vector<Cuboid>& items)
 
 bool BasicCollision::areColliding(Cuboid &a, Cuboid &b)
 {
-	bool interx = hasIntervalIntersection(a.pos.x, a.size.x, b.pos.x, b.size.x);
-	bool intery = hasIntervalIntersection(a.pos.y, a.size.y, b.pos.y, b.size.y);
-	bool interz = hasIntervalIntersection(a.pos.z, a.size.z, b.pos.z, b.size.z);
-	return interx && intery && interz;
-}
-
-bool BasicCollision::hasIntervalIntersection(float posA, float sizeA, float posB, float sizeB)
-{
-	float mina, maxa, minb, maxb;
-	mina = posA - sizeA / 2;
-	maxa = posA + sizeA / 2;
-	minb = posB - sizeB / 2;
-	maxb = posB + sizeB / 2;
-	return maxa > minb && mina < maxb;
+	return a.isCollidingWith(b);
 }
