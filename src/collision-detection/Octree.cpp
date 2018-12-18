@@ -89,11 +89,17 @@ void Octree::insert(Cuboid *c, int testing_depth, bool markColl)
 
 void Octree::insertDownward(Cuboid *c)
 {
+	bool atleastOneOctant = false;
 	getIntersectingOctants(*c);
 	for (int i = 0; i < c_octants; i++) {
 		if (whichOctants[i]) {
-			octants[i]->insert(c, 0, true);
+			octants[i]->insert(c, depth + 1, true);
+			atleastOneOctant = true;
 		}
+	}
+
+	if (atleastOneOctant == false) {
+		std::runtime_error("element doesn't belong to any octant");
 	}
 }
 

@@ -27,7 +27,6 @@ Cuboid Mover::getBounds() const
 	float sizey = fabsf(up - down);
 	float sizez = fabsf(front - back);
 
-
 	Vector3 pos = Vector3(x, y, z);
 	return Cuboid(pos, Vector3(sizex, sizey, sizez));
 }
@@ -36,36 +35,28 @@ Cuboid Mover::getBounds() const
 void Mover::moveItems(std::vector<Cuboid> &items, float delta) const
 {
 	for (auto& c : items) {
-		reflectVelocity(c);
 		c.pos = c.pos + c.vel * delta;
+		reflectVelocity(c);
 	}
 }
-
-//bool Mover::willBeOutsideBounds(const Cuboid &c) const
-//{
-//	float l, r, u, d, f, b;
-//	c.getNextLRUDFB(l, r, u, d, f, b);
-//
-//	bool xout = l < left || r > right;
-//	bool yout = d < down || u > up;
-//	bool zout = b < back || f > front;
-//	return xout || yout || zout;
-//}
 
 void Mover::reflectVelocity(Cuboid &c) const
 {
 	float l, r, u, d, f, b;
 	c.getNextLRUDFB(l, r, u, d, f, b);
 
-	if (l < left || r > right) {
+	if (l <= left || r >= right) {
 		c.vel.x *= -1;
+		c.pos.x = l <= left ? left + c.size.x : right - c.size.x;
 	}
 		
-	if (d < down || u > up) {
+	if (d <= down || u >= up) {
 		c.vel.y *= -1;
+		c.pos.y = d <= down ? down + c.size.y : up - c.size.y;
 	}
 		
-	if (b < back || f > front) {
+	if (b <= back || f >= front) {
 		c.vel.z *= -1;
+		c.pos.z = b <= back ? back + c.size.z : front - c.size.z;
 	}
 }

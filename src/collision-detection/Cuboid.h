@@ -27,7 +27,7 @@ private:
 		maxa = posA + sizeA / 2;
 		minb = posB - sizeB / 2;
 		maxb = posB + sizeB / 2;
-		return maxa > minb && mina < maxb;
+		return maxa >= minb && mina <= maxb;
 	}
 };
 

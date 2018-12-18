@@ -110,7 +110,7 @@ void updateCollisions()
 	}
 	collisionChecker = new Octree(bounds.pos, bounds.size); 
 	//collisionChecker = new BasicCollision();
-	//collisionChecker->markCollisions(cuboids);
+	collisionChecker->markCollisions(cuboids);
 }
 
 void drawAllText(float fpsCount)
