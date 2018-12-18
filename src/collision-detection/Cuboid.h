@@ -1,12 +1,22 @@
 #pragma once
 #include "Vector3.h"
 
+class Box 
+{
+public:
+	Vector3 pos;
+	Vector3 size;
+protected:
+	Box(Vector3& pos, Vector3& size) : pos(pos), size(size)
+	{
+	}
+};
 
-class Cuboid
+class Cuboid : public Box
 {
 public:
 	Cuboid(Vector3& pos, Vector3&& size)
-		: pos(pos), size(size), vel(Vector3::randVec()), m_hasCollision(false)
+		: Box(pos, size), vel(Vector3::randVec()), m_hasCollision(false)
 	{
 		vel.setLength(0.01f);
 	}
@@ -58,8 +68,6 @@ public:
 		b += vel.z;
 	}
 
-	Vector3 pos;
-	Vector3 size;
 	Vector3 vel;
 
 private:

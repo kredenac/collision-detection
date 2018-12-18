@@ -144,6 +144,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="miscfunc.cpp" />
     <ClCompile Include="Mover.cpp" />
+    <ClCompile Include="Octree.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="Vector3.cpp" />
   </ItemGroup>
@@ -156,6 +157,7 @@
     <ClInclude Include="keyboard.h" />
     <ClInclude Include="miscfunc.h" />
     <ClInclude Include="Mover.h" />
+    <ClInclude Include="Octree.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="Vector3.h" />
   </ItemGroup>

@@ -122,6 +122,54 @@ void drawWithColor(float r, float g, float b, float a = 1.0)
 
 }
 
+
+//https://www.opengl.org/archives/resources/features/KilgardTechniques/oglpitfall/
+// sets up gl for writing text
+void glWindowPos4fMESAemulate(float x, float y, float z, float w) {
+	float fx, fy;
+
+	/* Push current matrix mode and viewport attributes. */
+	glPushAttrib(GL_TRANSFORM_BIT | GL_VIEWPORT_BIT);
+
+	/* Setup projection parameters. */
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+	glDepthRange(z, z);
+	glViewport((int)x - 1, (int)y - 1, 2, 2);
+	/* Set the raster (window) position. */
+	fx = x - (int)x;
+	fy = y - (int)y;
+	glRasterPos4f(fx, fy, 0.0, w);
+	/* Restore matrices, viewport and matrix mode. */
+	glPopMatrix();
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	glPopAttrib();
+}
+
+// wrapper
+void glWindowPos2fMESAemulate(float x, float y)
+{
+	glWindowPos4fMESAemulate(x, y, 0, 1);
+}
+
+void drawTextAt(float x, float y, const char *string)
+{
+	glWindowPos2fMESAemulate(x, y);
+	int len = (int)strlen(string);
+	glColor3f(1.0f, 0.2f, 0.5f);
+	//loop to display character by character
+	int i;
+	for (i = 0; i < len; i++)
+	{
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, string[i]);
+	}
+};
+
 /*postavlja kameru na poziciju glave igraca i usmerava pogled*/
 void positionCam(void)
 {

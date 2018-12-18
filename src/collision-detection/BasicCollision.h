@@ -6,9 +6,9 @@ class BasicCollision
 {
 public:
 	BasicCollision();
-	~BasicCollision();
+	virtual ~BasicCollision();
 
-	void markCollisions(std::vector<Cuboid>& items);
+	virtual void markCollisions(std::vector<Cuboid>& items);
 
 private:
 	bool areColliding(Cuboid &a, Cuboid &b);

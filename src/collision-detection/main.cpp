@@ -22,6 +22,8 @@ static void onDisplay(void);
 static void updateDeltaTime(void);
 static float fps(int print);
 void drawAllText(float fpsCount);
+void updateCollisions();
+void drawCollisions();
 
 std::vector<Cuboid> cuboids;
 
@@ -53,7 +55,7 @@ int main(int argc, char** argv)
 
     glutInitWindowSize(aspectRatio * initWindowHeight, initWindowHeight);
     glutInitWindowPosition(0, 0);
-    glutCreateWindow("Paint the Way");
+    glutCreateWindow("Collision detection");
     glutDisplayFunc(onDisplay);
     glutReshapeFunc(onReshape);
     glutKeyboardFunc(onKeyboard);
@@ -87,52 +89,40 @@ int main(int argc, char** argv)
     return 0;
 }
 
-//https://www.opengl.org/archives/resources/features/KilgardTechniques/oglpitfall/
-// sets up gl for writing text
-void glWindowPos4fMESAemulate(float x, float y, float z, float w) {
-   float fx, fy;
+void updateCollisions()
+{
+	for (auto& cub : cuboids) {
+		// unmark collisions
+		cub.setColliding(false);
+	}
+	float delta = dt / (float)UPDATE_INTERVAL;
+	MOVER.moveItems(cuboids, delta);
 
-  /* Push current matrix mode and viewport attributes. */
-  glPushAttrib(GL_TRANSFORM_BIT | GL_VIEWPORT_BIT);
-
-    /* Setup projection parameters. */
-    glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
-      glLoadIdentity();
-      glMatrixMode(GL_MODELVIEW);
-      glPushMatrix();
-        glLoadIdentity();
-        glDepthRange(z, z);
-        glViewport((int) x - 1, (int) y - 1, 2, 2);
-        /* Set the raster (window) position. */
-        fx = x - (int) x;
-        fy = y - (int) y;
-        glRasterPos4f(fx, fy, 0.0, w);
-      /* Restore matrices, viewport and matrix mode. */
-      glPopMatrix();
-    glMatrixMode(GL_PROJECTION);
-    glPopMatrix();
-  glPopAttrib();
+	auto collisionChecker = BasicCollision();
+	collisionChecker.markCollisions(cuboids);
 }
 
-// wrapper
-void glWindowPos2fMESAemulate(float x, float y)
+void drawAllText(float fpsCount)
 {
-  glWindowPos4fMESAemulate(x, y, 0, 1);
+	glDisable(GL_LIGHTING);
+
+	char fPointer[55] = "fps: ";
+	sprintf(fPointer, "%f", fpsCount);
+
+	drawTextAt(100, 0, fPointer);
+
+	glEnable(GL_LIGHTING);
 }
 
-void textToScreenPos(float x, float y, const char *string)
+void drawCollisions()
 {
-    glWindowPos2fMESAemulate(x, y);
-    int len = (int) strlen(string);
-    glColor3f(1.0f, 0.2f, 0.5f);
-    //loop to display character by character
-    int i;
-    for (i = 0; i < len; i++)
-    {
-        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, string[i]);
-    }
-};
+	for (auto cub : cuboids) {
+		drawCuboid(cub);
+	}
+
+	auto bounds = MOVER.getBounds();
+	drawCuboid(bounds, 0.1f);
+}
 
 void onDisplay(void)
 {
@@ -147,28 +137,11 @@ void onDisplay(void)
     drawMap();
     drawBullets();
 
-	for (auto cub : cuboids) {
-		drawCuboid(cub);
-	}
-
-	auto bounds = MOVER.getBounds();
-	drawCuboid(bounds, 0.1f);
+	drawCollisions();
 
 	drawAllText(fpsCount);
 
     glutSwapBuffers();
-}
-
-void drawAllText(float fpsCount)
-{
-	glDisable(GL_LIGHTING);
-
-	char fPointer[55] = "fps: ";
-	sprintf(fPointer, "%f", fpsCount);
-
-	textToScreenPos(100, 0, fPointer);
-
-	glEnable(GL_LIGHTING);
 }
 
 /*funkcija za azuriranje polozaja objekata i obradu svih dogadjaja*/
@@ -184,14 +157,7 @@ void onTimerUpdate(int id)
     moveBullets();
     checkEvents();
 
-	for (auto& cub : cuboids) {
-		cub.setColliding(false); // unmark collisions
-	}
-	float delta = dt / (float)UPDATE_INTERVAL;
-	MOVER.moveItems(cuboids, delta);
-
-	auto collisionChecker = BasicCollision();
-	collisionChecker.markCollisions(cuboids);
+	updateCollisions();
 
     glutPostRedisplay();
     glutTimerFunc(UPDATE_TIMER_INTERVAL, onTimerUpdate, TIMER_UPDATE_ID);
@@ -200,10 +166,10 @@ void onTimerUpdate(int id)
 /*racunanje dt-vremena izmedju 2 poziva onTimerUpdate funkcije*/
 /*potrebno je znati delta time posto ce na sporijim racunarima
 redje da se poziva Timer. Zbog toga svi pomeraji se vrse srazmerno sa dt*/
-#define DT_MAX 100
-static int newTime;
-static int oldTime = 0;
-static int timeSum = 0;
+int DT_MAX = 100;
+int newTime;
+int oldTime = 0;
+int timeSum = 0;
 
 void updateDeltaTime(void)
 {
@@ -211,13 +177,14 @@ void updateDeltaTime(void)
     dt = newTime - oldTime;
     oldTime = newTime;
     timeSum += dt;
-    if (dt > DT_MAX)
-        dt = DT_MAX;
+	if (dt > DT_MAX) {
+		dt = DT_MAX;
+	}
 }
 
-/*racuna frames per second*/
-static int newDisplayTime;
-#define SECOND 1000
+/*for frames per second*/
+int newDisplayTime;
+int SECOND = 1000;
 
 float fps(int print)
 {
