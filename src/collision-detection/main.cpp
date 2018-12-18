@@ -15,6 +15,7 @@
 #include "Octree.h"
 #include "Mover.h"
 #include <vector>
+#include <string>
 
 int dt;
 static int oldDisplayTime;
@@ -27,8 +28,10 @@ void updateCollisions();
 void drawCollisions();
 
 std::vector<Cuboid> cuboids;
+std::string outputText;
 
 Mover MOVER = Mover(0,0,0,0,0,0);
+BasicCollision *collisionChecker = nullptr;
 
 int main(int argc, char** argv)
 {
@@ -36,7 +39,7 @@ int main(int argc, char** argv)
 	//test begin
 	printf("hi\n");
 
-	const float cuboidSize = 0.2f;
+	const float cuboidSize = 0.02f;
 	Vector3 min = Vector3(-2.f, -0.99f, -2.f);
 	Vector3 max = Vector3(2, 2, 2);
 
@@ -45,7 +48,7 @@ int main(int argc, char** argv)
 	min = min + cuboidSize;
 	max = max + (-cuboidSize);
 
-	for (unsigned i = 0; i < 100; i++) {
+	for (unsigned i = 0; i < 1000; i++) {
 		cuboids.push_back(Cuboid(Vector3::randVec(min, max), cuboidSize));
 	}
 
@@ -72,7 +75,9 @@ int main(int argc, char** argv)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	// --
-
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT7);
+	
     /*prilikom skaliranja se poremeti osvetljenje pa me gl_normalize spasi*/
     glEnable(GL_NORMALIZE);
     glutSetCursor(GLUT_CURSOR_NONE);
@@ -100,8 +105,12 @@ void updateCollisions()
 	MOVER.moveItems(cuboids, delta);
 
 	auto bounds = MOVER.getBounds();
-	auto collisionChecker = Octree(bounds.pos, bounds.size); //BasicCollision();
-	collisionChecker.markCollisions(cuboids);
+	if (collisionChecker != nullptr) { 
+		delete collisionChecker; 
+	}
+	collisionChecker = new Octree(bounds.pos, bounds.size); 
+	//collisionChecker = new BasicCollision();
+	//collisionChecker->markCollisions(cuboids);
 }
 
 void drawAllText(float fpsCount)
@@ -113,6 +122,12 @@ void drawAllText(float fpsCount)
 
 	drawTextAt(100, 0, fPointer);
 
+	if (collisionChecker != nullptr) {
+		int count = ((Octree*)collisionChecker)->countStoredElements();
+		outputText = std::to_string(count);
+		drawTextAt(300, 0, outputText.c_str());
+	}
+	
 	glEnable(GL_LIGHTING);
 }
 
@@ -124,9 +139,12 @@ void drawCollisions()
 
 	auto bounds = MOVER.getBounds();
 	drawCuboid(bounds, 0.1f);
+	//if (collisionChecker != nullptr) {
+	//	collisionChecker->drawSelf(drawBox);
+	//}
 }
 
-void onDisplay(void)
+void onDisplay()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     float fpsCount = fps(showFps);
@@ -173,7 +191,7 @@ int newTime;
 int oldTime = 0;
 int timeSum = 0;
 
-void updateDeltaTime(void)
+void updateDeltaTime()
 {
     newTime=glutGet(GLUT_ELAPSED_TIME);
     dt = newTime - oldTime;

@@ -9,14 +9,12 @@ int lights[] = {
     GL_LIGHT4,
     GL_LIGHT5,
     GL_LIGHT6,
-    GL_LIGHT7
 };
 float lightPos[MAX_LIGHTS][4];
 
 /*ukljucuju se i pozicioniraju aktivna svetla*/
 void lightSetup()
 {
-    glEnable(GL_LIGHTING);
     int i;
     for (i = 0; i < MAX_LIGHTS; i++) {
         if (lightOn[i]) {
@@ -26,9 +24,7 @@ void lightSetup()
             glDisable(lights[i]);
         }
     }
-
-	const float globalLightPos[] = { 0., 1.f, -1.9f };
-	glEnable(GL_LIGHT7);
+	const float globalLightPos[] = { 0., 1.f, -1.9f, 1};
 	glLightfv(GL_LIGHT7, GL_POSITION, globalLightPos);
 }
 
@@ -40,7 +36,7 @@ void initLights()
     float lightSpecular[] = {0.2, 0.2, 0.2, 0.0};
     float lightDirection[] = {0, 0, 0};
     int i;
-    for (i = 0; i < MAX_LIGHTS - 1; i++) {
+    for (i = 0; i < MAX_LIGHTS; i++) {
         lightOn[i]=0;
         glLightfv(lights[i], GL_SPOT_DIRECTION, lightDirection);
         glLightfv(lights[i], GL_AMBIENT, lightAmbient);
@@ -272,17 +268,22 @@ void drawCube(Object* o)
     glPopMatrix();
 }
 
-void drawCuboid(Cuboid & c, float alpha) 
+void drawBox(const Box & c, float r, float g, float b, float alpha)
 {
-	if (c.hasCollision()) {
-		drawWithColor(1, 0, 0, alpha);
-	}
-	else {
-		drawWithColor(0, 1, 0, alpha);
-	}
+	drawWithColor(r, g, b, alpha);
 	glPushMatrix();
 	glTranslatef(c.pos.x, c.pos.y, c.pos.z);
 	glScalef(c.size.x, c.size.y, c.size.z);
 	glutSolidCube(1);
 	glPopMatrix();
+}
+
+void drawCuboid(const Cuboid & c, float alpha) 
+{
+	if (c.hasCollision()) {
+		drawBox(c, 1, 0, 0, alpha);
+	}
+	else {
+		drawBox(c, 0, 1, 0, alpha);
+	}
 }

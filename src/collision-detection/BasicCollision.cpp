@@ -29,3 +29,8 @@ bool BasicCollision::areColliding(Cuboid &a, Cuboid &b)
 {
 	return a.isCollidingWith(b);
 }
+
+void BasicCollision::drawSelf(void(*draw)(const Box &c, float r, float g, float b, float a)) const
+{
+
+}
