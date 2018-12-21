@@ -16,6 +16,7 @@
 #include "Mover.h"
 #include <vector>
 #include <string>
+#include <typeinfo>
 
 int dt;
 static int oldDisplayTime;
@@ -39,7 +40,7 @@ int main(int argc, char** argv)
 	//test begin
 	printf("hi\n");
 
-	const float cuboidSize = 0.02f;
+	const float cuboidSize = 0.2f;
 	Vector3 min = Vector3(-2.f, -0.99f, -2.f);
 	Vector3 max = Vector3(2, 2, 2);
 
@@ -48,10 +49,11 @@ int main(int argc, char** argv)
 	min = min + cuboidSize;
 	max = max + (-cuboidSize);
 
-	for (unsigned i = 0; i < 1000; i++) {
+	for (unsigned i = 0; i < 10000; i++) {
 		cuboids.push_back(Cuboid(Vector3::randVec(min, max), cuboidSize));
 	}
 
+	Octree::innerNodesHoldChildren = true;
 	printf("carry on\n");
 	//test end
     glutInit(&argc,argv);
@@ -108,7 +110,7 @@ void updateCollisions()
 	if (collisionChecker != nullptr) { 
 		delete collisionChecker; 
 	}
-	collisionChecker = new Octree(bounds.pos, bounds.size); 
+	collisionChecker = new Octree(bounds.pos, bounds.size, false); 
 	//collisionChecker = new BasicCollision();
 	collisionChecker->markCollisions(cuboids);
 }
@@ -122,9 +124,10 @@ void drawAllText(float fpsCount)
 
 	drawTextAt(100, 0, fPointer);
 
-	if (collisionChecker != nullptr) {
+	if (collisionChecker != nullptr /*&& typeid(Octree) == typeid(collisionChecker)*/) {
 		int count = ((Octree*)collisionChecker)->countStoredElements();
-		outputText = std::to_string(count);
+		std::string holdsChildren = Octree::innerNodesHoldChildren ? "without duplicates" : "with duplicates";
+		outputText = holdsChildren + " " + std::to_string(count);
 		drawTextAt(300, 0, outputText.c_str());
 	}
 	

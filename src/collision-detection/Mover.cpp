@@ -47,16 +47,16 @@ void Mover::reflectVelocity(Cuboid &c) const
 
 	if (l <= left || r >= right) {
 		c.vel.x *= -1;
-		c.pos.x = l <= left ? left + c.size.x : right - c.size.x;
+		c.pos.x = l <= left ? left + c.size.x / 2 : right - c.size.x / 2;
 	}
 		
 	if (d <= down || u >= up) {
 		c.vel.y *= -1;
-		c.pos.y = d <= down ? down + c.size.y : up - c.size.y;
+		c.pos.y = d <= down ? down + c.size.y / 2 : up - c.size.y / 2;
 	}
 		
 	if (b <= back || f >= front) {
 		c.vel.z *= -1;
-		c.pos.z = b <= back ? back + c.size.z : front - c.size.z;
+		c.pos.z = b <= back ? back + c.size.z / 2 : front - c.size.z / 2;
 	}
 }
