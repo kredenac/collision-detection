@@ -3,6 +3,7 @@
 #include <vector>
 #include <cmath>
 #include <exception>
+#include <stdexcept>
 
 // moves the given items
 // holding them within given bounds

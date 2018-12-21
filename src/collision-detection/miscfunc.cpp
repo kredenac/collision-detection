@@ -102,7 +102,7 @@ void saveMap()
 #ifdef _WIN32
 	strcat(path, "../collision-detection/maps/");
 #elif __linux__
-	strcat(path, "./src/maps/");
+	strcat(path, "./src/collision-detection/maps/");
 #endif
     /*pravi se putanja do novog fajla*/
     strcat(path, name);
@@ -148,7 +148,7 @@ void loadMap(int defaultMap)
 	//scanf("%s", pBuf);
 	strcat(path, "../collision-detection/maps/");
 #elif __linux__
-	strcat(path, "./src/maps/");
+	strcat(path, "./src/collision-detection/maps/");
 #endif
     FILE* f;
     isDefaultMap = defaultMap;
