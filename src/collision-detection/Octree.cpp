@@ -21,6 +21,16 @@ Octree::~Octree()
 	}
 }
 
+std::string Octree::getInfo() const
+{
+	int count = countStoredElements();
+	std::string holdsChildren = Octree::innerNodesHoldChildren ? "without duplicates" : "with duplicates";
+	std::string outputText = holdsChildren + " " + std::to_string(count);
+	int count2 = countElementsInInnerNodes();
+	outputText += Octree::innerNodesHoldChildren ? " innerElements = " + std::to_string(count2) : "";
+	return outputText;
+}
+
 bool Octree::getIntersectingOctants(const Cuboid &c)
 {
 	bool moreThanOneOctant = false;

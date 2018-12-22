@@ -126,13 +126,8 @@ void drawAllText(float fpsCount)
 	sprintf(fPointer, "%f", fpsCount);
 
 	drawTextAt(100, 5, fPointer);
-
-	if (dynamic_cast<Octree*>(collisionChecker) != nullptr) {
-		int count = ((Octree*)collisionChecker)->countStoredElements();
-		std::string holdsChildren = Octree::innerNodesHoldChildren ? "without duplicates" : "with duplicates";
-		outputText = holdsChildren + " " + std::to_string(count);
-		int count2 = ((Octree*)collisionChecker)->countElementsInInnerNodes();
-		outputText += Octree::innerNodesHoldChildren ? " innerElements = " + std::to_string(count2) : "";
+	if (collisionChecker != nullptr) {
+        outputText = collisionChecker->getInfo();
 		drawTextAt(300, 5, outputText.c_str());
 	}
 	

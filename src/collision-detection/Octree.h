@@ -8,6 +8,8 @@ public:
 	Octree(const Vector3 &pos, const Vector3 &size, int depth = 1);
 	~Octree();
 
+	virtual std::string getInfo() const;
+
 	void markCollisions(std::vector<Cuboid>& items) override;
 
 	// draws itself recursively using given draw function

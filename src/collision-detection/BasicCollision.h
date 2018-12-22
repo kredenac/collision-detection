@@ -3,6 +3,39 @@
 #include <string>
 #include "Cuboid.h"
 
+
+// TODO move into seperate files
+class BasicCollision;
+#include "Mover.h"
+class Controller
+{
+public:
+	static std::vector<Cuboid> cuboids;
+	static BasicCollision* collisionChecker;
+	
+	static void moreElements(int n = 1);
+	static void lessElements(int n = 1);
+
+	static void nextAlgorithm();
+	static void previousAlgorithm();
+
+	static Mover mover;
+
+	static Controller& getInstance()
+	{
+		static Controller instance;
+		return instance;
+	}
+	Controller(Controller const&) = delete;
+	void operator=(Controller const&)  = delete;
+
+private:
+	Controller() 
+	{
+
+	}
+};
+
 class BasicCollision
 {
 public:
