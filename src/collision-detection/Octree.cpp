@@ -3,7 +3,7 @@
 bool Octree::innerNodesHoldChildren;
 
 Octree::Octree(const Vector3 &pos, const Vector3 &size, int depth) :
-	Box(pos, size), depth(depth), whichOctants(c_octants)
+	c_maxDepth(10), c_maxElem(4), Box(pos, size), depth(depth), whichOctants(c_octants)
 {
 	whichOctants.resize(c_octants);
 	for (unsigned i = 0; i < c_octants; i++) {
@@ -100,7 +100,7 @@ void Octree::insert(Cuboid *c, bool markColl)
 void Octree::findIntersectionDownward(Cuboid *c)
 {
 	if (innerNodesHoldChildren == false) {
-		std::runtime_error("only use this method when inner nodes hold children");
+		throw std::runtime_error("only use this method when inner nodes hold children");
 	}
 	for (auto e : innerElements) {
 		if (e->isCollidingWith(*c)) {
@@ -152,7 +152,7 @@ void Octree::insertDownward(Cuboid *c)
 	}
 
 	if (atleastOneOctant == false) {
-		std::runtime_error("element doesn't belong to any octant");
+		throw std::runtime_error("element doesn't belong to any octant");
 	}
 }
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "BasicCollision.h"
+#include <stdexcept>
 
 class Octree : public BasicCollision, public Box
 {
@@ -39,9 +40,9 @@ private:
 	// returns true if there are collisions with multiple octants
 	// puts true in whichOctants[i] when c intersects with i-th octant
 	bool getIntersectingOctants(const Cuboid &c);
-	const unsigned c_maxElem = 4;
-	const unsigned c_octants = 8;
-	const int c_maxDepth = 10;
+	const unsigned c_maxElem;
+	const int c_maxDepth;
+	static const unsigned c_octants = 8;
 
 	std::vector<Cuboid*> elements;
 	std::vector<Cuboid*> innerElements;

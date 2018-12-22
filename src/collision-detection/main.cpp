@@ -16,7 +16,6 @@
 #include "Mover.h"
 #include <vector>
 #include <string>
-#include <typeinfo>
 
 int dt;
 static int oldDisplayTime;
@@ -27,6 +26,7 @@ static float fps(int print);
 void drawAllText(float fpsCount);
 void updateCollisions();
 void drawCollisions();
+void initCollision();
 
 std::vector<Cuboid> cuboids;
 std::string outputText;
@@ -34,10 +34,9 @@ std::string outputText;
 Mover MOVER = Mover(0,0,0,0,0,0);
 BasicCollision *collisionChecker = nullptr;
 
-int main(int argc, char** argv)
+void initCollision()
 {
-	srand((unsigned)time(NULL));
-	//test begin
+    srand((unsigned)time(NULL));
 	printf("hi\n");
 
 	const float cuboidSize = 0.02f;
@@ -49,13 +48,17 @@ int main(int argc, char** argv)
 	min = min + cuboidSize;
 	max = max + (-cuboidSize);
 
-	for (unsigned i = 0; i < 10000; i++) {
+	for (unsigned i = 0; i < 1000; i++) {
 		cuboids.push_back(Cuboid(Vector3::randVec(min, max), cuboidSize));
 	}
 
 	Octree::innerNodesHoldChildren = false;
 	printf("carry on\n");
-	//test end
+}
+
+int main(int argc, char** argv)
+{
+    initCollision();
     glutInit(&argc,argv);
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
 
@@ -111,7 +114,7 @@ void updateCollisions()
 		delete collisionChecker; 
 	}
 	collisionChecker = new Octree(bounds.pos, bounds.size); 
-	//collisionChecker = new BasicCollision();
+	// collisionChecker = new BasicCollision();
 	collisionChecker->markCollisions(cuboids);
 }
 
