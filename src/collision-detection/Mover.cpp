@@ -1,16 +1,16 @@
 #include "Mover.h"
 
-Mover::Mover(float left, float right, float up, float down, float front, float back)
-	: left(left), right(right), up(up), down(down), front(front), back(back)
-{
-}
-
-Mover::Mover(Vector3 &min, Vector3 &max)
-	: left(min.x), right(max.x), up(max.y), down(min.y), front(max.z), back(min.z)
+Mover::Mover(float left, float right, float up, float down, float front, float back, float speedScale)
+	: left(left), right(right), up(up), down(down), front(front), back(back), speedScale(speedScale)
 {
 	if (front < back) {
 		throw std::runtime_error("front < back");
 	}
+}
+
+Mover::Mover(Vector3 &min, Vector3 &max, float speedScale)
+	: Mover(min.x, max.x, max.y, min.y, max.z, min.z, speedScale)
+{
 }
 
 Mover::~Mover()
@@ -35,7 +35,7 @@ Cuboid Mover::getBounds() const
 void Mover::moveItems(std::vector<Cuboid> &items, float delta) const
 {
 	for (auto& c : items) {
-		c.pos = c.pos + c.vel * delta;
+		c.pos = c.pos + c.vel * delta * speedScale;
 		reflectVelocity(c);
 	}
 }

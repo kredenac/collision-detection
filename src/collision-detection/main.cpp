@@ -40,11 +40,11 @@ int main(int argc, char** argv)
 	//test begin
 	printf("hi\n");
 
-	const float cuboidSize = 0.2f;
+	const float cuboidSize = 0.02f;
 	Vector3 min = Vector3(-2.f, -0.99f, -2.f);
 	Vector3 max = Vector3(2, 2, 2);
 
-	MOVER = Mover(min, max);
+	MOVER = Mover(min, max, 0.3);
 
 	min = min + cuboidSize;
 	max = max + (-cuboidSize);
@@ -110,6 +110,7 @@ void updateCollisions()
 	if (collisionChecker != nullptr) { 
 		delete collisionChecker; 
 	}
+	int x = true;
 	collisionChecker = new Octree(bounds.pos, bounds.size, false); 
 	//collisionChecker = new BasicCollision();
 	collisionChecker->markCollisions(cuboids);
@@ -122,24 +123,24 @@ void drawAllText(float fpsCount)
 	char fPointer[55] = "fps: ";
 	sprintf(fPointer, "%f", fpsCount);
 
-	drawTextAt(100, 0, fPointer);
+	drawTextAt(100, 5, fPointer);
 
-	if (collisionChecker != nullptr /*&& typeid(Octree) == typeid(collisionChecker)*/) {
+	if (dynamic_cast<Octree*>(collisionChecker) != nullptr) {
 		int count = ((Octree*)collisionChecker)->countStoredElements();
 		std::string holdsChildren = Octree::innerNodesHoldChildren ? "without duplicates" : "with duplicates";
 		outputText = holdsChildren + " " + std::to_string(count);
-		drawTextAt(300, 0, outputText.c_str());
+		int count2 = ((Octree*)collisionChecker)->countElementsInInnerNodes();
+		outputText += Octree::innerNodesHoldChildren ? " innerElements = " + std::to_string(count2) : "";
+		drawTextAt(300, 5, outputText.c_str());
 	}
 	
 	glEnable(GL_LIGHTING);
 }
-
 void drawCollisions()
 {
-	for (auto cub : cuboids) {
+	for (auto& cub : cuboids) {
 		drawCuboid(cub);
 	}
-
 	auto bounds = MOVER.getBounds();
 	drawCuboid(bounds, 0.1f);
 	//if (collisionChecker != nullptr) {

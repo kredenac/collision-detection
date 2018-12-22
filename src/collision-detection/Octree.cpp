@@ -128,10 +128,20 @@ void Octree::insertDownward(Cuboid *c)
 {
 	bool atleastOneOctant = false;
 	bool multipleOctants = getIntersectingOctants(*c);
-	if (multipleOctants && innerNodesHoldChildren) {
-		findIntersectionDownward(c);
-		innerElements.push_back(c);
-		return;
+	if (innerNodesHoldChildren) {
+		// TODO: this is now done twice - second time
+		// in findIntersectionDownward
+		for (auto e : innerElements) {
+			if (e->isCollidingWith(*c)) {
+				e->setColliding(true);
+				c->setColliding(true);
+			}
+		}
+		if (multipleOctants) {
+			findIntersectionDownward(c);
+			innerElements.push_back(c);
+			return;
+		}
 	}
 
 	for (int i = 0; i < c_octants; i++) {
@@ -153,6 +163,17 @@ int Octree::countStoredElements() const
 	if (!isLeaf()) {
 		for (int i = 0; i < c_octants; i++) {
 			sum += octants[i]->countStoredElements();
+		}
+	}
+	return sum;
+}
+
+int Octree::countElementsInInnerNodes() const
+{
+	int sum = innerElements.size();
+	if (!isLeaf()) {
+		for (int i = 0; i < c_octants; i++) {
+			sum += octants[i]->countElementsInInnerNodes();
 		}
 	}
 	return sum;

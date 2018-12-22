@@ -14,6 +14,8 @@ public:
 
 	// counts number of all elements in the tree
 	int countStoredElements() const;
+
+	int countElementsInInnerNodes() const;
 	static bool innerNodesHoldChildren;
 private:
 	// it's a member so it doesn't always get instantiated
