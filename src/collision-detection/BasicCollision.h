@@ -7,7 +7,7 @@ class BasicCollision
 public:
 	BasicCollision();
 	virtual ~BasicCollision();
-
+	virtual std::string getInfo() const;
 	virtual void markCollisions(std::vector<Cuboid>& items);
 	virtual void drawSelf(void (*draw)(const Box &c, float r, float g, float b, float a)) const;
 private:

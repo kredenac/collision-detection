@@ -2,47 +2,47 @@
 
 const Object playerInit = {
     //.posx = 
-	0,
+	0.f,
     //.posy = 
-	0,
+	0.f,
     //.posz = 
-	4,
+	4.f,
     //.vx = 
-	{0, 0},
+	{0.f, 0.f},
     //.vy = 
-	{0, 0},
+	{0.f, 0.f},
     //.vz = 
-	{0, 0},
+	{0.f, 0.f},
     //.length = 
-	0.4,
+	0.4f,
     //.height = 
-	1.4,
+	1.4f,
     //.width = 
-	0.4,
+	0.4f,
     //.color = 
-	{0, 0, 0}
+	{0.f, 0.f, 0.f}
 };
 const Object bulletInit = {
     //.posx =
-	0,
+	0.f,
     //.posy =
-	0,
+	0.f,
     //.posz =
-	0,
+	0.f,
     //.vx = 
-	{0, 0},
+	{0.f, 0.f},
     //.vy = 
-	{0, 0},
+	{0.f, 0.f},
     //.vz = 
-	{0, 0},
+	{0.f, 0.f},
     //.length = 
-	0.2,
+	0.2f,
     //.height = 
-	0.2,
+	0.2f,
     //.width = 
-	0.2,
+	0.2f,
     //.color = 
-	{1, 1, 1}
+	{1.f, 1.f, 1.f}
 };
 State state;
 const State stateInit = {
@@ -67,15 +67,15 @@ const State stateInit = {
 Object player;
 extern int dt;
 
-float GRAVITY = -1;
+float GRAVITY = -1.f;
 float rotWorld;
 Val2f viewAzimuth;
 Val2f viewElevation;
 float eyex, eyey, eyez;
 float lookAtx, lookAty, lookAtz;
 float upx, upy, upz;
-float playerHeadHeight = 0.25;
-float JUMP_V = 0.1;
+float playerHeadHeight = 0.25f;
+float JUMP_V = 0.1f;
 
 static float* moveRightCam(void);
 static float* moveForwardCam(int yZero);
@@ -88,7 +88,7 @@ void movePlayer()
     /*ako je neko dugme pritisnuto azuriraj brzine*/
     onKeyHold();
     /*jedino ako je igrac u vazduhu ima razloga da ga teram dole*/
-    GRAVITY = (state.jumping && !state.flying) ? -1 : 0;
+    GRAVITY = (state.jumping && !state.flying) ? -1.f : 0.f;
     /*vektori napred i desno relativno od kamere*/
     float* r = moveRightCam();
     float* f = moveForwardCam(1);
@@ -246,7 +246,7 @@ int firstFreeLight(void)
     int i;
     /*ne mogu biti mladji od trenutnog vremena*/
     int oldest = glutGet(GLUT_ELAPSED_TIME) + 1;
-    int oldestIndex;
+    int oldestIndex = 0;
     for (i = 0; i < MAX_LIGHTS; i++) {
         if (lightOn[i] == 0) {
             return i;
@@ -265,12 +265,12 @@ int firstFreeLight(void)
 void jump(void)
 {
     if (!state.jumping) {
-        player.vy.goal = JUMP_V + state.bigJump * 0.1;
+        player.vy.goal = JUMP_V + state.bigJump * 0.1f;
         state.bigJump = 0;
         state.jumping = 1;
     }else if(state.buildMode) {
         state.flying=1;
-        player.vy.goal = JUMP_V + state.bigJump * 0.1;
+        player.vy.goal = JUMP_V + state.bigJump * 0.1f;
     }
 }
 
@@ -278,7 +278,7 @@ void jump(void)
 void flyDown(void)
 {
     if (state.buildMode && state.flying) {
-        player.vy.goal = -(JUMP_V + state.bigJump * 0.1);
+        player.vy.goal = -(JUMP_V + state.bigJump * 0.1f);
     }
 }
 
@@ -304,7 +304,7 @@ void toggleBuildMode(void)
 }
 
 /*reakcija igraca kada hoda po blokovima u zavisnosti od njihove boje*/
-static const float eps = 0.001;
+static const float eps = 0.001f;
 void playerOnBlockReact(Object* p)
 {
     player.posy = p->posy + p->height / 2 + player.height / 2 - eps;

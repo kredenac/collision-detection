@@ -6,7 +6,7 @@ Octree::Octree(const Vector3 &pos, const Vector3 &size, int depth) :
 	Box(pos, size), depth(depth), whichOctants(c_octants)
 {
 	whichOctants.resize(c_octants);
-	for (int i = 0; i < c_octants; i++) {
+	for (unsigned i = 0; i < c_octants; i++) {
 		octants[i] = nullptr;
 	}
 }
@@ -16,7 +16,7 @@ Octree::~Octree()
 	if (isLeaf()) {
 		return;
 	}
-	for (int i = 0; i < c_octants; i++) {
+	for (unsigned i = 0; i < c_octants; i++) {
 		delete octants[i];
 	}
 }
@@ -25,7 +25,7 @@ bool Octree::getIntersectingOctants(const Cuboid &c)
 {
 	bool moreThanOneOctant = false;
 	bool foundOctant = false;
-	for (int i = 0; i < c_octants; i++) {
+	for (unsigned i = 0; i < c_octants; i++) {
 		whichOctants[i] = octants[i]->isCollidingWith(c);
 		if (whichOctants[i]) {
 			moreThanOneOctant = foundOctant;
@@ -38,7 +38,7 @@ bool Octree::getIntersectingOctants(const Cuboid &c)
 void Octree::markCollisions(std::vector<Cuboid>& items) 
 {
 	for (Cuboid &c : items) {
-		insert(&c, 0, true);
+		insert(&c, true);
 	}
 }
 
@@ -65,7 +65,7 @@ void Octree::subdivide()
 	octants[7] = new Octree(newPos, newSize, newDepth); // bigger x, y,z
 }
 
-void Octree::insert(Cuboid *c, int testing_depth, bool markColl)
+void Octree::insert(Cuboid *c, bool markColl)
 {
 	if (!isLeaf()) {
 		insertDownward(c);
@@ -91,7 +91,7 @@ void Octree::insert(Cuboid *c, int testing_depth, bool markColl)
 
 	// then insert elements into octants
 	// iterating over index, vector may get realloced
-	for (int i = 0; i < elements.size(); i++) {
+	for (size_t i = 0; i < elements.size(); i++) {
 		insertDownward(elements[i]);
 	}
 	elements.clear();
@@ -117,7 +117,7 @@ void Octree::findIntersectionDownward(Cuboid *c)
 		}
 		return;
 	}
-	for (int i = 0; i < c_octants; i++) {
+	for (unsigned i = 0; i < c_octants; i++) {
 		if (whichOctants[i]) {
 			octants[i]->findIntersectionDownward(c);
 		}
@@ -144,9 +144,9 @@ void Octree::insertDownward(Cuboid *c)
 		}
 	}
 
-	for (int i = 0; i < c_octants; i++) {
+	for (unsigned i = 0; i < c_octants; i++) {
 		if (whichOctants[i]) {
-			octants[i]->insert(c, depth + 1, true);
+			octants[i]->insert(c, true);
 			atleastOneOctant = true;
 		}
 	}
@@ -161,7 +161,7 @@ int Octree::countStoredElements() const
 	int sum = elements.size();
 	sum += innerElements.size();
 	if (!isLeaf()) {
-		for (int i = 0; i < c_octants; i++) {
+		for (unsigned i = 0; i < c_octants; i++) {
 			sum += octants[i]->countStoredElements();
 		}
 	}
@@ -172,7 +172,7 @@ int Octree::countElementsInInnerNodes() const
 {
 	int sum = innerElements.size();
 	if (!isLeaf()) {
-		for (int i = 0; i < c_octants; i++) {
+		for (unsigned i = 0; i < c_octants; i++) {
 			sum += octants[i]->countElementsInInnerNodes();
 		}
 	}
@@ -186,9 +186,9 @@ bool Octree::isLeaf() const
 
 void Octree::drawSelf(void(*draw)(const Box &c, float r, float g, float b, float a)) const 
 {
-	(*draw)(*this, 0, 0, 1, 0.1);
+	(*draw)(*this, 0.f, 0.f, 1.f, 0.1f);
 	if (!isLeaf()) {
-		for (int i = 0; i < c_octants; i++) {
+		for (unsigned i = 0; i < c_octants; i++) {
 			octants[i]->drawSelf(draw);
 		}
 	}

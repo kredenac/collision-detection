@@ -34,3 +34,8 @@ void BasicCollision::drawSelf(void(*draw)(const Box &c, float r, float g, float 
 {
 	(void)draw;
 }
+
+std::string BasicCollision::getInfo() const
+{
+	return "Basic Collision";
+}

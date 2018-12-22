@@ -1,4 +1,7 @@
 #include "keyboard.h"
+#pragma warning(push)
+#pragma warning(disable: 4305)
+#pragma warning(disable: 4244)
 
 #define ESC 27
 static int KEY_W = 0;
@@ -8,13 +11,14 @@ static int KEY_D = 0;
 static int KEY_Q = 0;
 static int KEY_SPACE = 0;
 static int fullScreen = 0;
-float initWindowHeight = 800;
+int initWindowHeight = 800;
 static float viewAzimuthdt = 5, viewElevationdt = 3;
 static float mouseSensitivity=0.01;
 float aspectRatio = 16 / 9.0;
 
 void onMouseButton(int button, int pressed, int x, int y)
 {
+	(void)x; (void)y;
     if (button == GLUT_LEFT_BUTTON) {
 
         if (pressed == GLUT_DOWN) {
@@ -103,14 +107,12 @@ void onKeyHold()
 /*ne treba mi vise al nek stoji za ukras*/
 void onSpecialInputUp(int key, int x, int y)
 {
-    switch (key) {
-        default:
-            break;
-    }
+	(void)key; (void)x; (void)y;
 }
 
 void onSpecialInput(int key, int x, int y)
 {
+	(void)x; (void)y;
     switch (key) {
         case (GLUT_KEY_F1):
             saveMap();
@@ -146,6 +148,7 @@ void onSpecialInput(int key, int x, int y)
 
 void onKeyboardUp(unsigned char key, int x, int y)
 {
+	(void)x; (void)y;
     switch (key) {
         case ('h'):
             countList(Blocks);
@@ -183,6 +186,7 @@ void onKeyboardUp(unsigned char key, int x, int y)
 
 void onKeyboard(unsigned char key, int x, int y)
 {
+	(void)x; (void)y;
     switch (key) {
         case ('f'):
         case ('F'):
@@ -266,3 +270,4 @@ void onReshape(int width, int height)
     glLoadIdentity();
     gluPerspective(60.0, (float) width / height, 0.1, 1000.0);
 }
+#pragma warning(pop)

@@ -31,10 +31,10 @@ void lightSetup()
 /*inicijalna svojstva svetlosti*/
 void initLights()
 {
-    float lightAmbient[] = {0.3, 0.3, 0.3, 1};
-    float lightDiffuse[] = {0.7, 0.7, 0.7, 1};
-    float lightSpecular[] = {0.2, 0.2, 0.2, 0.0};
-    float lightDirection[] = {0, 0, 0};
+    float lightAmbient[] = {0.3f, 0.3f, 0.3f, 1.f};
+    float lightDiffuse[] = {0.7f, 0.7f, 0.7f, 1.f};
+    float lightSpecular[] = {0.2f, 0.2f, 0.2f, 0.0f};
+    float lightDirection[] = {0.f, 0.f, 0.f};
     int i;
     for (i = 0; i < MAX_LIGHTS; i++) {
         lightOn[i]=0;
@@ -43,24 +43,24 @@ void initLights()
         glLightfv(lights[i], GL_DIFFUSE, lightDiffuse);
         glLightfv(lights[i], GL_SPECULAR, lightSpecular);
         /*opadanje intenziteta svetlosti u zavisnosti od razdaljine*/
-        glLightf(lights[i], GL_CONSTANT_ATTENUATION, 0);
-        glLightf(lights[i], GL_LINEAR_ATTENUATION, 0.3);
-        glLightf(lights[i], GL_QUADRATIC_ATTENUATION, 0.01);
-        glLightf(lights[i], GL_SPOT_CUTOFF, 180.0);
+        glLightf(lights[i], GL_CONSTANT_ATTENUATION, 0.f);
+        glLightf(lights[i], GL_LINEAR_ATTENUATION, 0.3f);
+        glLightf(lights[i], GL_QUADRATIC_ATTENUATION, 0.01f);
+        glLightf(lights[i], GL_SPOT_CUTOFF, 180.0f);
     }
 	// global light
-	float globalAmbient[] = { 0.3, 0.3, 0.3, 1 };
-	float globalDiffuse[] = { 0.7, 0.7, 0.7, 1 };
-	float globalSpecular[] = { 0.2, 0.2, 0.2, 0.0 };
-	float globalDirection[] = { 0, 0, 0 };
+	float globalAmbient[] = { 0.3f, 0.3f, 0.3f, 1.f };
+	float globalDiffuse[] = { 0.7f, 0.7f, 0.7f, 1.f };
+	float globalSpecular[] = { 0.2f, 0.2f, 0.2f, 0.0f };
+	float globalDirection[] = { 0.f, 0.f, 0.f };
 	glLightfv(GL_LIGHT7, GL_SPOT_DIRECTION, globalDirection);
 	glLightfv(GL_LIGHT7, GL_AMBIENT, globalAmbient);
 	glLightfv(GL_LIGHT7, GL_DIFFUSE, globalDiffuse);
 	glLightfv(GL_LIGHT7, GL_SPECULAR, globalSpecular);
-	glLightf(GL_LIGHT7, GL_CONSTANT_ATTENUATION, 0);
-	glLightf(GL_LIGHT7, GL_LINEAR_ATTENUATION, 0.3);
-	glLightf(GL_LIGHT7, GL_QUADRATIC_ATTENUATION, 0.01);
-	glLightf(GL_LIGHT7, GL_SPOT_CUTOFF, 360.0);
+	glLightf(GL_LIGHT7, GL_CONSTANT_ATTENUATION, 0.f);
+	glLightf(GL_LIGHT7, GL_LINEAR_ATTENUATION, 0.3f);
+	glLightf(GL_LIGHT7, GL_QUADRATIC_ATTENUATION, 0.01f);
+	glLightf(GL_LIGHT7, GL_SPOT_CUTOFF, 360.0f);
 }
 
 /*postavlja poziciju n-tog GL_LIGHT*/
@@ -75,10 +75,10 @@ void setLightPos(int n, float x, float y, float z)
 /*inicijalna svojstva materijala*/
 void initMaterial()
 {
-    GLfloat ambient_coeffs[] = {0, 0, 0, 1};
-    GLfloat diffuse_coeffs[] = {0.4, 0.4, 0.4, 1};
-    GLfloat specular_coeffs[] = {0, 0, 0, 1};
-    GLfloat shininess = 0;
+    float ambient_coeffs[] = {0.f, 0.f, 0.f, 1.f };
+    float diffuse_coeffs[] = {0.4f, 0.4f, 0.4f, 1.f };
+    float specular_coeffs[] = {0.f, 0.f, 0.f, 1.f };
+    float shininess = 0;
 
     glMaterialfv(GL_FRONT, GL_AMBIENT, ambient_coeffs);
     glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse_coeffs);
@@ -93,8 +93,8 @@ void drawWithColor(Object* o)
 	/*potamnjuje ambinet coeffs*/
 	float s = 1.f;
 	GLfloat ambientCoeffs[] = { o->color[0] * s, o->color[1] * s, o->color[2] * s, 1 };
-	const float emissionCoeffs[] = { 0.5, 0.5, 0.5, 1 };
-	const float emissionCoeffs2[] = { 0, 0, 0, 0 };
+	const float emissionCoeffs[] = { 0.5f, 0.5f, 0.5f, 1.f };
+	const float emissionCoeffs2[] = { 0.f, 0.f, 0.f, 0.f };
 	if (getColor(o) == WHITE) {
 		glMaterialfv(GL_FRONT, GL_EMISSION, emissionCoeffs);
 	}
@@ -105,13 +105,13 @@ void drawWithColor(Object* o)
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuseCoeffs);
 }
 
-void drawWithColor(float r, float g, float b, float a = 1.0)
+void drawWithColor(float r, float g, float b, float a)
 {
 	GLfloat diffuseCoeffs[] = { r, g, b, a};
 	/*potamnjuje ambinet coeffs*/
-	float s = 0.6;
+	float s = 0.6f;
 	GLfloat ambientCoeffs[] = { r * s, g * s, b * s, a };
-	const float emissionCoeffs2[] = { 0, 0, 0, 0 };
+	const float emissionCoeffs2[] = { 0.f, 0.f, 0.f, 0.f };
 	glMaterialfv(GL_FRONT, GL_EMISSION, emissionCoeffs2);
 	glMaterialfv(GL_FRONT, GL_AMBIENT, ambientCoeffs);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuseCoeffs);
@@ -167,18 +167,18 @@ void drawTextAt(float x, float y, const char *string)
 };
 
 /*postavlja kameru na poziciju glave igraca i usmerava pogled*/
-void positionCam(void)
+void positionCam()
 {
     eyex = player.posx;
     eyey = player.posy + playerHeadHeight;
     eyez = player.posz;
 
     /*azuriranje lookat na osnovu levo-desno rotacije. A3*/
-    float cosy = cos(M_PI * viewElevation.curr / 180);
-    lookAtx = cos(M_PI * viewAzimuth.curr / 180) * cosy;
-    lookAtz = sin(M_PI * viewAzimuth.curr / 180) * cosy;
+    float cosy = cosf((float)M_PI * viewElevation.curr / 180);
+    lookAtx = cosf((float)M_PI * viewAzimuth.curr / 180) * cosy;
+    lookAtz = sinf((float)M_PI * viewAzimuth.curr / 180) * cosy;
     /*azuriranje lookat na osnovu gore-dole rotacije*/
-    lookAty = sin(M_PI * viewElevation.curr / 180);
+    lookAty = sinf((float)M_PI * viewElevation.curr / 180);
     /*usmerava se pogled relativno od pozicije kamere*/
     lookAtx = eyex + lookAtx;
     lookAtz = eyez + lookAtz;
@@ -220,8 +220,8 @@ void psychedelic(int interval)
     };
     /*ipak, nece biti cist gradijent nego odstupanja.
     nice je deo boje od gradijenta, a displace deo od rand odstupanja*/
-    float nice = 0.8;
-    float displace = 1 - nice;
+    float nice = 0.8f;
+    float displace = 1.f - nice;
     float r, g, b;
     /*s je deo start boje, a e je deo end boje*/
     ObjectNode* l;
@@ -243,7 +243,7 @@ void psychedelic(int interval)
 }
 
 /*iscrtava sve aktivne metke*/
-void drawBullets(void) {
+void drawBullets() {
     float x, y, z;
     int i;
     for (i = 0; i < MAX_BULLETS; i++) {

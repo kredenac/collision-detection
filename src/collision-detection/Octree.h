@@ -17,6 +17,7 @@ public:
 
 	int countElementsInInnerNodes() const;
 	static bool innerNodesHoldChildren;
+
 private:
 	// it's a member so it doesn't always get instantiated
 	std::vector<bool> whichOctants;
@@ -26,7 +27,7 @@ private:
 	void insertDownward(Cuboid *c);
 
 	// inserts into node or lower
-	void insert(Cuboid *c, int d, bool markColl);
+	void insert(Cuboid *c, bool markColl);
 
 	// splits itself in octants[]
 	void subdivide();

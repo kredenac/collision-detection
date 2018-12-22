@@ -14,5 +14,5 @@ extern void onMouseButton(int button, int state, int x, int y);
 extern void onMousePressedLook(int x, int y);
 extern void onKeyHold(void);
 extern float aspectRatio;
-extern float initWindowHeight;
+extern int initWindowHeight;
 #endif

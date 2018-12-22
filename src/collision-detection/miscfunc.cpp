@@ -1,4 +1,8 @@
 #include "miscfunc.h"
+#pragma warning(push)
+#pragma warning(disable: 4305)
+#pragma warning(disable: 4244)
+
 int showFps = 0;
 
 static int isequal(float a, float b);
@@ -112,15 +116,15 @@ void saveMap()
         exit(EXIT_FAILURE);
     }
     ObjectNode* l;
-    float sizex=0, sizey=0, sizez=0;
+    float currSizex=0, currSizey=0, currSizez=0;
     int i;
     for (l=Blocks, i=0; l != NULL; l = l->next, i++){
         Object block=*(l->o);
-        if (sizex != block.length || sizey != block.height || sizez != block.width){
-            sizex = block.length;
-            sizey = block.height;
-            sizez = block.width;
-            fprintf(f, "s %.2f %.2f %.2f\n", sizex, sizey, sizez);
+        if (currSizex != block.length || currSizey != block.height || currSizez != block.width){
+            currSizex = block.length;
+            currSizey = block.height;
+            currSizez = block.width;
+            fprintf(f, "s %.2f %.2f %.2f\n", currSizex, currSizey, currSizez);
         }
         fprintf(f, "c %.3f %.3f %.3f\n", block.posx / scale, block.posy / scale,
          block.posz / scale);
@@ -171,19 +175,19 @@ void loadMap(int defaultMap)
     char line[MAX_LINE];
     int count, i=0;
     float x, y, z;
-    float sizex, sizey, sizez;
+    float currSizex, currSizey, currSizez;
     /*citaju se linije .map fajla*/
     while (!feof(f)) {
         fgets(line, MAX_LINE, f);
         i++;
         /*ako je prvi char linije s tad se postavljaju dimenzije blokova*/
         if (line[0] == 's') {
-            count = sscanf(&line[1], "%f %f %f", &sizex, &sizey, &sizez);
+            count = sscanf(&line[1], "%f %f %f", &currSizex, &currSizey, &currSizez);
             if (count != 3) {
                 printf("los .map fajl\n");
                 exit(EXIT_FAILURE);
             }
-            setSizes(sizex, sizey, sizez);
+            setSizes(currSizex, currSizey, currSizez);
         /*kad je prvi char c to su koordinate blokova*/
         } else if (line[0] == 'c') {
             count = sscanf(&line[1], "%f %f %f", &x, &y, &z);
@@ -221,3 +225,4 @@ void resetGame(void)
     for (i = 0; i < MAX_LIGHTS; i++)
         lightOn[i] = 0;
 }
+#pragma warning(pop)

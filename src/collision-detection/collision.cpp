@@ -118,7 +118,7 @@ Side aRelativeTob(Object* ap, Object* bp)
 
 /*eps sluzi kao mala velicina za koju odaljim igraca od blokova
 da ne bi bila kolizija */
-static const float eps = 0.0001;
+static const float eps = 0.0001f;
 void playerCollision(void)
 {
     /*postavlja se jumping na 1, pa ako stoji na necemu bice 0*/

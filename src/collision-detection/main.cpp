@@ -36,7 +36,7 @@ BasicCollision *collisionChecker = nullptr;
 
 int main(int argc, char** argv)
 {
-	srand(time(NULL));
+	srand((unsigned)time(NULL));
 	//test begin
 	printf("hi\n");
 
@@ -44,7 +44,7 @@ int main(int argc, char** argv)
 	Vector3 min = Vector3(-2.f, -0.99f, -2.f);
 	Vector3 max = Vector3(2, 2, 2);
 
-	MOVER = Mover(min, max, 0.3);
+	MOVER = Mover(min, max, 0.3f);
 
 	min = min + cuboidSize;
 	max = max + (-cuboidSize);
@@ -53,13 +53,13 @@ int main(int argc, char** argv)
 		cuboids.push_back(Cuboid(Vector3::randVec(min, max), cuboidSize));
 	}
 
-	Octree::innerNodesHoldChildren = true;
+	Octree::innerNodesHoldChildren = false;
 	printf("carry on\n");
 	//test end
     glutInit(&argc,argv);
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
 
-    glutInitWindowSize(aspectRatio * initWindowHeight, initWindowHeight);
+    glutInitWindowSize((int)(aspectRatio * initWindowHeight), initWindowHeight);
     glutInitWindowPosition(0, 0);
     glutCreateWindow("Collision detection");
     glutDisplayFunc(onDisplay);
@@ -110,8 +110,7 @@ void updateCollisions()
 	if (collisionChecker != nullptr) { 
 		delete collisionChecker; 
 	}
-	int x = true;
-	collisionChecker = new Octree(bounds.pos, bounds.size, false); 
+	collisionChecker = new Octree(bounds.pos, bounds.size); 
 	//collisionChecker = new BasicCollision();
 	collisionChecker->markCollisions(cuboids);
 }
@@ -136,6 +135,7 @@ void drawAllText(float fpsCount)
 	
 	glEnable(GL_LIGHTING);
 }
+
 void drawCollisions()
 {
 	for (auto& cub : cuboids) {
