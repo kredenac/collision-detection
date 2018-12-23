@@ -54,25 +54,28 @@ void Octree::markCollisions(std::vector<Cuboid>& items)
 
 void Octree::subdivide()
 {
+	// octants are inflated just a tiny bit to prevent floating point rounding errors
+	// alternative would be on each comparison to compensate for it, but this way is much faster
+	const float extendFactor = 1.001f;
 	Vector3 newSize = size * 0.5f;
 	Vector3 lowPos(pos.x - newSize.x/2, pos.y - newSize.y/2, pos.z - newSize.z/2);
 	int newDepth = depth + 1;
-	octants[0] = new Octree(lowPos, newSize, newDepth); //smallest x,y,z
+	octants[0] = new Octree(lowPos, newSize*extendFactor, newDepth); //smallest x,y,z
 	Vector3 newPos = lowPos; newPos.z += newSize.z;
-	octants[1] = new Octree(newPos, newSize, newDepth); // bigger z
+	octants[1] = new Octree(newPos, newSize*extendFactor, newDepth); // bigger z
 	newPos = lowPos; newPos.z += newSize.z; newPos.y += newSize.y;
-	octants[2] = new Octree(newPos, newSize, newDepth); // bigger z y
+	octants[2] = new Octree(newPos, newSize*extendFactor, newDepth); // bigger z y
 	newPos = lowPos; newPos.y += newSize.y;
-	octants[3] = new Octree(newPos, newSize, newDepth); // bigger y
+	octants[3] = new Octree(newPos, newSize*extendFactor, newDepth); // bigger y
 	lowPos.x += newSize.x;
 	newPos = lowPos;
-	octants[4] = new Octree(newPos, newSize, newDepth); // bigger x
+	octants[4] = new Octree(newPos, newSize*extendFactor, newDepth); // bigger x
 	newPos.z += newSize.z;
-	octants[5] = new Octree(newPos, newSize, newDepth); // bigger x, z
+	octants[5] = new Octree(newPos, newSize*extendFactor, newDepth); // bigger x, z
 	newPos = lowPos; newPos.y += newSize.y;
-	octants[6] = new Octree(newPos, newSize, newDepth); // bigger x, y
+	octants[6] = new Octree(newPos, newSize*extendFactor, newDepth); // bigger x, y
 	newPos.z += newSize.z;
-	octants[7] = new Octree(newPos, newSize, newDepth); // bigger x, y,z
+	octants[7] = new Octree(newPos, newSize*extendFactor, newDepth); // bigger x, y,z
 }
 
 void Octree::insert(Cuboid *c, bool markColl)

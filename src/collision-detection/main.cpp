@@ -48,7 +48,7 @@ void initCollision()
 	min = min + cuboidSize;
 	max = max + (-cuboidSize);
 
-	for (unsigned i = 0; i < 1000; i++) {
+	for (unsigned i = 0; i < 10000; i++) {
 		cuboids.push_back(Cuboid(Vector3::randVec(min, max), cuboidSize));
 	}
 
@@ -114,7 +114,7 @@ void updateCollisions()
 		delete collisionChecker; 
 	}
 	collisionChecker = new Octree(bounds.pos, bounds.size); 
-	// collisionChecker = new BasicCollision();
+	 //collisionChecker = new BasicCollision();
 	collisionChecker->markCollisions(cuboids);
 }
 

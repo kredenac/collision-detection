@@ -142,6 +142,7 @@
     <ClCompile Include="BasicCollision.cpp" />
     <ClCompile Include="blocks.cpp" />
     <ClCompile Include="collision.cpp" />
+    <ClCompile Include="Controller.cpp" />
     <ClCompile Include="Cuboid.cpp" />
     <ClCompile Include="draw.cpp" />
     <ClCompile Include="keyboard.cpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="BasicCollision.h" />
     <ClInclude Include="blocks.h" />
     <ClInclude Include="collision.h" />
+    <ClInclude Include="Controller.h" />
     <ClInclude Include="Cuboid.h" />
     <ClInclude Include="draw.h" />
     <ClInclude Include="keyboard.h" />
