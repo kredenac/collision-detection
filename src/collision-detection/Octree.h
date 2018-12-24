@@ -44,7 +44,9 @@ private:
 	bool getIntersectingOctants(const Cuboid &c);
 	const unsigned c_maxElem;
 	const int c_maxDepth;
+	const float c_extendFactor;
 	static const unsigned c_octants = 8;
+
 
 	std::vector<Cuboid*> elements;
 	std::vector<Cuboid*> innerElements;

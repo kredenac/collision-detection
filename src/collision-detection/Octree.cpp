@@ -3,7 +3,7 @@
 bool Octree::innerNodesHoldChildren;
 
 Octree::Octree(const Vector3 &pos, const Vector3 &size, int depth) :
-	c_maxDepth(10), c_maxElem(4), Box(pos, size), depth(depth), whichOctants(c_octants)
+	c_maxDepth(10), c_maxElem(4), c_extendFactor(1.001f), Box(pos, size), depth(depth), whichOctants(c_octants)
 {
 	whichOctants.resize(c_octants);
 	for (unsigned i = 0; i < c_octants; i++) {
@@ -56,26 +56,25 @@ void Octree::subdivide()
 {
 	// octants are inflated just a tiny bit to prevent floating point rounding errors
 	// alternative would be on each comparison to compensate for it, but this way is much faster
-	const float extendFactor = 1.001f;
 	Vector3 newSize = size * 0.5f;
-	Vector3 lowPos(pos.x - newSize.x/2, pos.y - newSize.y/2, pos.z - newSize.z/2);
+	Vector3 lowPos(pos.x - newSize.x / 2, pos.y - newSize.y / 2, pos.z - newSize.z / 2);
 	int newDepth = depth + 1;
-	octants[0] = new Octree(lowPos, newSize*extendFactor, newDepth); //smallest x,y,z
+	octants[0] = new Octree(lowPos, newSize*c_extendFactor, newDepth); //smallest x,y,z
 	Vector3 newPos = lowPos; newPos.z += newSize.z;
-	octants[1] = new Octree(newPos, newSize*extendFactor, newDepth); // bigger z
+	octants[1] = new Octree(newPos, newSize*c_extendFactor, newDepth); // bigger z
 	newPos = lowPos; newPos.z += newSize.z; newPos.y += newSize.y;
-	octants[2] = new Octree(newPos, newSize*extendFactor, newDepth); // bigger z y
+	octants[2] = new Octree(newPos, newSize*c_extendFactor, newDepth); // bigger z y
 	newPos = lowPos; newPos.y += newSize.y;
-	octants[3] = new Octree(newPos, newSize*extendFactor, newDepth); // bigger y
+	octants[3] = new Octree(newPos, newSize*c_extendFactor, newDepth); // bigger y
 	lowPos.x += newSize.x;
 	newPos = lowPos;
-	octants[4] = new Octree(newPos, newSize*extendFactor, newDepth); // bigger x
+	octants[4] = new Octree(newPos, newSize*c_extendFactor, newDepth); // bigger x
 	newPos.z += newSize.z;
-	octants[5] = new Octree(newPos, newSize*extendFactor, newDepth); // bigger x, z
+	octants[5] = new Octree(newPos, newSize*c_extendFactor, newDepth); // bigger x, z
 	newPos = lowPos; newPos.y += newSize.y;
-	octants[6] = new Octree(newPos, newSize*extendFactor, newDepth); // bigger x, y
+	octants[6] = new Octree(newPos, newSize*c_extendFactor, newDepth); // bigger x, y
 	newPos.z += newSize.z;
-	octants[7] = new Octree(newPos, newSize*extendFactor, newDepth); // bigger x, y,z
+	octants[7] = new Octree(newPos, newSize*c_extendFactor, newDepth); // bigger x, y,z
 }
 
 void Octree::insert(Cuboid *c, bool markColl)

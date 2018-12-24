@@ -1,5 +1,7 @@
 #include <GL/glut.h>
 #include <stdio.h>
+#include <string>
+#include <vector>
 #include <math.h>
 #include <stdlib.h>
 #include <time.h>
@@ -14,8 +16,7 @@
 #include "BasicCollision.h"
 #include "Octree.h"
 #include "Mover.h"
-#include <vector>
-#include <string>
+#include "Controller.h"
 
 int dt;
 static int oldDisplayTime;
@@ -28,31 +29,13 @@ void updateCollisions();
 void drawCollisions();
 void initCollision();
 
-std::vector<Cuboid> cuboids;
-std::string outputText;
-
-Mover MOVER = Mover(0,0,0,0,0,0);
-BasicCollision *collisionChecker = nullptr;
-
 void initCollision()
 {
     srand((unsigned)time(NULL));
+	// delete above
 	printf("hi\n");
-
-	const float cuboidSize = 0.02f;
-	Vector3 min = Vector3(-2.f, -0.99f, -2.f);
-	Vector3 max = Vector3(2, 2, 2);
-
-	MOVER = Mover(min, max, 0.3f);
-
-	min = min + cuboidSize;
-	max = max + (-cuboidSize);
-
-	for (unsigned i = 0; i < 10000; i++) {
-		cuboids.push_back(Cuboid(Vector3::randVec(min, max), cuboidSize));
-	}
-
-	Octree::innerNodesHoldChildren = false;
+	auto& control = Controller::get();
+	control.moreElements(10000);
 	printf("carry on\n");
 }
 
@@ -102,18 +85,20 @@ int main(int argc, char** argv)
 
 void updateCollisions()
 {
+	auto& control = Controller::get();
+	auto& mover = control.mover;
+	auto& cuboids = control.cuboids;
+
 	for (auto& cub : cuboids) {
 		// unmark collisions
 		cub.setColliding(false);
 	}
 	float delta = dt / (float)UPDATE_INTERVAL;
-	MOVER.moveItems(cuboids, delta);
+	mover.moveItems(cuboids, delta);
 
-	auto bounds = MOVER.getBounds();
-	if (collisionChecker != nullptr) { 
-		delete collisionChecker; 
-	}
-	collisionChecker = new Octree(bounds.pos, bounds.size); 
+	auto bounds = mover.getBounds();
+	control.resetAlgorithm();
+	auto& collisionChecker = control.collisionChecker;
 	 //collisionChecker = new BasicCollision();
 	collisionChecker->markCollisions(cuboids);
 }
@@ -126,20 +111,21 @@ void drawAllText(float fpsCount)
 	sprintf(fPointer, "%f", fpsCount);
 
 	drawTextAt(100, 5, fPointer);
-	if (collisionChecker != nullptr) {
-        outputText = collisionChecker->getInfo();
-		drawTextAt(300, 5, outputText.c_str());
-	}
+	auto& collisionChecker = Controller::get().collisionChecker;
+    std::string outputText = collisionChecker->getInfo();
+	drawTextAt(300, 5, outputText.c_str());
 	
 	glEnable(GL_LIGHTING);
 }
 
 void drawCollisions()
 {
-	for (auto& cub : cuboids) {
+	auto& control = Controller::get();
+	auto& mover = control.mover;
+	for (auto& cub : control.cuboids) {
 		drawCuboid(cub);
 	}
-	auto bounds = MOVER.getBounds();
+	auto bounds = mover.getBounds();
 	drawCuboid(bounds, 0.1f);
 	//if (collisionChecker != nullptr) {
 	//	collisionChecker->drawSelf(drawBox);

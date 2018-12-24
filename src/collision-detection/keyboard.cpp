@@ -1,4 +1,5 @@
 #include "keyboard.h"
+#include "Controller.h"
 #pragma warning(push)
 #pragma warning(disable: 4305)
 #pragma warning(disable: 4244)
@@ -188,6 +189,14 @@ void onKeyboard(unsigned char key, int x, int y)
 {
 	(void)x; (void)y;
     switch (key) {
+		case ('j'):
+		case ('J'):
+			Controller::get().prevAlgorithm();
+			break;
+		case ('k'):
+		case ('K'): 
+			Controller::get().nextAlgorithm();
+			break;
         case ('f'):
         case ('F'):
             firePaint();
