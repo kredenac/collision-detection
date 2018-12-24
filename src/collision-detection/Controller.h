@@ -23,23 +23,21 @@ public:
 	void lessElements(size_t n = 1)
 	{
 		if (n > cuboids.size()) {
-			m_numElements = 0;
 			cuboids.clear();
 			return;
 		}
-		m_numElements -= n; 
 		cuboids.erase(cuboids.end() - n, cuboids.end());
 	}
 
 	void nextAlgorithm()
 	{
-		printf("now %d\n", m_algorithmIndex);
 		m_algorithmIndex = (m_algorithmIndex + 1) % c_numAlgorithms;
 		resetAlgorithm();
 	}
 
 	void resetAlgorithm()
 	{
+		printf("now %d\n", m_algorithmIndex);
 		if (collisionChecker != nullptr) {
 			delete collisionChecker;
 		}
@@ -61,7 +59,6 @@ public:
 
 	void prevAlgorithm()
 	{
-		printf("now %d\n", m_algorithmIndex);
 		m_algorithmIndex = (m_algorithmIndex + c_numAlgorithms - 1) % c_numAlgorithms;
 		resetAlgorithm();
 	}
@@ -80,15 +77,15 @@ public:
 		m_min = minv;
 		m_max = maxv;
 		mover = Mover(m_min, m_max, 0.3f);
-		m_algorithmIndex--;
-		nextAlgorithm();
+		resetAlgorithm();
 	}
 
 	void setCuboidSize(float size)
 	{
 		m_cuboidSize = size;
+		auto oldSize = cuboids.size();
 		cuboids.clear();
-		moreElements(m_numElements);
+		moreElements(oldSize);
 	}
 
 	float cuboidSize()
@@ -101,11 +98,10 @@ private:
 	Vector3 m_min;
 	Vector3 m_max;
 	int m_algorithmIndex;
-	size_t m_numElements;
 	float m_cuboidSize;
 
 	Controller() : m_algorithmIndex(1), m_min(-2.f, -0.99f, -2.f), m_max(2.f, 2.f, 2.f), 
-		m_cuboidSize(0.02f), collisionChecker(nullptr), mover(m_min, m_max, 0.3f), m_numElements(0)
+		m_cuboidSize(0.02f), collisionChecker(nullptr), mover(m_min, m_max, 0.3f)
 	{
 		setMinMax(m_min, m_max);
 	}

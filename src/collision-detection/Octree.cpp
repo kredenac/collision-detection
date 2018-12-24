@@ -198,7 +198,9 @@ bool Octree::isLeaf() const
 
 void Octree::drawSelf(void(*draw)(const Box &c, float r, float g, float b, float a)) const 
 {
-	(*draw)(*this, 0.f, 0.f, 1.f, 0.1f);
+	if (isLeaf() && elements.size() == 2) {
+		(*draw)(*this, 0.f, 0.f, 1.f, 0.1f);
+	}
 	if (!isLeaf()) {
 		for (unsigned i = 0; i < c_octants; i++) {
 			octants[i]->drawSelf(draw);

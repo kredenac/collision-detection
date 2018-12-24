@@ -184,9 +184,8 @@ void firePaint()
 
     state.newGame = 0;
 }
-/*bullets[i].vx.goal koristim kao brojac duzine zivota metaka,
-nakon max_bullet_life nestane.*/
-static const float MAX_BULLET_LIFE = 1000;
+//bullets[i].vs.goal is used as a timed counter for bullet lifespan
+static const float MAX_BULLET_LIFE = 10000;
 void moveBullets(void)
 {
     float d = dt / (float) 17;
@@ -196,7 +195,7 @@ void moveBullets(void)
             bullets[i].posx += bullets[i].vx.curr * d;
             bullets[i].posy += bullets[i].vy.curr * d;
             bullets[i].posz += bullets[i].vz.curr * d;
-            bullets[i].vx.goal++;
+            bullets[i].vx.goal+=dt;
             if (bullets[i].vx.goal > MAX_BULLET_LIFE)
                 bulletsActive[i] = 0;
         }

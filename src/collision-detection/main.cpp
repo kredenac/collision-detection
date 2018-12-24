@@ -35,7 +35,7 @@ void initCollision()
 	// delete above
 	printf("hi\n");
 	auto& control = Controller::get();
-	control.moreElements(10000);
+	control.moreElements(1000);
 	printf("carry on\n");
 }
 
@@ -99,7 +99,6 @@ void updateCollisions()
 	auto bounds = mover.getBounds();
 	control.resetAlgorithm();
 	auto& collisionChecker = control.collisionChecker;
-	 //collisionChecker = new BasicCollision();
 	collisionChecker->markCollisions(cuboids);
 }
 
@@ -127,9 +126,7 @@ void drawCollisions()
 	}
 	auto bounds = mover.getBounds();
 	drawCuboid(bounds, 0.1f);
-	//if (collisionChecker != nullptr) {
-	//	collisionChecker->drawSelf(drawBox);
-	//}
+	//control.collisionChecker->drawSelf(drawBox);
 }
 
 void onDisplay()
