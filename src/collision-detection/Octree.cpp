@@ -1,6 +1,7 @@
 #include "Octree.h"
 
 bool Octree::innerNodesHoldChildren;
+std::vector<std::pair<Cuboid*, Cuboid*>> *Octree::pairs = nullptr;
 
 Octree::Octree(const Vector3 &pos, const Vector3 &size, int depth) :
 	c_maxDepth(10), c_maxElem(4), c_extendFactor(1.001f), Box(pos, size), depth(depth), whichOctants(c_octants)
@@ -45,8 +46,9 @@ bool Octree::getIntersectingOctants(const Cuboid &c)
 	return moreThanOneOctant;
 }
 
-void Octree::markCollisions(std::vector<Cuboid>& items) 
+void Octree::markCollisions(std::vector<Cuboid>& items, std::vector<std::pair<Cuboid*, Cuboid*>> &pairs)
 {
+	this->pairs = &pairs;
 	for (Cuboid &c : items) {
 		insert(&c, true);
 	}
@@ -87,7 +89,8 @@ void Octree::insert(Cuboid *c, bool markColl)
 	if (markColl) {
 		for (auto e : elements) {
 			if (e->isCollidingWith(*c)) {
-				e->response(*c);
+				auto p = std::make_pair(c, e);
+				pairs->push_back(p);
 				e->setColliding(true);
 				c->setColliding(true);
 			}
@@ -117,7 +120,7 @@ void Octree::findIntersectionDownward(Cuboid *c)
 	}
 	for (auto e : innerElements) {
 		if (e->isCollidingWith(*c)) {
-			e->response(*c);
+			pairs->push_back(std::make_pair(c, e));			
 			e->setColliding(true);
 			c->setColliding(true);
 		}
@@ -125,7 +128,7 @@ void Octree::findIntersectionDownward(Cuboid *c)
 	if (isLeaf()) {
 		for (auto e : elements) {
 			if (e->isCollidingWith(*c)) {
-				e->response(*c);
+				pairs->push_back(std::make_pair(c, e));
 				e->setColliding(true);
 				c->setColliding(true);
 			}
@@ -154,7 +157,7 @@ void Octree::insertDownward(Cuboid *c)
 		// i think it's not done twice now.
 		for (auto e : innerElements) {
 			if (e->isCollidingWith(*c)) {
-				e->response(*c);
+				pairs->push_back(std::make_pair(c, e));
 				e->setColliding(true);
 				c->setColliding(true);
 			}

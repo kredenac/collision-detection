@@ -17,7 +17,7 @@ Mover::~Mover()
 {
 }
 
-Cuboid Mover::getBounds() const
+Box Mover::getBounds() const
 {
 	float x = (left + right) / 2;
 	float y = (up + down) / 2;
@@ -28,7 +28,7 @@ Cuboid Mover::getBounds() const
 	float sizez = fabsf(front - back);
 
 	Vector3 pos = Vector3(x, y, z);
-	return Cuboid(pos, Vector3(sizex, sizey, sizez));
+	return Box(pos, Vector3(sizex, sizey, sizez));
 }
 
 
@@ -36,14 +36,20 @@ void Mover::moveItems(std::vector<Cuboid> &items, float delta) const
 {
 	for (auto& c : items) {
 		c.pos = c.pos + c.vel * delta * speedScale;
-		reflectVelocity(c);
+		reflectVelocity(c, delta * speedScale);
 	}
 }
 
-void Mover::reflectVelocity(Cuboid &c) const
+void Mover::reflectVelocity(Cuboid &c, float withSpeed) const
 {
 	float l, r, u, d, f, b;
-	c.getNextLRUDFB(l, r, u, d, f, b);
+	c.getLRUDFB(l, r, u, d, f, b);
+	l += c.vel.x*withSpeed;
+	r += c.vel.x*withSpeed;
+	u += c.vel.y*withSpeed;
+	d += c.vel.y*withSpeed;
+	f += c.vel.z*withSpeed;
+	b += c.vel.z*withSpeed;
 
 	if (l <= left || r >= right) {
 		c.vel.x *= -1;

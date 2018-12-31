@@ -9,6 +9,16 @@ public:
 	std::vector<Cuboid> cuboids;
 	BasicCollision* collisionChecker;
 	Mover mover;
+	bool doResolution;
+
+	void joltTowardsCenter()
+	{
+		auto center = mover.getBounds();
+		for (auto &c : cuboids) {
+			c.vel = center.pos - c.pos;
+			c.vel.normalize();
+		}
+	}
 
 	void moreElements(int n = 1, float cubSize = -1.f)
 	{
@@ -76,7 +86,7 @@ public:
 	{
 		m_min = minv;
 		m_max = maxv;
-		mover = Mover(m_min, m_max, 0.3f);
+		mover = Mover(m_min, m_max, m_speed);
 		resetAlgorithm();
 	}
 
@@ -100,8 +110,12 @@ private:
 	int m_algorithmIndex;
 	float m_cuboidSize;
 
+	// TODO implement reinserting when changing speed
+	float m_speed;
+
 	Controller() : m_algorithmIndex(1), m_min(-2.f, -0.99f, -2.f), m_max(2.f, 2.f, 2.f), 
-		m_cuboidSize(0.02f), collisionChecker(nullptr), mover(m_min, m_max, 0.3f)
+		m_cuboidSize(0.02f), collisionChecker(nullptr), mover(m_min, m_max, 0.3f), 
+		m_speed(0.01f), doResolution(false)
 	{
 		setMinMax(m_min, m_max);
 	}

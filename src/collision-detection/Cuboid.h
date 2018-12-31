@@ -34,17 +34,16 @@ private:
 class Cuboid : public Box
 {
 public:
-	Cuboid(const Vector3& pos, Vector3&& size)
+	Cuboid(const Vector3& pos, Vector3&& size, float speed)
 		: Box(pos, size), vel(Vector3::randVec()), m_hasCollision(false)
 	{
-		vel.setLength(0.01f);
+		vel.setLength(speed);
 	}
 
-	Cuboid(const Vector3& pos, float size) 
-		: Cuboid(pos, Vector3(size, size, size))
+	Cuboid(const Vector3& pos, float size, float speed = 1.f) 
+		: Cuboid(pos, Vector3(size, size, size), speed)
 	{
 		
-		vel.setLength(0.01f);
 	}
 
 	Cuboid(Vector3&& pos, float size)
@@ -57,20 +56,20 @@ public:
 	void response(Cuboid &b)
 	{
 		Cuboid &a = *this;
-
-		const float eps = 1.001;
-		// minimum translation vector
-		auto mtv = a.pos - b.pos; // TODO take into account sizes 
+		auto aVel = calcResolution(a, b);
+		auto bVel = calcResolution(b, a);
+		const float eps = 1.001f;
+		auto centerDist = a.pos - b.pos; 
 		auto addSizes = a.size * 0.5f + b.size * 0.5F;
 
-		mtv = mtv * eps;
-		if (mtv.x > 0) { // a is to the left of b
+		centerDist = centerDist * eps;
+		if (centerDist.x > 0) { // a is to the left of b
 			addSizes.x *= -1.f;
 		}
-		if (mtv.y > 0) {
+		if (centerDist.y > 0) {
 			addSizes.y *= -1.f;
 		}
-		if (mtv.z > 0) {
+		if (centerDist.z > 0) {
 			addSizes.z *= -1.f;
 		}
 
@@ -83,17 +82,21 @@ public:
 			but sizes of two squares - distance
 			is equal to minimal translation vector
 		*/
-		mtv = mtv * (-1.f) + addSizes;
+		// minimum translation vector
+
+		// this is how it should be: auto mtv = centerDist * (-1.f) + addSizes;
+
+		// this is circle-like resolution
+		centerDist.setLength(addSizes.length() - centerDist.length()); 
+		auto mtv = centerDist;
 		a.pos.x += mtv.x / 2;
 		b.pos.x -= mtv.x / 2;
-		
+				   
 		a.pos.y += mtv.y / 2;
 		b.pos.y -= mtv.y / 2;
-		
+				   
 		a.pos.z += mtv.z / 2;
 		b.pos.z -= mtv.z / 2;
-		auto aVel = calcResolution(a, b);
-		auto bVel = calcResolution(b, a);
 
 		a.vel = aVel;
 		b.vel = bVel;
@@ -120,18 +123,6 @@ public:
 		b = pos.z - size.z / 2;
 	}
 
-	// gets bounds of object at position + velocity
-	void getNextLRUDFB(float &l, float &r, float &u, float &d, float &f, float &b) const
-	{
-		getLRUDFB(l, r, u, d, f, b);
-		l += vel.x;
-		r += vel.x;
-		u += vel.y;
-		d += vel.y;
-		f += vel.z;
-		b += vel.z;
-	}
-
 	Vector3 vel;
 
 private:
@@ -146,6 +137,7 @@ private:
 		scalar *= (a.vel - b.vel).dot(posDiff) / (posDiffLen * posDiffLen);
 		return a.vel - (posDiff * scalar);
 	}
+
 	bool m_hasCollision;
 };
 

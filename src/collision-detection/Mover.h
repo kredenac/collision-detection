@@ -17,10 +17,11 @@ public:
 
 	void moveItems(std::vector<Cuboid> &items, float dt) const;
 
-	//bool willBeOutsideBounds(const Cuboid &c) const;
-	void reflectVelocity(Cuboid &c) const;
+	// if cuboid c would exit Mover bounds in next step, with given speed,
+	// then reflect its velocity to prevent it from going out
+	void reflectVelocity(Cuboid &c, float withSpeed) const;
 	
-	Cuboid getBounds() const;
+	Box getBounds() const;
 
 private:
 	float left;

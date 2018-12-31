@@ -35,8 +35,9 @@ void initCollision()
 	// delete above
 	printf("hi\n");
 	auto& control = Controller::get();
-	control.setCuboidSize(.02f);
-	control.moreElements(10000);
+	control.doResolution = true;
+	control.setCuboidSize(.01f);
+	control.moreElements(11111);
 	printf("carry on\n");
 }
 
@@ -100,7 +101,11 @@ void updateCollisions()
 	auto bounds = mover.getBounds();
 	control.resetAlgorithm();
 	auto& collisionChecker = control.collisionChecker;
-	collisionChecker->markCollisions(cuboids);
+	std::vector<std::pair<Cuboid*, Cuboid*>> pairs;
+	collisionChecker->markCollisions(cuboids, pairs);
+	for (auto &pair : pairs) {
+		pair.first->response(*pair.second);
+	}
 }
 
 void drawAllText(float fpsCount)
@@ -126,7 +131,7 @@ void drawCollisions()
 		drawCuboid(cub);
 	}
 	auto bounds = mover.getBounds();
-	drawCuboid(bounds, 0.1f);
+	drawBox(bounds, 0, 0, 0, 0.1f);
 	//control.collisionChecker->drawSelf(drawBox);
 }
 

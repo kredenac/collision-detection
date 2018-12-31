@@ -225,6 +225,9 @@ void onKeyboard(unsigned char key, int x, int y)
 {
 	(void)x; (void)y;
 	switch (std::tolower(key)) {
+	case ('i'):
+		Controller::get().joltTowardsCenter();
+		break;
 	case ('v'):
 		KEY_SMALLER = true;
 		break;
