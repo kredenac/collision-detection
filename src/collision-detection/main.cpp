@@ -103,8 +103,10 @@ void updateCollisions()
 	auto& collisionChecker = control.collisionChecker;
 	std::vector<std::pair<Cuboid*, Cuboid*>> pairs;
 	collisionChecker->markCollisions(cuboids, pairs);
-	for (auto &pair : pairs) {
-		pair.first->response(*pair.second);
+	if (control.doResolution) {
+		for (auto &pair : pairs) {
+			pair.first->response(*pair.second);
+		}
 	}
 }
 

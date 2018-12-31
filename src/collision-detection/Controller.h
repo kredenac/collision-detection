@@ -11,11 +11,14 @@ public:
 	Mover mover;
 	bool doResolution;
 
-	void joltTowardsCenter()
+	void joltTowards(float x, float y, float z)
 	{
-		auto center = mover.getBounds();
+		//auto center = mover.getBounds();
+		auto center = Vector3(x, y, z);
 		for (auto &c : cuboids) {
-			c.vel = center.pos - c.pos;
+			c.vel = center - c.pos;
+			// speed grows with distance
+			//c.vel = c.vel * 0.2;
 			c.vel.normalize();
 		}
 	}
