@@ -35,7 +35,8 @@ void initCollision()
 	// delete above
 	printf("hi\n");
 	auto& control = Controller::get();
-	control.moreElements(1000);
+	control.setCuboidSize(.02f);
+	control.moreElements(10000);
 	printf("carry on\n");
 }
 

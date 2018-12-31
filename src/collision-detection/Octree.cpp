@@ -87,6 +87,7 @@ void Octree::insert(Cuboid *c, bool markColl)
 	if (markColl) {
 		for (auto e : elements) {
 			if (e->isCollidingWith(*c)) {
+				e->response(*c);
 				e->setColliding(true);
 				c->setColliding(true);
 			}
@@ -116,6 +117,7 @@ void Octree::findIntersectionDownward(Cuboid *c)
 	}
 	for (auto e : innerElements) {
 		if (e->isCollidingWith(*c)) {
+			e->response(*c);
 			e->setColliding(true);
 			c->setColliding(true);
 		}
@@ -123,6 +125,7 @@ void Octree::findIntersectionDownward(Cuboid *c)
 	if (isLeaf()) {
 		for (auto e : elements) {
 			if (e->isCollidingWith(*c)) {
+				e->response(*c);
 				e->setColliding(true);
 				c->setColliding(true);
 			}
@@ -141,18 +144,20 @@ void Octree::insertDownward(Cuboid *c)
 	bool atleastOneOctant = false;
 	bool multipleOctants = getIntersectingOctants(*c);
 	if (innerNodesHoldChildren) {
-		// TODO: this is now done twice - second time
-		// in findIntersectionDownward
-		for (auto e : innerElements) {
-			if (e->isCollidingWith(*c)) {
-				e->setColliding(true);
-				c->setColliding(true);
-			}
-		}
 		if (multipleOctants) {
 			findIntersectionDownward(c);
 			innerElements.push_back(c);
 			return;
+		}
+		// TODO: this is now done twice - second time
+		// in findIntersectionDownward.
+		// i think it's not done twice now.
+		for (auto e : innerElements) {
+			if (e->isCollidingWith(*c)) {
+				e->response(*c);
+				e->setColliding(true);
+				c->setColliding(true);
+			}
 		}
 	}
 
@@ -164,6 +169,7 @@ void Octree::insertDownward(Cuboid *c)
 	}
 
 	if (atleastOneOctant == false) {
+		// TODO uncomment this
 		throw std::runtime_error("element doesn't belong to any octant");
 	}
 }

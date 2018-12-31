@@ -31,7 +31,6 @@ public:
 
 	static Vector3 randVec(bool normalize = true);
 	static Vector3 randVec(Vector3 &min, Vector3 &max);
-
 	
 	static float randf();
 
@@ -39,9 +38,16 @@ public:
 
 	void setLength(float length);
 
+	float length() const;
+
 	Vector3 operator + (const Vector3& v) const
 	{
 		return Vector3(x + v.x, y + v.y, z + v.z);
+	}
+
+	Vector3 operator - (const Vector3& v) const
+	{
+		return Vector3(x - v.x, y - v.y, z - v.z);
 	}
 
 	Vector3 operator + (const float c) const
@@ -57,5 +63,11 @@ public:
 	float dot(const Vector3& A) const
 	{
 		return A.x*x + A.y*y + A.z*z;
+	}
+
+	// direction in radians
+	float direction() const
+	{
+		return atan2f(y, x);
 	}
 };

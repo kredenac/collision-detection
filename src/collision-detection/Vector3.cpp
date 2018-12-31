@@ -14,8 +14,7 @@ Vector3::~Vector3()
 
 void Vector3::normalize()
 {
-	float len =  x * x + y * y + z * z;
-	len = sqrtf(len);
+	float len = length();
 	x /= len;
 	y /= len;
 	z /= len;
@@ -27,6 +26,11 @@ void Vector3::setLength(float length)
 	x *= length;
 	y *= length;
 	z *= length;
+}
+
+float Vector3::length() const
+{
+	return sqrtf(x*x + y*y + z*z);
 }
 
 Vector3 Vector3::randVec(bool normalize)

@@ -54,6 +54,51 @@ public:
 
 	~Cuboid();
 
+	void response(Cuboid &b)
+	{
+		Cuboid &a = *this;
+
+		const float eps = 1.001;
+		// minimum translation vector
+		auto mtv = a.pos - b.pos; // TODO take into account sizes 
+		auto addSizes = a.size * 0.5f + b.size * 0.5F;
+
+		mtv = mtv * eps;
+		if (mtv.x > 0) { // a is to the left of b
+			addSizes.x *= -1.f;
+		}
+		if (mtv.y > 0) {
+			addSizes.y *= -1.f;
+		}
+		if (mtv.z > 0) {
+			addSizes.z *= -1.f;
+		}
+
+		/*	|-----|
+			|	|-|-----|
+			|	|_|_____|
+			|_____|
+
+			currently mtv is distance between centers
+			but sizes of two squares - distance
+			is equal to minimal translation vector
+		*/
+		mtv = mtv * (-1.f) + addSizes;
+		a.pos.x += mtv.x / 2;
+		b.pos.x -= mtv.x / 2;
+		
+		a.pos.y += mtv.y / 2;
+		b.pos.y -= mtv.y / 2;
+		
+		a.pos.z += mtv.z / 2;
+		b.pos.z -= mtv.z / 2;
+		auto aVel = calcResolution(a, b);
+		auto bVel = calcResolution(b, a);
+
+		a.vel = aVel;
+		b.vel = bVel;
+	}
+
 	bool hasCollision() const 
 	{
 		return m_hasCollision;
@@ -90,6 +135,17 @@ public:
 	Vector3 vel;
 
 private:
+	static Vector3 calcResolution(const Cuboid &a, const Cuboid &b)
+	{
+		// m1, m2 can be masses
+		float m1 = 1.f;
+		float m2 = 1.f;
+		float scalar = 2 * m2 / (m1 + m2);
+		auto posDiff = a.pos - b.pos;
+		float posDiffLen = posDiff.length();
+		scalar *= (a.vel - b.vel).dot(posDiff) / (posDiffLen * posDiffLen);
+		return a.vel - (posDiff * scalar);
+	}
 	bool m_hasCollision;
 };
 

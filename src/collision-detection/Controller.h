@@ -37,7 +37,7 @@ public:
 
 	void resetAlgorithm()
 	{
-		printf("now %d\n", m_algorithmIndex);
+		//printf("now %d\n", m_algorithmIndex);
 		if (collisionChecker != nullptr) {
 			delete collisionChecker;
 		}
