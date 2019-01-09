@@ -29,6 +29,12 @@ public:
 		this->z += z;
 	}
 
+	bool isZero() const
+	{
+		return !x && !y && !z;
+	}
+
+
 	static Vector3 randVec(bool normalize = true);
 	static Vector3 randVec(Vector3 &min, Vector3 &max);
 	

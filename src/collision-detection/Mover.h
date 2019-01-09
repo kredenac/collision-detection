@@ -21,6 +21,8 @@ public:
 	// then reflect its velocity to prevent it from going out
 	void reflectVelocity(Cuboid &c, float withSpeed) const;
 	
+	void ensureWithinBounds(std::vector<Cuboid> &items, float delta) const;
+
 	Box getBounds() const;
 
 private:

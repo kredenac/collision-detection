@@ -35,11 +35,19 @@ Box Mover::getBounds() const
 void Mover::moveItems(std::vector<Cuboid> &items, float delta) const
 {
 	for (auto& c : items) {
-		c.pos = c.pos + c.vel * delta * speedScale;
+		c.pos = c.pos + c.vel * (delta * speedScale);
+	}
+	ensureWithinBounds(items, delta);
+}
+
+void Mover::ensureWithinBounds(std::vector<Cuboid> &items, float delta) const
+{
+	for (auto& c : items) {
 		reflectVelocity(c, delta * speedScale);
 	}
 }
 
+// FIXME: sometimes, objects can get out, if speed is high enough towards inside and they're outside
 void Mover::reflectVelocity(Cuboid &c, float withSpeed) const
 {
 	float l, r, u, d, f, b;
@@ -51,18 +59,27 @@ void Mover::reflectVelocity(Cuboid &c, float withSpeed) const
 	f += c.vel.z*withSpeed;
 	b += c.vel.z*withSpeed;
 
-	if (l <= left || r >= right) {
-		c.vel.x *= -1;
-		c.pos.x = l <= left ? left + c.size.x / 2 : right - c.size.x / 2;
+	// if it is outisde bounds, then push it back in and change its velocity
+	bool leftOut = l <= left;
+	if (leftOut || r >= right) {
+		// if x is too low, and is negative (would be even lower) then 
+		// it's in a wrong direction
+		bool isWrongDirection = leftOut ? c.vel.x < 0 : c.vel.y > 0;
+		c.vel.x *= isWrongDirection ? -1 : 1;
+		c.pos.x = leftOut ? left + c.size.x / 2 : right - c.size.x / 2;
 	}
-		
-	if (d <= down || u >= up) {
-		c.vel.y *= -1;
-		c.pos.y = d <= down ? down + c.size.y / 2 : up - c.size.y / 2;
+	
+	bool downOut = d <= down;
+	if (downOut || u >= up) {
+		bool isWrongDirection = downOut ? c.vel.y < 0 : c.vel.y > 0;
+		c.vel.y *= isWrongDirection ? -1 : 1;
+		c.pos.y = downOut ? down + c.size.y / 2 : up - c.size.y / 2;
 	}
-		
-	if (b <= back || f >= front) {
-		c.vel.z *= -1;
-		c.pos.z = b <= back ? back + c.size.z / 2 : front - c.size.z / 2;
+	
+	bool backOut = b <= back;
+	if (backOut || f >= front) {
+		bool isWrongDirection = backOut ? c.vel.z < 0 : c.vel.z > 0;
+		c.vel.z *= isWrongDirection ? -1 : 1;
+		c.pos.z = backOut ? back + c.size.z / 2 : front - c.size.z / 2;
 	}
 }

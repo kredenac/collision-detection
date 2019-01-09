@@ -96,6 +96,7 @@ void updateCollisions()
 		cub.setColliding(false);
 	}
 	float delta = dt / (float)UPDATE_INTERVAL;
+	control.delta = delta;
 	mover.moveItems(cuboids, delta);
 
 	auto bounds = mover.getBounds();
@@ -108,6 +109,7 @@ void updateCollisions()
 			pair.first->response(*pair.second);
 		}
 	}
+	mover.ensureWithinBounds(cuboids, 0);
 }
 
 void drawAllText(float fpsCount)
@@ -118,9 +120,13 @@ void drawAllText(float fpsCount)
 	sprintf(fPointer, "%f", fpsCount);
 
 	drawTextAt(100, 5, fPointer);
-	auto& collisionChecker = Controller::get().collisionChecker;
+	auto& control = Controller::get();
+	auto& collisionChecker = control.collisionChecker;
     std::string outputText = collisionChecker->getInfo();
 	drawTextAt(300, 5, outputText.c_str());
+
+	outputText = control.getInfo();
+	drawTextAt(100, 55, outputText.c_str());
 	
 	glEnable(GL_LIGHTING);
 }
@@ -143,12 +149,13 @@ void onDisplay()
     float fpsCount = fps(showFps);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    positionCam();
 
-    lightSetup();
+	positionCam();
 
-    drawMap();
-    drawBullets();
+	lightSetup();
+
+	drawMap();
+	drawBullets();
 
 	drawCollisions();
 

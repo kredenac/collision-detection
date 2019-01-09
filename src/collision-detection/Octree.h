@@ -21,6 +21,9 @@ public:
 	int countElementsInInnerNodes() const;
 	static bool innerNodesHoldChildren;
 
+	static unsigned maxElem;
+	static unsigned maxDepth;
+
 private:
 	static std::vector<std::pair<Cuboid*, Cuboid*>> *pairs;
 	// it's a member so it doesn't always get instantiated
@@ -43,8 +46,6 @@ private:
 	// returns true if there are collisions with multiple octants
 	// puts true in whichOctants[i] when c intersects with i-th octant
 	bool getIntersectingOctants(const Cuboid &c);
-	const unsigned c_maxElem;
-	const int c_maxDepth;
 	const float c_extendFactor;
 	static const unsigned c_octants = 8;
 

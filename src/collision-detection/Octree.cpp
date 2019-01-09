@@ -2,9 +2,11 @@
 
 bool Octree::innerNodesHoldChildren;
 std::vector<std::pair<Cuboid*, Cuboid*>> *Octree::pairs = nullptr;
+unsigned Octree::maxDepth = 10;
+unsigned Octree::maxElem = 4;
 
 Octree::Octree(const Vector3 &pos, const Vector3 &size, int depth) :
-	c_maxDepth(10), c_maxElem(4), c_extendFactor(1.001f), Box(pos, size), depth(depth), whichOctants(c_octants)
+	c_extendFactor(1.001f), Box(pos, size), depth(depth), whichOctants(c_octants)
 {
 	whichOctants.resize(c_octants);
 	for (unsigned i = 0; i < c_octants; i++) {
@@ -29,6 +31,7 @@ std::string Octree::getInfo() const
 	std::string outputText = holdsChildren + " " + std::to_string(count);
 	int count2 = countElementsInInnerNodes();
 	outputText += Octree::innerNodesHoldChildren ? " innerElements = " + std::to_string(count2) : "";
+	outputText += "    max depth: " + std::to_string(maxDepth) + "    max leaf elements: " + std::to_string(maxElem) ;
 	return outputText;
 }
 
@@ -99,7 +102,7 @@ void Octree::insert(Cuboid *c, bool markColl)
 	elements.push_back(c);
 
 	// if there's space, or max depth reached, just put it and return 
-	if (elements.size() <= c_maxElem || depth == c_maxDepth) {
+	if (elements.size() <= maxElem || depth == maxDepth) {
 		return;
 	}
 	// if max elem reached, subdivide
@@ -148,13 +151,11 @@ void Octree::insertDownward(Cuboid *c)
 	bool multipleOctants = getIntersectingOctants(*c);
 	if (innerNodesHoldChildren) {
 		if (multipleOctants) {
+
 			findIntersectionDownward(c);
 			innerElements.push_back(c);
 			return;
 		}
-		// TODO: this is now done twice - second time
-		// in findIntersectionDownward.
-		// i think it's not done twice now.
 		for (auto e : innerElements) {
 			if (e->isCollidingWith(*c)) {
 				pairs->push_back(std::make_pair(c, e));

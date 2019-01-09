@@ -98,19 +98,19 @@ void onKeyHold()
 	if (KEY_LESS) {
 		auto& ctl = Controller::get();
 		float percentLess = ctl.cuboids.size() * 0.01f;
-		size_t less = (size_t)ceilf(percentLess);
+		size_t less = (size_t)ceilf(percentLess * ctl.delta);
 		ctl.lessElements(less);
 	}
 	if (KEY_MORE) { // TODO refactor
 		auto& ctl = Controller::get();
 		float percentMore = fmaxf(ctl.cuboids.size() * 0.01f, 1.f);
-		size_t more = (size_t)ceilf(percentMore);
+		size_t more = (size_t)ceilf(percentMore * ctl.delta);
 		ctl.moreElements(more);
 	}
 	if (KEY_SMALLER || KEY_BIGGER) {
 		auto& ctl = Controller::get();
 		float currSize = ctl.cuboidSize();
-		float diff = fmaxf(currSize * 0.01f, 1e-5);
+		float diff = fmaxf(currSize * 0.01f, 1e-5) * ctl.delta;
 		diff *= KEY_BIGGER ? 1.f : -1.f;
 		float newSize = currSize + diff;
 		ctl.setCuboidSize(newSize);
@@ -224,9 +224,25 @@ void onKeyboardUp(unsigned char key, int x, int y)
 void onKeyboard(unsigned char key, int x, int y)
 {
 	(void)x; (void)y;
+	auto& control = Controller::get();
 	switch (std::tolower(key)) {
+	case ('c'):
+		control.doResolution = !control.doResolution;
+		break;
+	case ('7'):
+		control.changeOcteeMaxDepth(-1);
+		break;
+	case ('8'):
+		control.changeOcteeMaxDepth(1);
+		break;
+	case ('9'):
+		control.changeOctreeMaxElements(-1);
+		break;
+	case ('0'):
+		control.changeOctreeMaxElements(1);
+		break;
 	case ('i'):
-		Controller::get().joltTowards(player.posx, player.posy, player.posz);
+		control.joltTowards(player.posx, player.posy, player.posz);
 		break;
 	case ('v'):
 		KEY_SMALLER = true;
@@ -241,10 +257,10 @@ void onKeyboard(unsigned char key, int x, int y)
 		KEY_MORE = true;
 		break;
 	case ('j'):
-		Controller::get().prevAlgorithm();
+		control.prevAlgorithm();
 		break;
 	case ('k'):
-		Controller::get().nextAlgorithm();
+		control.nextAlgorithm();
 		break;
 	case ('f'):
 		firePaint();

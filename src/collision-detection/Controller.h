@@ -10,6 +10,7 @@ public:
 	BasicCollision* collisionChecker;
 	Mover mover;
 	bool doResolution;
+	float delta;
 
 	void joltTowards(float x, float y, float z)
 	{
@@ -18,8 +19,8 @@ public:
 		for (auto &c : cuboids) {
 			c.vel = center - c.pos;
 			// speed grows with distance
-			//c.vel = c.vel * 0.2;
-			c.vel.normalize();
+			// c.vel = c.vel * 0.2;
+			// c.vel.normalize();
 		}
 	}
 
@@ -64,7 +65,7 @@ public:
 			collisionChecker = new Octree(bounds.pos, bounds.size);
 			Octree::innerNodesHoldChildren = m_algorithmIndex != 1;
 		}
-			break;
+				break;
 		default:
 			break;
 		}
@@ -95,15 +96,42 @@ public:
 
 	void setCuboidSize(float size)
 	{
+		if (size < 1e-7) {
+			return;
+		}
 		m_cuboidSize = size;
 		auto oldSize = cuboids.size();
 		cuboids.clear();
 		moreElements(oldSize);
 	}
 
-	float cuboidSize()
+	float cuboidSize() const
 	{
 		return m_cuboidSize;
+	}
+
+	std::string getInfo() const
+	{
+		return "Number of elements: " + std::to_string(cuboids.size()) +
+			", size: " + std::to_string(m_cuboidSize);
+	}
+
+	void changeOcteeMaxDepth(int diff)
+	{
+		auto depth = Octree::maxDepth + diff;
+		if (depth <= 0) {
+			return;
+		}
+		Octree::maxDepth = depth;
+	}
+
+	void changeOctreeMaxElements(int diff)
+	{
+		auto max = Octree::maxElem + diff;
+		if (max <= 0) {
+			return;
+		}
+		Octree::maxElem = max;
 	}
 
 private:
@@ -116,9 +144,9 @@ private:
 	// TODO implement reinserting when changing speed
 	float m_speed;
 
-	Controller() : m_algorithmIndex(1), m_min(-2.f, -0.99f, -2.f), m_max(2.f, 2.f, 2.f), 
-		m_cuboidSize(0.02f), collisionChecker(nullptr), mover(m_min, m_max, 0.3f), 
-		m_speed(0.01f), doResolution(false)
+	Controller() : m_algorithmIndex(1), m_min(-2.f, -0.99f, -2.f), m_max(2.f, 2.f, 2.f),
+		m_cuboidSize(0.02f), collisionChecker(nullptr), mover(m_min, m_max, 0.3f),
+		delta(0.f), m_speed(0.01f), doResolution(false)
 	{
 		setMinMax(m_min, m_max);
 	}

@@ -1,5 +1,6 @@
 #pragma once
 #include "Vector3.h"
+#include <stdexcept>
 
 class Box 
 {
@@ -87,8 +88,12 @@ public:
 		// this is how it should be: auto mtv = centerDist * (-1.f) + addSizes;
 
 		// this is circle-like resolution
-		centerDist.setLength(addSizes.length() - centerDist.length()); 
 		auto mtv = centerDist;
+		if (mtv.isZero()) {
+			mtv = addSizes;
+		}
+		mtv.setLength(addSizes.length() - centerDist.length());
+		
 		a.pos.x += mtv.x / 2;
 		b.pos.x -= mtv.x / 2;
 				   
@@ -97,6 +102,10 @@ public:
 				   
 		a.pos.z += mtv.z / 2;
 		b.pos.z -= mtv.z / 2;
+
+		if (a.pos.x != a.pos.x) {
+			throw std::runtime_error("nan");
+		}
 
 		a.vel = aVel;
 		b.vel = bVel;
@@ -134,7 +143,13 @@ private:
 		float scalar = 2 * m2 / (m1 + m2);
 		auto posDiff = a.pos - b.pos;
 		float posDiffLen = posDiff.length();
+		if (posDiffLen == 0) {
+			posDiffLen = 0.0001f;
+		}
 		scalar *= (a.vel - b.vel).dot(posDiff) / (posDiffLen * posDiffLen);
+		if (a.vel.x != a.vel.x) {
+			throw std::runtime_error("nan");
+		}
 		return a.vel - (posDiff * scalar);
 	}
 
