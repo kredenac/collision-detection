@@ -64,7 +64,7 @@ void Mover::reflectVelocity(Cuboid &c, float withSpeed) const
 	if (leftOut || r >= right) {
 		// if x is too low, and is negative (would be even lower) then 
 		// it's in a wrong direction
-		bool isWrongDirection = leftOut ? c.vel.x < 0 : c.vel.y > 0;
+		bool isWrongDirection = leftOut ? c.vel.x < 0 : c.vel.x > 0;
 		c.vel.x *= isWrongDirection ? -1 : 1;
 		c.pos.x = leftOut ? left + c.size.x / 2 : right - c.size.x / 2;
 	}

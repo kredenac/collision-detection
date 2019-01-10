@@ -97,7 +97,7 @@ void updateCollisions()
 	}
 	float delta = dt / (float)UPDATE_INTERVAL;
 	control.delta = delta;
-	mover.moveItems(cuboids, delta);
+    mover.moveItems(cuboids, delta);
 
 	auto bounds = mover.getBounds();
 	control.resetAlgorithm();
