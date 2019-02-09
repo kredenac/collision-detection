@@ -121,7 +121,7 @@ public:
 		m_hasCollision = isColliding;
 	}
 
-	// gets left, right, up, down, front, back coordinates
+	// gets left, right, up, down, front, back coordinates (front > back)
 	void getLRUDFB(float &l, float &r, float &u, float &d, float &f, float &b) const
 	{
 		l = pos.x - size.x / 2;

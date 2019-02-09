@@ -49,7 +49,7 @@ bool Octree::getIntersectingOctants(const Cuboid &c)
 	return moreThanOneOctant;
 }
 
-void Octree::markCollisions(std::vector<Cuboid>& items, std::vector<std::pair<Cuboid*, Cuboid*>> &pairs)
+void Octree::markCollisions(std::vector<Cuboid>& items, Collisions &pairs)
 {
 	this->pairs = &pairs;
 	for (Cuboid &c : items) {

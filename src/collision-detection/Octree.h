@@ -10,7 +10,7 @@ public:
 
 	virtual std::string getInfo() const;
 
-	void markCollisions(std::vector<Cuboid>& items, std::vector<std::pair<Cuboid*, Cuboid*>> &pairs) override;
+	void markCollisions(std::vector<Cuboid>& items, Collisions &pairs) override;
 
 	// draws itself recursively using given draw function
 	void drawSelf(void(*draw)(const Box &c, float r, float g, float b, float a)) const override;

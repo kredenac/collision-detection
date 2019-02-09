@@ -9,7 +9,7 @@ BasicCollision::~BasicCollision()
 {
 }
 
-void BasicCollision::markCollisions(std::vector<Cuboid>& items, std::vector<std::pair<Cuboid*, Cuboid*>> &pairs)
+void BasicCollision::markCollisions(std::vector<Cuboid>& items, Collisions &pairs)
 {
 	unsigned len = items.size();
 	for (unsigned i = 0; i < len - 1; i++) {
