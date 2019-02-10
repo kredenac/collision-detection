@@ -3,15 +3,19 @@
 #include "BasicCollision.h"
 #include "Octree.h"
 #include "Sap.h"
+#include <sstream>
 
 class Controller
 {
 public:
 	std::vector<Cuboid> cuboids;
+	std::vector<std::pair<Cuboid*, Cuboid*>> pairs;
 	BasicCollision* collisionChecker;
 	Mover mover;
 	bool doResolution;
 	float delta;
+	int numPairs;
+	int numInCollision;
 
 	void joltTowards(float x, float y, float z)
 	{
@@ -54,12 +58,9 @@ public:
 	{
 		//printf("now %d\n", m_algorithmIndex);
 		if (collisionChecker != nullptr) {
-			
-			if (m_algorithmIndex == 3 && collisionChecker->getInfo().find("Sweep") !=
-				std::string::npos) {
-				return;
+			if (collisionChecker->getInfo().find("Sweep") == std::string::npos) {
+				delete collisionChecker;
 			}
-			delete collisionChecker;
 		}
 		switch (m_algorithmIndex) {
 		case 0:
@@ -74,7 +75,7 @@ public:
 		}
 		case 3: {
 			auto bounds = mover.getBounds();
-			collisionChecker = new Sap(bounds.pos, bounds.size, cuboids);
+			collisionChecker = Sap::get(bounds.pos, bounds.size, cuboids);
 			break;
 		}
 		default:
@@ -105,6 +106,22 @@ public:
 		resetAlgorithm();
 	}
 
+	void setSpeed(float speed)
+	{
+		m_speed = speed;
+		mover = Mover(m_min, m_max, m_speed);
+	}
+
+	void increaseSpeed()
+	{
+		setSpeed(m_speed * c_speedMultiplier);
+	}
+
+	void decreaseSpeed()
+	{
+		setSpeed(m_speed / c_speedMultiplier);
+	}
+
 	void setCuboidSize(float size)
 	{
 		if (size < 1e-7) {
@@ -123,8 +140,11 @@ public:
 
 	std::string getInfo() const
 	{
+		std::stringstream str;
+
 		return "Number of elements: " + std::to_string(cuboids.size()) +
-			", size: " + std::to_string(m_cuboidSize);
+			", size: " + std::to_string(m_cuboidSize) + ", colliding: " + 
+			std::to_string(numInCollision) + ", pairs : " + std::to_string(numPairs);
 	}
 
 	void changeOcteeMaxDepth(int diff)
@@ -147,6 +167,7 @@ public:
 
 private:
 	static const int c_numAlgorithms = 4;
+	static const float c_speedMultiplier;
 	Vector3 m_min;
 	Vector3 m_max;
 	int m_algorithmIndex;

@@ -226,6 +226,12 @@ void onKeyboard(unsigned char key, int x, int y)
 	(void)x; (void)y;
 	auto& control = Controller::get();
 	switch (std::tolower(key)) {
+	case ('z'):
+		control.decreaseSpeed();
+		break;
+	case ('x'):
+		control.increaseSpeed();
+		break;
 	case ('c'):
 		control.doResolution = !control.doResolution;
 		break;

@@ -12,7 +12,7 @@ struct pairhash {
 public:
 	std::size_t operator()(const CollisionPair &x) const
 	{
-		return std::hash<int>()(x.first << 16 + x.second);
+		return std::hash<int>()((x.first << 16) + x.second);
 	}
 };
 
@@ -68,7 +68,7 @@ public:
 		add(p);
 	}
 
-	void remove(int a, int b) 
+	void remove(int a, int b)
 	{
 		if (a == b) {
 			throw std::runtime_error("indices can't be the same");
@@ -79,7 +79,6 @@ public:
 		auto p = std::make_pair(a, b);
 		m_set.erase(p);
 	}
-
 
 	void setCollisions(std::vector<Cuboid>& items, Collisions &pairs)
 	{
@@ -103,9 +102,43 @@ enum Axis { xAxis = 0, yAxis = 1, zAxis = 2 };
 class Sap : public BasicCollision
 {
 public:
+	static Sap* get(const Vector3 &pos, const Vector3 &size, std::vector<Cuboid>& items)
+	{
+		static Sap instance(pos, size, items);
+		// if number of elements or their size has changed, needs to bee reinitialized
+		if (instance.m_lastNumElements != items.size() || 
+			instance.lastCubeSize != items[0].size) {
+
+			instance = Sap(pos, size, items);
+			instance.m_lastNumElements = items.size();
+			instance.lastCubeSize = items[0].size;
+		}
+		return &instance;
+	}
+
+	void markCollisions(std::vector<Cuboid>& items, Collisions &pairs) override
+	{
+		if (isInit) {
+			initPhase(items, pairs);
+			return;
+		}
+
+		updateCollisions(items);
+
+		m_pairs.setCollisions(items, pairs);
+	}
+
+	std::string getInfo() const
+	{
+		return "Sweep and Prune, number of swaps: " + std::to_string(m_numberOfSwaps);
+	}
+
+private:
 	Sap(const Vector3 &pos, const Vector3 &size, std::vector<Cuboid>& items)
 		: isInit(true), octPos(pos), octSize(size)
 	{
+		lastCubeSize = Vector3(0, 0, 0);
+		m_lastNumElements = 0;
 		initAxes(items);
 	}
 
@@ -117,7 +150,7 @@ public:
 	void initAxes(std::vector<Cuboid>& items)
 	{
 		for (auto &axis : m_axes) {
-			axis.reserve(items.size()*2);
+			axis.reserve(items.size() * 2);
 		}
 		// fill all three axes with 2n points each
 		for (size_t i = 0; i < items.size(); i++) {
@@ -150,7 +183,7 @@ public:
 
 	// updates values of all points
 	void updateAxesPoints(std::vector<Cuboid>& items) {
-		
+
 		for (auto &point : m_axes[xAxis]) {
 			auto &elem = items[point.index];
 			point.value = point.isBegin ? elem.left() : elem.right();
@@ -163,11 +196,6 @@ public:
 			auto &elem = items[point.index];
 			point.value = point.isBegin ? elem.back() : elem.front();
 		}
-	}
-
-	std::string getInfo() const
-	{
-		return "Sweep and Prune, number of swaps: " + std::to_string(m_numberOfSwaps);
 	}
 
 	void initPhase(std::vector<Cuboid>& items, Collisions &pairs)
@@ -208,7 +236,7 @@ public:
 			int i;
 			for (i = j - 1; i >= 0 && axis[i].value > value; i--) {
 				auto &toMove = axis[i];
-				
+
 				// toMove.begin skips over currPoint.end, which means 
 				// they are no longer colliding
 				if (toMove.isBegin && !currPoint.isBegin) {
@@ -232,20 +260,10 @@ public:
 		return numMoved;
 	}
 
-	void markCollisions(std::vector<Cuboid>& items, Collisions &pairs) override
-	{
-		if (isInit) {
-			initPhase(items, pairs);
-			return;
-		}
-
-		updateCollisions(items);
-
-		m_pairs.setCollisions(items, pairs);
-	}
-
-
 private:
+	// information about cuboids from last frame
+	Vector3 lastCubeSize;
+	size_t m_lastNumElements;
 	// used for reporting number of swamps per update
 	int m_numberOfSwaps;
 	// needed to construct helper octree in first iteration

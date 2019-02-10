@@ -35,9 +35,10 @@ void initCollision()
 	// delete above
 	printf("hi\n");
 	auto& control = Controller::get();
+	control.setSpeed(0.01f);
 	control.doResolution = true;
 	control.setCuboidSize(.01f);
-	control.moreElements(111);//11111
+	control.moreElements(1111);//11111
 	printf("carry on\n");
 }
 
@@ -104,25 +105,30 @@ void updateCollisions()
 	auto& collisionChecker = control.collisionChecker;
 
 	// TODO make it once, so it doesnt get resized always
-	std::vector<std::pair<Cuboid*, Cuboid*>> pairs; 
+	auto &pairs = control.pairs;
+	pairs.resize(0);
 	collisionChecker->markCollisions(cuboids, pairs);
 	if (control.doResolution) {
 		for (auto &pair : pairs) {
 			pair.first->response(*pair.second);
 		}
 	}
+	control.numPairs = pairs.size();
+	control.numInCollision = std::count_if(cuboids.cbegin(), cuboids.cend(),
+		[](const auto &c) {return c.hasCollision();});
 	mover.ensureWithinBounds(cuboids, 0);
 }
 
 void drawAllText(float fpsCount)
 {
+	auto& control = Controller::get();
 	glDisable(GL_LIGHTING);
 
-	char fPointer[55] = "fps: ";
-	sprintf(fPointer, "%f", fpsCount);
+	char fPointer[100] = "fps: ";
+	sprintf(fPointer, "%f.1", fpsCount, 
+		control.numPairs, control.numInCollision);
 
 	drawTextAt(100, 5, fPointer);
-	auto& control = Controller::get();
 	auto& collisionChecker = control.collisionChecker;
     std::string outputText = collisionChecker->getInfo();
 	drawTextAt(300, 5, outputText.c_str());

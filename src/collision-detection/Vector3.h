@@ -11,7 +11,7 @@ public:
 	float y;
 	float z;
 
-	Vector3(float x, float y, float z) 
+	Vector3(float x, float y, float z)
 		: x(x), y(y), z(z)
 	{
 	}
@@ -22,7 +22,7 @@ public:
 		setLength(size);
 	}
 
-	void add(float x, float y, float z) 
+	void add(float x, float y, float z)
 	{
 		this->x += x;
 		this->y += y;
@@ -34,10 +34,20 @@ public:
 		return !x && !y && !z;
 	}
 
+	bool operator==(const Vector3 &o) const
+	{
+		return o.x == x && o.y == y && o.z == z;
+	}
+
+	bool operator!=(const Vector3 &o) const
+	{
+		return !(o == *this);
+	}
+
 
 	static Vector3 randVec(bool normalize = true);
 	static Vector3 randVec(Vector3 &min, Vector3 &max);
-	
+
 	static float randf();
 
 	void normalize();

@@ -28,7 +28,7 @@ std::string Octree::getInfo() const
 {
 	int count = countStoredElements();
 	std::string holdsChildren = Octree::innerNodesHoldChildren ? "without duplicates" : "with duplicates";
-	std::string outputText = holdsChildren + " " + std::to_string(count);
+	std::string outputText = "QuadTree " +  holdsChildren + " " + std::to_string(count);
 	int count2 = countElementsInInnerNodes();
 	outputText += Octree::innerNodesHoldChildren ? " innerElements = " + std::to_string(count2) : "";
 	outputText += "    max depth: " + std::to_string(maxDepth) + "    max leaf elements: " + std::to_string(maxElem) ;
