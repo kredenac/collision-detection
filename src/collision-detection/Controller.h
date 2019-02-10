@@ -2,6 +2,7 @@
 #include "Mover.h"
 #include "BasicCollision.h"
 #include "Octree.h"
+#include "Sap.h"
 
 class Controller
 {
@@ -53,6 +54,11 @@ public:
 	{
 		//printf("now %d\n", m_algorithmIndex);
 		if (collisionChecker != nullptr) {
+			
+			if (m_algorithmIndex == 3 && collisionChecker->getInfo().find("Sweep") !=
+				std::string::npos) {
+				return;
+			}
 			delete collisionChecker;
 		}
 		switch (m_algorithmIndex) {
@@ -64,8 +70,13 @@ public:
 			auto bounds = mover.getBounds();
 			collisionChecker = new Octree(bounds.pos, bounds.size);
 			Octree::innerNodesHoldChildren = m_algorithmIndex != 1;
+			break;
 		}
-				break;
+		case 3: {
+			auto bounds = mover.getBounds();
+			collisionChecker = new Sap(bounds.pos, bounds.size, cuboids);
+			break;
+		}
 		default:
 			break;
 		}
@@ -135,7 +146,7 @@ public:
 	}
 
 private:
-	static const int c_numAlgorithms = 3;
+	static const int c_numAlgorithms = 4;
 	Vector3 m_min;
 	Vector3 m_max;
 	int m_algorithmIndex;

@@ -10,7 +10,7 @@ struct pairhash {
 public:
 	std::size_t operator()(const CollisionPair &x) const
 	{
-		return std::hash<int>()(x.first<<16 + x.second);
+		return std::hash<int>()(x.first << 16 + x.second);
 	}
 };
 
@@ -22,6 +22,7 @@ public:
 	{
 
 	}
+
 	int index;
 	float value;
 	bool isBegin;
@@ -34,7 +35,7 @@ public:
 };
 
 // pair manager, stores pairs of object indices
-class PM 
+class PM
 {
 public:
 	bool has(CollisionPair &p) const
@@ -65,6 +66,18 @@ public:
 		add(p);
 	}
 
+
+	void setCollisions(std::vector<Cuboid>& items, Collisions &pairs)
+	{
+		for (auto &pair : m_set) {
+			auto &first = items[pair.first];
+			auto &second = items[pair.second];
+			first.setColliding(true);
+			second.setColliding(true);
+			pairs.emplace_back(&first, &second);
+		}
+	}
+
 private:
 	std::unordered_set<CollisionPair, pairhash> m_set;
 };
@@ -75,7 +88,7 @@ enum Axis { xAxis = 0, yAxis = 1, zAxis = 2 };
 class Sap : public BasicCollision
 {
 public:
-	Sap(const Vector3 &pos, const Vector3 &size, std::vector<Cuboid>& items) 
+	Sap(const Vector3 &pos, const Vector3 &size, std::vector<Cuboid>& items)
 		: isInit(true), octPos(pos), octSize(size)
 	{
 		initAxes(items);
@@ -125,10 +138,6 @@ public:
 		return "Sweep and Prune - TODO";
 	}
 
-	void fillWithPairManager(Collisions &pairs)
-	{
-
-	}
 
 	void markCollisions(std::vector<Cuboid>& items, Collisions &pairs) override
 	{
@@ -136,16 +145,17 @@ public:
 			isInit = false;
 			Octree oct(octPos, octSize);
 			oct.markCollisions(items, pairs);
-			
+
 			for (auto &pair : pairs)
 			{
 				int first = pair.first - &items[0];
 				int second = pair.second - &items[0];
 				m_pairs.add(first, second);
 			}
+			return;
 		}
 
-		
+		m_pairs.setCollisions(items, pairs);
 	}
 
 

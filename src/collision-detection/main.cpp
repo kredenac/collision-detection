@@ -37,7 +37,7 @@ void initCollision()
 	auto& control = Controller::get();
 	control.doResolution = true;
 	control.setCuboidSize(.01f);
-	control.moreElements(11111);
+	control.moreElements(111);//11111
 	printf("carry on\n");
 }
 
@@ -102,7 +102,9 @@ void updateCollisions()
 	auto bounds = mover.getBounds();
 	control.resetAlgorithm();
 	auto& collisionChecker = control.collisionChecker;
-	std::vector<std::pair<Cuboid*, Cuboid*>> pairs;
+
+	// TODO make it once, so it doesnt get resized always
+	std::vector<std::pair<Cuboid*, Cuboid*>> pairs; 
 	collisionChecker->markCollisions(cuboids, pairs);
 	if (control.doResolution) {
 		for (auto &pair : pairs) {
