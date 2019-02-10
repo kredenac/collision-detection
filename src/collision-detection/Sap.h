@@ -4,6 +4,8 @@
 #include <unordered_set>
 #include <algorithm>
 
+// TODO: maybe create a class with overloaded equality
+// to ignore pair ordering
 using CollisionPair = std::pair<int, int>;
 
 struct pairhash {
@@ -66,6 +68,18 @@ public:
 		add(p);
 	}
 
+	void remove(int a, int b) 
+	{
+		if (a == b) {
+			throw std::runtime_error("indices can't be the same");
+		}
+		if (a > b) {
+			std::swap(a, b);
+		}
+		auto p = std::make_pair(a, b);
+		m_set.erase(p);
+	}
+
 
 	void setCollisions(std::vector<Cuboid>& items, Collisions &pairs)
 	{
@@ -85,6 +99,7 @@ private:
 enum Axis { xAxis = 0, yAxis = 1, zAxis = 2 };
 
 // Sweep and Prune
+// assumes working with same objects
 class Sap : public BasicCollision
 {
 public:
@@ -101,9 +116,9 @@ public:
 
 	void initAxes(std::vector<Cuboid>& items)
 	{
-		m_axes[xAxis].reserve(items.size());
-		m_axes[yAxis].reserve(items.size());
-		m_axes[zAxis].reserve(items.size());
+		for (auto &axis : m_axes) {
+			axis.reserve(items.size()*2);
+		}
 		// fill all three axes with 2n points each
 		for (size_t i = 0; i < items.size(); i++) {
 
@@ -128,9 +143,33 @@ public:
 			//zEnd
 			m_axes[zAxis].emplace_back(i, b, false);
 		}
-		std::sort(m_axes[xAxis].begin(), m_axes[xAxis].end());
-		std::sort(m_axes[yAxis].begin(), m_axes[yAxis].end());
-		std::sort(m_axes[zAxis].begin(), m_axes[zAxis].end());
+		for (auto &axis : m_axes) {
+			std::sort(axis.begin(), axis.end());
+		}
+	}
+
+	// updates values of all points
+	void updateAxesPoints(std::vector<Cuboid>& items) {
+		for (size_t i = 0; i < items.size(); i++) {
+
+			float l, r, u, d, f, b;
+			items[i].getLRUDFB(l, r, u, d, f, b);
+
+			// xBeg
+			m_axes[xAxis][i].value = l;
+			// xEnd
+			m_axes[xAxis][i + 1].value = r;
+
+			//yBeg
+			m_axes[yAxis][i].value = d;
+			//yEnd
+			m_axes[yAxis][i + 1].value = u;
+
+			//zBeg
+			m_axes[zAxis][i].value = f;
+			//zEnd
+			m_axes[zAxis][i + 1].value = b;
+		}
 	}
 
 	std::string getInfo() const
@@ -138,8 +177,7 @@ public:
 		return "Sweep and Prune - TODO";
 	}
 
-
-	void markCollisions(std::vector<Cuboid>& items, Collisions &pairs) override
+	void initPhase(std::vector<Cuboid>& items, Collisions &pairs)
 	{
 		if (isInit) {
 			isInit = false;
@@ -152,14 +190,70 @@ public:
 				int second = pair.second - &items[0];
 				m_pairs.add(first, second);
 			}
-			return;
 		}
+	}
+
+	void updateCollisions(std::vector<Cuboid>& items)
+	{
+		int numMoved = 0;
+		updateAxesPoints(items);
+		for (auto &axis : m_axes) {
+			numMoved += sortAxis(axis, items);
+		}
+		m_numberOfSwaps = numMoved;
+	}
+
+	// returns the number of moved elements
+	int sortAxis(std::vector<Point> &axis, std::vector<Cuboid> &items)
+	{
+		int numMoved = 0;
+		for (size_t j = 1; j < axis.size(); j++) {
+			auto currPoint = axis[j];
+			float value = currPoint.value;
+
+			// currPoint is moved to the left .
+			// update position of elements using insertion sort
+			// add/remove collisions accordingly. 
+			int i;
+			for (i = j - 1; i >= 0 && axis[i].value > value; i--) {
+				auto &toMove = axis[i];
+				
+				// toMove.begin skips over currPoint.end, which means 
+				// they are no longer colliding
+				if (toMove.isBegin && !currPoint.isBegin) {
+					m_pairs.remove(toMove.index, currPoint.index);
+				}
+
+				// tomove.end skips oevr currPoint.begin, which means
+				// that they now they might have an intersection
+				if (!toMove.isBegin && currPoint.isBegin) {
+					auto &first = items[toMove.index];
+					auto &second = items[currPoint.index];
+					if (first.isCollidingWith(second)) {
+						m_pairs.add(toMove.index, currPoint.index);
+					}
+				}
+				axis[i + 1] = toMove;
+			}
+			numMoved += j - i + 1;
+			axis[i + 1] = currPoint;
+		}
+		return numMoved;
+	}
+
+	void markCollisions(std::vector<Cuboid>& items, Collisions &pairs) override
+	{
+		initPhase(items, pairs);
+
+		updateCollisions(items);
 
 		m_pairs.setCollisions(items, pairs);
 	}
 
 
 private:
+	// used for reporting number of swamps per update
+	int m_numberOfSwaps;
 	// needed to construct helper octree in first iteration
 	Vector3 octPos;
 	Vector3 octSize;
