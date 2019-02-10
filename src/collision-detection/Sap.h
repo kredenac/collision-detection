@@ -139,9 +139,9 @@ public:
 			m_axes[yAxis].emplace_back(i, u, false);
 
 			//zBeg
-			m_axes[zAxis].emplace_back(i, f, true);
+			m_axes[zAxis].emplace_back(i, b, true);
 			//zEnd
-			m_axes[zAxis].emplace_back(i, b, false);
+			m_axes[zAxis].emplace_back(i, f, false);
 		}
 		for (auto &axis : m_axes) {
 			std::sort(axis.begin(), axis.end());
@@ -150,46 +150,37 @@ public:
 
 	// updates values of all points
 	void updateAxesPoints(std::vector<Cuboid>& items) {
-		for (size_t i = 0; i < items.size(); i++) {
-
-			float l, r, u, d, f, b;
-			items[i].getLRUDFB(l, r, u, d, f, b);
-
-			// xBeg
-			m_axes[xAxis][i].value = l;
-			// xEnd
-			m_axes[xAxis][i + 1].value = r;
-
-			//yBeg
-			m_axes[yAxis][i].value = d;
-			//yEnd
-			m_axes[yAxis][i + 1].value = u;
-
-			//zBeg
-			m_axes[zAxis][i].value = f;
-			//zEnd
-			m_axes[zAxis][i + 1].value = b;
+		
+		for (auto &point : m_axes[xAxis]) {
+			auto &elem = items[point.index];
+			point.value = point.isBegin ? elem.left() : elem.right();
+		}
+		for (auto &point : m_axes[yAxis]) {
+			auto &elem = items[point.index];
+			point.value = point.isBegin ? elem.down() : elem.up();
+		}
+		for (auto &point : m_axes[zAxis]) {
+			auto &elem = items[point.index];
+			point.value = point.isBegin ? elem.back() : elem.front();
 		}
 	}
 
 	std::string getInfo() const
 	{
-		return "Sweep and Prune - TODO";
+		return "Sweep and Prune, number of swaps: " + std::to_string(m_numberOfSwaps);
 	}
 
 	void initPhase(std::vector<Cuboid>& items, Collisions &pairs)
 	{
-		if (isInit) {
-			isInit = false;
-			Octree oct(octPos, octSize);
-			oct.markCollisions(items, pairs);
+		isInit = false;
+		Octree oct(octPos, octSize);
+		oct.markCollisions(items, pairs);
 
-			for (auto &pair : pairs)
-			{
-				int first = pair.first - &items[0];
-				int second = pair.second - &items[0];
-				m_pairs.add(first, second);
-			}
+		for (auto &pair : pairs)
+		{
+			int first = pair.first - &items[0];
+			int second = pair.second - &items[0];
+			m_pairs.add(first, second);
 		}
 	}
 
@@ -243,7 +234,10 @@ public:
 
 	void markCollisions(std::vector<Cuboid>& items, Collisions &pairs) override
 	{
-		initPhase(items, pairs);
+		if (isInit) {
+			initPhase(items, pairs);
+			return;
+		}
 
 		updateCollisions(items);
 

@@ -2,7 +2,7 @@
 #include "Vector3.h"
 #include <stdexcept>
 
-class Box 
+class Box
 {
 public:
 	Vector3 pos;
@@ -41,10 +41,10 @@ public:
 		vel.setLength(speed);
 	}
 
-	Cuboid(const Vector3& pos, float size, float speed = 1.f) 
+	Cuboid(const Vector3& pos, float size, float speed = 1.f)
 		: Cuboid(pos, Vector3(size, size, size), speed)
 	{
-		
+
 	}
 
 	Cuboid(Vector3&& pos, float size)
@@ -60,7 +60,7 @@ public:
 		auto aVel = calcResolution(a, b);
 		auto bVel = calcResolution(b, a);
 		const float eps = 1.001f;
-		auto centerDist = a.pos - b.pos; 
+		auto centerDist = a.pos - b.pos;
 		auto addSizes = a.size * 0.5f + b.size * 0.5F;
 
 		centerDist = centerDist * eps;
@@ -93,13 +93,13 @@ public:
 			mtv = addSizes;
 		}
 		mtv.setLength(addSizes.length() - centerDist.length());
-		
+
 		a.pos.x += mtv.x / 2;
 		b.pos.x -= mtv.x / 2;
-				   
+
 		a.pos.y += mtv.y / 2;
 		b.pos.y -= mtv.y / 2;
-				   
+
 		a.pos.z += mtv.z / 2;
 		b.pos.z -= mtv.z / 2;
 
@@ -111,12 +111,12 @@ public:
 		b.vel = bVel;
 	}
 
-	bool hasCollision() const 
+	bool hasCollision() const
 	{
 		return m_hasCollision;
 	}
 
-	void setColliding(bool isColliding) 
+	void setColliding(bool isColliding)
 	{
 		m_hasCollision = isColliding;
 	}
@@ -124,12 +124,42 @@ public:
 	// gets left, right, up, down, front, back coordinates (front > back)
 	void getLRUDFB(float &l, float &r, float &u, float &d, float &f, float &b) const
 	{
-		l = pos.x - size.x / 2;
-		r = pos.x + size.x / 2;
-		u = pos.y + size.y / 2;
-		d = pos.y - size.y / 2;
-		f = pos.z + size.z / 2;
-		b = pos.z - size.z / 2;
+		l = left();
+		r = right();
+		u = up();
+		d = down();
+		f = front();
+		b = back();
+	}
+
+	float left() const
+	{
+		return  pos.x - size.x / 2;
+	}
+
+	float right() const
+	{
+		return pos.x + size.x / 2;
+	}
+
+	float up() const
+	{
+		return pos.y + size.y / 2;
+	}
+
+	float down() const
+	{
+		return pos.y - size.y / 2;
+	}
+
+	float front() const
+	{
+		return  pos.z + size.z / 2;
+	}
+
+	float back() const
+	{
+		return  pos.z - size.z / 2;
 	}
 
 	Vector3 vel;
