@@ -19,8 +19,8 @@ Octree::~Octree()
 	if (isLeaf()) {
 		return;
 	}
-	for (unsigned i = 0; i < c_octants; i++) {
-		delete octants[i];
+	for (auto& octant : octants){
+		delete octant;
 	}
 }
 

@@ -8,13 +8,13 @@
 #include "player.h"
 #include "draw.h"
 #include "blocks.h"
-constexpr auto TIMER_UPDATE_ID = 1;
+const int TIMER_UPDATE_ID = 1;
 
 // minimum timer callback time in milliseconds
 const int UPDATE_TIMER_INTERVAL = 10;
 
 // expected relative deltatime 
-const float UPDATE_INTERVAL = 1 / 60.f;
+const float UPDATE_INTERVAL = 1000.f / 60.f;
 extern int showFps;
 
 extern float approach(float goal, float curr, float dt);

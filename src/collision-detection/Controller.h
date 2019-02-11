@@ -7,6 +7,9 @@
 
 class Controller
 {
+private:
+	Vector3 m_min;
+	Vector3 m_max;
 public:
 	std::vector<Cuboid> cuboids;
 	std::vector<std::pair<Cuboid*, Cuboid*>> pairs;
@@ -77,17 +80,13 @@ public:
 private:
 	static const int c_numAlgorithms = 4;
 	static const float c_speedMultiplier;
-	Vector3 m_min;
-	Vector3 m_max;
 	int m_algorithmIndex;
+	float m_speed;
 	float m_cuboidSize;
 
-	// TODO implement reinserting when changing speed
-	float m_speed;
-
-	Controller() : m_algorithmIndex(1), m_min(-2.f, -0.99f, -2.f), m_max(2.f, 2.f, 2.f),
-		m_cuboidSize(0.02f), collisionChecker(nullptr), mover(m_min, m_max, 0.3f),
-		delta(0.f), m_speed(0.01f), doResolution(false), numPairs(0), numInCollision(0)
+	Controller() : m_min(-2.f, -0.99f, -2.f), m_max(2.f, 2.f, 2.f), collisionChecker(nullptr),
+		mover(m_min, m_max, 0.3f), doResolution(false), delta(0.f), numPairs(0),
+		numInCollision(0), m_algorithmIndex(1), m_speed(0.01f), m_cuboidSize(0.02f)
 	{
 		setMoverBounds(m_min, m_max);
 	}

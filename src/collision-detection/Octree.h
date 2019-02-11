@@ -8,7 +8,7 @@ public:
 	Octree(const Vector3 &pos, const Vector3 &size, int depth = 1);
 	~Octree();
 
-	virtual std::string getInfo() const;
+	virtual std::string getInfo() const override;
 
 	void markCollisions(std::vector<Cuboid>& items, Collisions &pairs) override;
 
@@ -35,7 +35,7 @@ private:
 	static std::vector<std::pair<Cuboid*, Cuboid*>> *pairs;
 	// it's a member so it doesn't always get instantiated
 	std::vector<bool> whichOctants;
-	int depth;
+	unsigned depth;
 
 	// helper function for insert
 	void insertDownward(Cuboid *c);

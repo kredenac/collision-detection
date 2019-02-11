@@ -100,10 +100,9 @@ std::string Sap::getInfo() const
 }
 
 Sap::Sap(const Vector3 &pos, const Vector3 &size, std::vector<Cuboid>& items)
-	: isInit(true), octPos(pos), octSize(size), m_numberOfSwaps(0)
+	: isInit(true), octPos(pos), octSize(size), m_numberOfSwaps(0), 
+	m_lastNumElements(0), lastCubeSize(0,0,0)
 {
-	lastCubeSize = Vector3(0, 0, 0);
-	m_lastNumElements = 0;
 	initAxes(items);
 }
 

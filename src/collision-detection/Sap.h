@@ -55,7 +55,7 @@ public:
 
 	void markCollisions(std::vector<Cuboid>& items, Collisions &pairs) override;
 
-	std::string getInfo() const;
+	std::string getInfo() const override;
 
 private:
 	Sap(const Vector3 &pos, const Vector3 &size, std::vector<Cuboid>& items);

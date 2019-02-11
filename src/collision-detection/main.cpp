@@ -1,16 +1,14 @@
 #include <GL/glut.h>
-#include <stdio.h>
+#include <cstdio>
 #include <string>
 #include <vector>
-#include <math.h>
-#include <stdlib.h>
-#include <time.h>
+#include <cstdlib>
+#include <ctime>
 #include "player.h"
 #include "keyboard.h"
 #include "miscfunc.h"
 #include "collision.h"
 #include "draw.h"
-#include "blocks.h"
 
 #include "Controller.h"
 

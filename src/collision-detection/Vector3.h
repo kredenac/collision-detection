@@ -16,7 +16,7 @@ public:
 	{
 	}
 
-	Vector3(float size)
+	explicit Vector3(float size)
 		: x(1.f), y(1.f), z(1.f)
 	{
 		setLength(size);
