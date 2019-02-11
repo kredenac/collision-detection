@@ -47,7 +47,6 @@ void Mover::ensureWithinBounds(std::vector<Cuboid> &items, float delta) const
 	}
 }
 
-// FIXME: sometimes, objects can get out, if speed is high enough towards inside and they're outside
 void Mover::reflectVelocity(Cuboid &c, float withSpeed) const
 {
 	float l, r, u, d, f, b;

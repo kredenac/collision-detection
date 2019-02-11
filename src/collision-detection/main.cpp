@@ -12,18 +12,14 @@
 #include "draw.h"
 #include "blocks.h"
 
-#include "Cuboid.h"
-#include "BasicCollision.h"
-#include "Octree.h"
-#include "Mover.h"
 #include "Controller.h"
 
 int dt;
-static int oldDisplayTime;
-static void onTimerUpdate(int id);
-static void onDisplay(void);
-static void updateDeltaTime(void);
-static float fps(int print);
+int oldDisplayTime;
+void onTimerUpdate(int id);
+void onDisplay(void);
+void updateDeltaTime(void);
+float fps(int print);
 void drawAllText(float fpsCount);
 void updateCollisions();
 void drawCollisions();
@@ -32,14 +28,11 @@ void initCollision();
 void initCollision()
 {
     srand((unsigned)time(NULL));
-	// delete above
-	printf("hi\n");
 	auto& control = Controller::get();
 	control.setSpeed(0.01f);
 	control.doResolution = true;
 	control.setCuboidSize(.01f);
 	control.moreElements(1111);//11111
-	printf("carry on\n");
 }
 
 int main(int argc, char** argv)
@@ -65,11 +58,11 @@ int main(int argc, char** argv)
 	glDisable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	// --
+
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT7);
 	
-    /*prilikom skaliranja se poremeti osvetljenje pa me gl_normalize spasi*/
+	// gl_normalize fixes lighting of scaled objects
     glEnable(GL_NORMALIZE);
     glutSetCursor(GLUT_CURSOR_NONE);
     glutIgnoreKeyRepeat(GL_TRUE);
@@ -92,8 +85,8 @@ void updateCollisions()
 	auto& mover = control.mover;
 	auto& cuboids = control.cuboids;
 
+	// unmark collisions
 	for (auto& cub : cuboids) {
-		// unmark collisions
 		cub.setColliding(false);
 	}
 	float delta = dt / (float)UPDATE_INTERVAL;
@@ -104,7 +97,6 @@ void updateCollisions()
 	control.resetAlgorithm();
 	auto& collisionChecker = control.collisionChecker;
 
-	// TODO make it once, so it doesnt get resized always
 	auto &pairs = control.pairs;
 	pairs.resize(0);
 	collisionChecker->markCollisions(cuboids, pairs);
@@ -125,8 +117,7 @@ void drawAllText(float fpsCount)
 	glDisable(GL_LIGHTING);
 
 	char fPointer[100] = "fps: ";
-	sprintf(fPointer, "%f.1", fpsCount, 
-		control.numPairs, control.numInCollision);
+	sprintf(fPointer, "%f.1", fpsCount);
 
 	drawTextAt(100, 5, fPointer);
 	auto& collisionChecker = control.collisionChecker;
@@ -172,7 +163,7 @@ void onDisplay()
     glutSwapBuffers();
 }
 
-/*funkcija za azuriranje polozaja objekata i obradu svih dogadjaja*/
+// updates position of all objects and handles all events
 void onTimerUpdate(int id)
 {
     if (TIMER_UPDATE_ID != id){
@@ -191,9 +182,9 @@ void onTimerUpdate(int id)
     glutTimerFunc(UPDATE_TIMER_INTERVAL, onTimerUpdate, TIMER_UPDATE_ID);
 }
 
-/*racunanje dt-vremena izmedju 2 poziva onTimerUpdate funkcije*/
-/*potrebno je znati delta time posto ce na sporijim racunarima
-redje da se poziva Timer. Zbog toga svi pomeraji se vrse srazmerno sa dt*/
+// calculation of delta time betweeen two calls to onTimerUpdate function
+// delta time is important because on slower configurations timer is called
+// less frequently. Because of it all movements are done proportionally to dt
 int DT_MAX = 100;
 int newTime;
 int oldTime = 0;
@@ -210,17 +201,17 @@ void updateDeltaTime()
 	}
 }
 
-/*for frames per second*/
+// vars for counting frames per second
 int newDisplayTime;
 int SECOND = 1000;
 
 float fps(int print)
 {
     newDisplayTime = glutGet(GLUT_ELAPSED_TIME);
-    /*proteklo vreme izmedju 2 iscrtavanja*/
+	// elapsed time between two frames
     int diff = newDisplayTime - oldDisplayTime;
     oldDisplayTime = newDisplayTime;
-    /*max i min vreme izmedju 2 frejma*/
+	// max and min time between two frames
     static int maxTime = 0, minTime = SECOND;
     maxTime = diff>maxTime ? diff : maxTime;
     minTime = diff<minTime ? diff : minTime;

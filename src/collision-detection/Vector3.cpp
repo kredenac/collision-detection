@@ -3,7 +3,7 @@
 
 
 
-Vector3::Vector3()
+Vector3::Vector3() : x(0.f), y(0.f), z(0.f)
 {
 }
 

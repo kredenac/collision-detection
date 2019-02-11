@@ -20,6 +20,7 @@ void BasicCollision::markCollisions(std::vector<Cuboid>& items, Collisions &pair
 			if (areColliding(a, b)) {
 				items[i].setColliding(true);
 				items[j].setColliding(true);
+				pairs.push_back(std::make_pair(&items[i], &items[j]));
 			}
 		}
 	}

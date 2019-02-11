@@ -173,7 +173,6 @@ void Octree::insertDownward(Cuboid *c)
 	}
 
 	if (atleastOneOctant == false) {
-		// TODO uncomment this
 		throw std::runtime_error("element doesn't belong to any octant");
 	}
 }

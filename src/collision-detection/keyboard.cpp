@@ -95,20 +95,18 @@ static const float moveSpeed = 0.05;
 #define NORM_SPEED 0.1
 void onKeyHold()
 {
+	auto& ctl = Controller::get();
 	if (KEY_LESS) {
-		auto& ctl = Controller::get();
 		float percentLess = ctl.cuboids.size() * 0.01f;
 		size_t less = (size_t)ceilf(percentLess * ctl.delta);
 		ctl.lessElements(less);
 	}
-	if (KEY_MORE) { // TODO refactor
-		auto& ctl = Controller::get();
+	if (KEY_MORE) { 
 		float percentMore = fmaxf(ctl.cuboids.size() * 0.01f, 1.f);
 		size_t more = (size_t)ceilf(percentMore * ctl.delta);
 		ctl.moreElements(more);
 	}
 	if (KEY_SMALLER || KEY_BIGGER) {
-		auto& ctl = Controller::get();
 		float currSize = ctl.cuboidSize();
 		float diff = fmaxf(currSize * 0.01f, 1e-5) * ctl.delta;
 		diff *= KEY_BIGGER ? 1.f : -1.f;
@@ -134,7 +132,6 @@ void onKeyHold()
 		flyDown();
 }
 
-/*ne treba mi vise al nek stoji za ukras*/
 void onSpecialInputUp(int key, int x, int y)
 {
 	(void)key; (void)x; (void)y;

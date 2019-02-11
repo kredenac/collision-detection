@@ -8,9 +8,13 @@
 #include "player.h"
 #include "draw.h"
 #include "blocks.h"
-#define TIMER_UPDATE_ID 1
-#define UPDATE_TIMER_INTERVAL 10
-#define UPDATE_INTERVAL 17
+constexpr auto TIMER_UPDATE_ID = 1;
+
+// minimum timer callback time in milliseconds
+const int UPDATE_TIMER_INTERVAL = 10;
+
+// expected relative deltatime 
+const float UPDATE_INTERVAL = 1 / 60.f;
 extern int showFps;
 
 extern float approach(float goal, float curr, float dt);
@@ -20,7 +24,6 @@ extern Color getColor(Object* o);
 
 extern void loadMap(int defaultMap);
 extern void saveMap(void);
-extern void loadBlocks(char* name);
 extern void resetGame(void);
 extern void normalize3f(float* x, float* y, float* z);
 

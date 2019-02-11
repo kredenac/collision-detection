@@ -18,10 +18,17 @@ public:
 	// counts number of all elements in the tree
 	int countStoredElements() const;
 
+	// counts number of elements within inner nodes
 	int countElementsInInnerNodes() const;
+
+	// if true then inner nodes hold children that belong to multiple octants,
+	// otherwise multiple nodes can hold same children if they belong partially to them
 	static bool innerNodesHoldChildren;
 
+	// maximum number of elements in leaf nodes
 	static unsigned maxElem;
+
+	// maximum depth of a node in the tree
 	static unsigned maxDepth;
 
 private:
@@ -46,12 +53,17 @@ private:
 	// returns true if there are collisions with multiple octants
 	// puts true in whichOctants[i] when c intersects with i-th octant
 	bool getIntersectingOctants(const Cuboid &c);
+
+	// how much to inflate octants
 	const float c_extendFactor;
 	static const unsigned c_octants = 8;
 
-
+	// leaf elements
 	std::vector<Cuboid*> elements;
+
+	// elements of inner nodes, when that mode is enabled
 	std::vector<Cuboid*> innerElements;
+
 	// children are first split on x axis, then y, then z
 	Octree *octants[8]; 
 	// left x half: [0,1,2,3]
