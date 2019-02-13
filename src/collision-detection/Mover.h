@@ -4,6 +4,7 @@
 #include <cmath>
 #include <exception>
 #include <stdexcept>
+#include <algorithm>
 
 // moves the given items
 // holding them within given bounds

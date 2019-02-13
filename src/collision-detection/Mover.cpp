@@ -56,12 +56,12 @@ void Mover::reflectVelocity(Cuboid &c, float withSpeed) const
 {
 	float l, r, u, d, f, b;
 	c.getLRUDFB(l, r, u, d, f, b);
-	l += c.vel.x*withSpeed;
-	r += c.vel.x*withSpeed;
-	u += c.vel.y*withSpeed;
-	d += c.vel.y*withSpeed;
-	f += c.vel.z*withSpeed;
-	b += c.vel.z*withSpeed;
+	l += std::min(c.vel.x*withSpeed, 0.f);
+	r += std::max(c.vel.x*withSpeed, 0.f);
+	u += std::max(c.vel.y*withSpeed, 0.f);
+	d += std::min(c.vel.y*withSpeed, 0.f);
+	f += std::max(c.vel.z*withSpeed, 0.f);
+	b += std::min(c.vel.z*withSpeed, 0.f);
 
 	// if it is outisde bounds, then push it back in and change its velocity
 	bool leftOut = l <= left;

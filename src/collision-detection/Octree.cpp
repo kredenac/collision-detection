@@ -144,7 +144,7 @@ void Octree::findIntersectionDownward(Cuboid *c)
 		}
 	}
 }
-
+#include<iostream>
 void Octree::insertDownward(Cuboid *c)
 {
 	bool atleastOneOctant = false;
@@ -173,7 +173,9 @@ void Octree::insertDownward(Cuboid *c)
 	}
 
 	if (atleastOneOctant == false) {
-		throw std::runtime_error("element doesn't belong to any octant");
+		this->isCollidingWith(*c);
+		std::cout << "out of bounds" << std::endl;
+		//throw std::runtime_error("element doesn't belong to any octant");
 	}
 }
 
