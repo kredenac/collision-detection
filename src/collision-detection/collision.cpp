@@ -6,14 +6,13 @@ static int isAbove(Object* ap, Object* bp);
 static Side aRelativeTob(Object* ap, Object* bp);
 static void bulletCollisionBuildMode(Object* bullet, ObjectNode* blockNode);
 
-/*proverava da li range mina-maxa ima presek sa minb-maxb*/
+
 int rangeIntersect(float mina, float maxa, float minb, float maxb)
 {
     return maxa > minb && mina < maxb;
 }
 
-/*proverava da li dva objekta imaju presek po svakoj osi,
- * ako imaju to je kolizija*/
+// box intersection
 int hasCollision(Object* ap, Object* bp)
 {
     Object a = *ap, b = *bp;
@@ -39,7 +38,7 @@ int hasCollision(Object* ap, Object* bp)
     return interx && intery && interz;
 }
 
-/*da li se objekat a nalazi u objektu b, gledajuci samo xz ravan*/
+// is a inside of b, looking only at x and z
 int aIsInb(Object* ap, Object* bp)
 {
     Object a = *ap, b = *bp;
@@ -59,10 +58,10 @@ int aIsInb(Object* ap, Object* bp)
     return interx && interz;
 }
 
-/*za playera se uzima u obzir i visina kolena - jer do te visine moze da
-se popne na objekat iako nije skroz ispod njega*/
+// max height that a player can step onto without jumping
 static float kneeHeight = 0.25;
-/*racuna da li je a iznad b*/
+
+// is a is above b
 int isAbove(Object* ap, Object* bp)
 {
     Object a = *ap, b = *bp;
@@ -72,7 +71,7 @@ int isAbove(Object* ap, Object* bp)
     return y - offset > b.posy + b.height / 2;
 }
 
-/*racuna da li je a ispod b*/
+// is a below b
 int isBelow(Object* ap, Object* bp)
 {
     Object a = *ap, b = *bp;
@@ -85,7 +84,7 @@ int isBelow(Object* ap, Object* bp)
     // return lastPosy - playerHeadHeight + player.height / 2 < b.posy - b.height / 2;
 }
 
-/*kada ima kolizije da se odluci sa koje strane b je*/
+// which side of the box is the collision
 Side aRelativeTob(Object* ap, Object* bp)
 {
     Object a = *ap, b = *bp;
@@ -116,24 +115,23 @@ Side aRelativeTob(Object* ap, Object* bp)
     return (ax < az) ? x : z;
 }
 
-/*eps sluzi kao mala velicina za koju odaljim igraca od blokova
-da ne bi bila kolizija */
+// distance to move the player to not have collision
 static const float eps = 0.0001f;
 void playerCollision(void)
 {
-    /*postavlja se jumping na 1, pa ako stoji na necemu bice 0*/
+    // jumping will become 0 if player is standing on something
     state.jumping = 1;
     ObjectNode* l;
     for (l = Blocks; l != NULL; l = l->next){
         Object* p = l->o;
         if (hasCollision(&player, p)) {
-            /*kolizija sa podom*/
+            // floor collision
             if (isAbove(&player, p)) {
-                /*ako je igrac iznad p, ali nije skroz u njemu, ignorise koliziju*/
+				// if player is above p but not within it, ignore collision
                 if (aIsInb(&player, p)) {
                     playerOnBlockReact(p);
                 }
-                /*kolizija sa plafonom*/
+                // ceiling collision
             } else if (isBelow(&player, p)) {
                 player.posy -= eps;
                 if (player.vy.curr > 0) {
@@ -141,7 +139,7 @@ void playerCollision(void)
                     player.vy.goal = -player.vy.goal / 2;
                 }
             } else {
-                /*ako je kolizija sa strane spreci igraca da ulazi u objekat*/
+				// prevent object intersection from the side
                 Side side = aRelativeTob(&player, p);
                 switch (side) {
                 case FRONT:
@@ -164,7 +162,7 @@ void playerCollision(void)
     }
 }
 
-/*prolazi kroz sve slotove, ako je aktivan metak proveri koliziju sa kockama*/
+// check collision of active bullets with blocks
 void bulletCollision(void)
 {
     int i;
@@ -185,26 +183,21 @@ void bulletCollision(void)
     }
 }
 
-/*u build modu sve boje osim crne stvore novi blok pri sudaru sa postojecim.*/
-/*crna boja brise postojece blokove*/
+// in build mode all colors create a new block, except black which deletes them
 void bulletCollisionBuildMode(Object* bullet, ObjectNode* blockNode)
 {
     if (!state.buildMode)
         return;
     Object* block = blockNode->o;
     float x = block->posx, y = block->posy, z = block->posz;
-    /*ako je blok pogodjen crnom bojom onda se brise*/
     if (getColor(bullet) == BLACK) {
         removeNode(&Blocks, blockNode);
         return;
-    /*inace napravi novi blok sa one strane bloka gde je udario metak.*/
-    /**postavi ga iznad*/
+	// create a block on the side of collision
     } else if (isAbove(bullet, block)) {
         y = block->posy + block->height / 2 + sizey / 2;
-    /**postavi ga ispod*/
     } else if (isBelow(bullet, block)) {
         y = block->posy - block->height /2 - sizey / 2;
-    /**postavi ga sa strane gde je metak udario blok*/
     } else {
         Side side = aRelativeTob(bullet, block);
         switch (side) {
@@ -224,15 +217,14 @@ void bulletCollisionBuildMode(Object* bullet, ObjectNode* blockNode)
             break;
         }
     }
-    /*pravim test blok*/
+	// if test block has collision with the player, then don't create it
     Object test;
     test.posx = x, test.posy = y, test.posz = z;
     test.length = sizex, test.height = sizey, test.width = sizez;
-    /*ako on ima koliziju sa igracem ne stvara se*/
     if (hasCollision(&test, &player)) {
         return;
     }
-    /*ne stvara se ni ako ima koliziju sa nekim druigm blokom*/
+	// or if it has collision with other blocks
     ObjectNode* l;
     for (l = Blocks; l != NULL; l = l->next){
         Object* p = l->o;

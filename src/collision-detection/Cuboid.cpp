@@ -94,7 +94,7 @@ void Cuboid::response(Cuboid &b)
 	b.pos.z -= mtv.z / 2;
 
 	if (a.pos.x != a.pos.x) {
-		throw std::runtime_error("nan");
+		//throw std::runtime_error("nan");
 	}
 
 	a.vel = aVel;
@@ -165,7 +165,7 @@ Vector3 Cuboid::calcResolution(const Cuboid &a, const Cuboid &b)
 	}
 	scalar *= (a.vel - b.vel).dot(posDiff) / (posDiffLen * posDiffLen);
 	if (a.vel.x != a.vel.x) {
-		throw std::runtime_error("nan");
+		//throw std::runtime_error("nan");
 	}
 	return a.vel - (posDiff * scalar);
 }

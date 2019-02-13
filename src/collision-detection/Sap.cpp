@@ -19,7 +19,7 @@ bool Point::operator < (const Point &rhs) const
 bool PairStorage::has(CollisionPair &p) const
 {
 	if (p.first == p.second) {
-		throw std::runtime_error("indices can't be the same");
+		//throw std::runtime_error("indices can't be the same");
 	}
 	if (p.first > p.second) {
 		std::swap(p.first, p.second);
@@ -30,7 +30,7 @@ bool PairStorage::has(CollisionPair &p) const
 void PairStorage::add(CollisionPair &p)
 {
 	if (p.first == p.second) {
-		throw std::runtime_error("indices can't be the same");
+		//throw std::runtime_error("indices can't be the same");
 	}
 	if (p.first > p.second) {
 		std::swap(p.first, p.second);
@@ -47,7 +47,7 @@ void PairStorage::add(int a, int b)
 void PairStorage::remove(int a, int b)
 {
 	if (a == b) {
-		throw std::runtime_error("indices can't be the same");
+		//throw std::runtime_error("indices can't be the same");
 	}
 	if (a > b) {
 		std::swap(a, b);
@@ -207,7 +207,7 @@ int Sap::sortAxis(std::vector<Point> &axis, std::vector<Cuboid> &items)
 				m_pairs.remove(toMove.index, currPoint.index);
 			}
 
-			// tomove.end skips oevr currPoint.begin, which means
+			// toMove.end skips oevr currPoint.begin, which means
 			// that they now they might have an intersection
 			if (!toMove.isBegin && currPoint.isBegin) {
 				auto &first = items[toMove.index];

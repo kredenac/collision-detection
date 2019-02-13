@@ -119,7 +119,7 @@ void Octree::insert(Cuboid *c, bool markColl)
 void Octree::findIntersectionDownward(Cuboid *c)
 {
 	if (innerNodesHoldChildren == false) {
-		throw std::runtime_error("only use this method when inner nodes hold children");
+		//throw std::runtime_error("only use this method when inner nodes hold children");
 	}
 	for (auto e : innerElements) {
 		if (e->isCollidingWith(*c)) {
@@ -144,7 +144,7 @@ void Octree::findIntersectionDownward(Cuboid *c)
 		}
 	}
 }
-#include<iostream>
+
 void Octree::insertDownward(Cuboid *c)
 {
 	bool atleastOneOctant = false;
@@ -173,8 +173,6 @@ void Octree::insertDownward(Cuboid *c)
 	}
 
 	if (atleastOneOctant == false) {
-		this->isCollidingWith(*c);
-		std::cout << "out of bounds" << std::endl;
 		//throw std::runtime_error("element doesn't belong to any octant");
 	}
 }

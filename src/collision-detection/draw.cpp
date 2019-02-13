@@ -12,7 +12,7 @@ int lights[] = {
 };
 float lightPos[MAX_LIGHTS][4];
 
-/*ukljucuju se i pozicioniraju aktivna svetla*/
+// turn on and place active lights
 void lightSetup()
 {
     int i;
@@ -28,7 +28,7 @@ void lightSetup()
 	glLightfv(GL_LIGHT7, GL_POSITION, globalLightPos);
 }
 
-/*inicijalna svojstva svetlosti*/
+// initial light properties
 void initLights()
 {
     float lightAmbient[] = {0.3f, 0.3f, 0.3f, 1.f};
@@ -42,7 +42,7 @@ void initLights()
         glLightfv(lights[i], GL_AMBIENT, lightAmbient);
         glLightfv(lights[i], GL_DIFFUSE, lightDiffuse);
         glLightfv(lights[i], GL_SPECULAR, lightSpecular);
-        /*opadanje intenziteta svetlosti u zavisnosti od razdaljine*/
+		// light attenuation
         glLightf(lights[i], GL_CONSTANT_ATTENUATION, 0.f);
         glLightf(lights[i], GL_LINEAR_ATTENUATION, 0.3f);
         glLightf(lights[i], GL_QUADRATIC_ATTENUATION, 0.01f);
@@ -63,7 +63,7 @@ void initLights()
 	glLightf(GL_LIGHT7, GL_SPOT_CUTOFF, 360.0f);
 }
 
-/*postavlja poziciju n-tog GL_LIGHT*/
+// sets position of n-th GL_LIGHT
 void setLightPos(int n, float x, float y, float z)
 {
     lightPos[n][0] = x;
@@ -72,7 +72,7 @@ void setLightPos(int n, float x, float y, float z)
     lightPos[n][3] = 1;
 }
 
-/*inicijalna svojstva materijala*/
+// initial material props
 void initMaterial()
 {
     float ambient_coeffs[] = {0.f, 0.f, 0.f, 1.f };
@@ -86,11 +86,11 @@ void initMaterial()
     glMaterialf(GL_FRONT, GL_SHININESS, shininess);
 }
 
-/*na osnovu boje objekta postavlja materijale pred iscrtavanje*/
+// sets colors before drawing
 void drawWithColor(Object* o)
 {
 	GLfloat diffuseCoeffs[] = { o->color[0], o->color[1], o->color[2], 1 };
-	/*potamnjuje ambinet coeffs*/
+	// darkens ambient coeffs
 	float s = 1.f;
 	GLfloat ambientCoeffs[] = { o->color[0] * s, o->color[1] * s, o->color[2] * s, 1 };
 	const float emissionCoeffs[] = { 0.5f, 0.5f, 0.5f, 1.f };
@@ -108,7 +108,7 @@ void drawWithColor(Object* o)
 void drawWithColor(float r, float g, float b, float a)
 {
 	GLfloat diffuseCoeffs[] = { r, g, b, a};
-	/*potamnjuje ambinet coeffs*/
+	// darkens ambient coeffs
 	float s = 0.6f;
 	GLfloat ambientCoeffs[] = { r * s, g * s, b * s, a };
 	const float emissionCoeffs2[] = { 0.f, 0.f, 0.f, 0.f };
@@ -124,10 +124,10 @@ void drawWithColor(float r, float g, float b, float a)
 void glWindowPos4fMESAemulate(float x, float y, float z, float w) {
 	float fx, fy;
 
-	/* Push current matrix mode and viewport attributes. */
+	// push current matrix mode and viewport attributes
 	glPushAttrib(GL_TRANSFORM_BIT | GL_VIEWPORT_BIT);
 
-	/* Setup projection parameters. */
+	// setup projection parameters
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 	glLoadIdentity();
@@ -136,11 +136,11 @@ void glWindowPos4fMESAemulate(float x, float y, float z, float w) {
 	glLoadIdentity();
 	glDepthRange(z, z);
 	glViewport((int)x - 1, (int)y - 1, 2, 2);
-	/* Set the raster (window) position. */
+	// set the raster (window) position
 	fx = x - (int)x;
 	fy = y - (int)y;
 	glRasterPos4f(fx, fy, 0.0, w);
-	/* Restore matrices, viewport and matrix mode. */
+	// restore matrices, viewport and matrix mode
 	glPopMatrix();
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
@@ -166,20 +166,20 @@ void drawTextAt(float x, float y, const char *string)
 	}
 };
 
-/*postavlja kameru na poziciju glave igraca i usmerava pogled*/
+// sets camera on players head position and directs the view
 void positionCam()
 {
     eyex = player.posx;
     eyey = player.posy + playerHeadHeight;
     eyez = player.posz;
 
-    /*azuriranje lookat na osnovu levo-desno rotacije. A3*/
+	// lookat based on left-right rotation
     float cosy = cosf((float)M_PI * viewElevation.curr / 180);
     lookAtx = cosf((float)M_PI * viewAzimuth.curr / 180) * cosy;
     lookAtz = sinf((float)M_PI * viewAzimuth.curr / 180) * cosy;
-    /*azuriranje lookat na osnovu gore-dole rotacije*/
+	// lookat based on up-down rotation
     lookAty = sinf((float)M_PI * viewElevation.curr / 180);
-    /*usmerava se pogled relativno od pozicije kamere*/
+	// view relatively from camera
     lookAtx = eyex + lookAtx;
     lookAtz = eyez + lookAtz;
     lookAty = eyey + lookAty;
@@ -189,7 +189,7 @@ void positionCam()
         upx, upy, upz);
 }
 
-/*iscrtava sve blokove koji cine mapu*/
+// draw all blocks that make a map
 void drawMap()
 {
     ObjectNode* l;
@@ -198,7 +198,8 @@ void drawMap()
     }
 }
 
-/*boji sve kocke random bojama. interval je broj poziva funkciji potreban da se promene boje*/
+// colors all blocks with random colors. interval is the number of calls to this function
+// needed to change the colors
 void psychedelic(int interval)
 {
     static int c = 0;
@@ -207,7 +208,7 @@ void psychedelic(int interval)
         return;
     c = 0;
     int i;
-    /*poput gradijenta-pocetni se boje pretezno start bojom, a poslednji end bojom*/
+	// gradients
     float start[] = {
         rand() / (float)(RAND_MAX),
         rand() / (float)(RAND_MAX),
@@ -218,12 +219,11 @@ void psychedelic(int interval)
         rand() / (float)(RAND_MAX),
         rand() / (float)(RAND_MAX)
     };
-    /*ipak, nece biti cist gradijent nego odstupanja.
-    nice je deo boje od gradijenta, a displace deo od rand odstupanja*/
+	// adding noise to colors
     float nice = 0.8f;
     float displace = 1.f - nice;
     float r, g, b;
-    /*s je deo start boje, a e je deo end boje*/
+	// s is the start of the gradnient and e is end
     ObjectNode* l;
     i=0;
     for (l=Blocks; l!=NULL; l=l->next, i++){
@@ -242,7 +242,6 @@ void psychedelic(int interval)
     }
 }
 
-/*iscrtava sve aktivne metke*/
 void drawBullets() {
     float x, y, z;
     int i;
