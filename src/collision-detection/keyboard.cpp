@@ -5,7 +5,7 @@
 #pragma warning(disable: 4244)
 #include <cctype>
 
-#define ESC 27
+const int ESC = 27;
 static int KEY_W = 0;
 static int KEY_S = 0;
 static int KEY_A = 0;
@@ -17,11 +17,13 @@ static bool KEY_LESS = false;
 static bool KEY_MORE = false;
 static bool KEY_BIGGER = false;
 static bool KEY_SMALLER = false;
+static bool KEY_CONTAINER_BIGGER = false;
+static bool KEY_CONTAINER_SMALLER = false;
 int initWindowHeight = 800;
 static float viewAzimuthdt = 5, viewElevationdt = 3;
-static float mouseSensitivity = 0.01;
+static float mouseSensitivity = 0.01f;
 
-float aspectRatio = 16 / 9.0;
+float aspectRatio = 16 / 9.0f;
 
 void onMouseButton(int button, int pressed, int x, int y)
 {
@@ -41,11 +43,9 @@ void onMouseButton(int button, int pressed, int x, int y)
 
 static float prevMouseX = 500;
 static float prevMouseY = 500;
-/*nakon poziva funkcije glutWarpPointer postavi se kursor u centar.
-Zbog toga glutmainloop opet pozove onMouseLook i tako u krug.
-Da bi se izignorisalo dejstvo tog poziva prekida se izvrsavanje funkcije
-ako je kursor u centru*/
-/*indikator da li prozor igre ne dopusta kursoru misa da ga napusti. overly attached*/
+
+
+// if mouse can leave the game window
 static int releaseMouse = 0;
 void onMouseLook(int x, int y)
 {
@@ -84,15 +84,14 @@ void onMouseLook(int x, int y)
 		viewElevation.curr = -MAX_ELEVATION;
 }
 
-/*isto kao i onMouseLook, sem sto se poziva umesto nje
-kada je pritisnuto dugme misa*/
+// mouse callback when a key is pressed
 void onMousePressedLook(int x, int y)
 {
 	onMouseLook(x, y);
 }
 
-static const float moveSpeed = 0.05;
-#define NORM_SPEED 0.1
+const float moveSpeed = 0.05f;
+const float NORM_SPEED = 0.1f;
 void onKeyHold()
 {
 	auto& ctl = Controller::get();
@@ -113,7 +112,9 @@ void onKeyHold()
 		float newSize = currSize + diff;
 		ctl.setCuboidSize(newSize);
 	}
-
+	if (KEY_CONTAINER_BIGGER || KEY_CONTAINER_SMALLER) {
+		ctl.changeContainerSize(KEY_CONTAINER_BIGGER);
+	}
 	// if going fast but not in gofast state (not on orange block)
 	if (fabsf(player.vz.curr > NORM_SPEED) && !state.goFast)
 		return;
@@ -148,7 +149,8 @@ void onSpecialInput(int key, int x, int y)
 		loadMap(0);
 		break;
 	case (GLUT_KEY_F5):
-		resetGame();
+		Controller::get().resetToDefault();
+		resetGame(); 
 		break;
 	case (GLUT_KEY_F10):
 		fullScreen = 1;
@@ -177,6 +179,12 @@ void onKeyboardUp(unsigned char key, int x, int y)
 {
 	(void)x; (void)y;
 	switch (std::tolower(key)) {
+	case('r'):
+		KEY_CONTAINER_SMALLER = false;
+		break;
+	case('t'):
+		KEY_CONTAINER_BIGGER = false;
+		break;
 	case ('v'):
 		KEY_SMALLER = false;
 		break;
@@ -223,6 +231,12 @@ void onKeyboard(unsigned char key, int x, int y)
 	(void)x; (void)y;
 	auto& control = Controller::get();
 	switch (std::tolower(key)) {
+	case('r'):
+		KEY_CONTAINER_SMALLER = true;
+		break;
+	case('t'):
+		KEY_CONTAINER_BIGGER = true;
+		break;
 	case ('z'):
 		control.decreaseSpeed();
 		break;

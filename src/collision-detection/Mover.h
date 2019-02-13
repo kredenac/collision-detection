@@ -13,6 +13,7 @@ class Mover
 public:
 	Mover(float left, float right, float up, float down, float front, float back, float speedScale = 1.f);
 	Mover(Vector3 &min, Vector3 &max, float speedScale = 1.f);
+	Mover();
 	~Mover();
 
 	void moveItems(std::vector<Cuboid> &items, float dt) const;

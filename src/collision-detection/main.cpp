@@ -29,8 +29,7 @@ void initCollision()
 	auto& control = Controller::get();
 	control.setSpeed(0.01f);
 	control.doResolution = true;
-	control.setCuboidSize(.01f);
-	control.moreElements(1111);//11111
+	control.setCuboidSize(.02f);
 }
 
 int main(int argc, char** argv)
@@ -114,13 +113,13 @@ void drawAllText(float fpsCount)
 	auto& control = Controller::get();
 	glDisable(GL_LIGHTING);
 
-	char fPointer[100] = "fps: ";
-	sprintf(fPointer, "%f.1", fpsCount);
+	char fPointer[100];
+	sprintf(fPointer, "FPS: %.2f", fpsCount);
 
 	drawTextAt(100, 5, fPointer);
 	auto& collisionChecker = control.collisionChecker;
     std::string outputText = collisionChecker->getInfo();
-	drawTextAt(300, 5, outputText.c_str());
+	drawTextAt(250, 5, outputText.c_str());
 
 	outputText = control.getInfo();
 	drawTextAt(100, 55, outputText.c_str());

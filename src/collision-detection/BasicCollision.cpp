@@ -40,3 +40,13 @@ std::string BasicCollision::getInfo() const
 {
 	return "Basic Collision";
 }
+
+void Idle::markCollisions(std::vector<Cuboid>& items, Collisions &pairs)
+{
+	return;
+}
+
+std::string Idle::getInfo() const
+{
+	return "Not handling collisions";
+}

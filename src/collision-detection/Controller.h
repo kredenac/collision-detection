@@ -4,6 +4,7 @@
 #include "Octree.h"
 #include "Sap.h"
 #include <sstream>
+#include <iomanip>
 
 class Controller
 {
@@ -77,17 +78,20 @@ public:
 	// maxElem += diff
 	void changeOctreeMaxElements(int diff);
 
+	// changes the size of container holding all objects
+	void changeContainerSize(bool toBigger);
+
+	// resets all parameters to default values
+	void resetToDefault();
+
 private:
-	static const int c_numAlgorithms = 4;
+	static const int c_numAlgorithms = 5;
 	static const float c_speedMultiplier;
+	static const float c_lowerBound;
 	int m_algorithmIndex;
 	float m_speed;
 	float m_cuboidSize;
+	float m_containerSize;
 
-	Controller() : m_min(-2.f, -0.99f, -2.f), m_max(2.f, 2.f, 2.f), collisionChecker(nullptr),
-		mover(m_min, m_max, 0.3f), doResolution(false), delta(0.f), numPairs(0),
-		numInCollision(0), m_algorithmIndex(1), m_speed(0.01f), m_cuboidSize(0.02f)
-	{
-		setMoverBounds(m_min, m_max);
-	}
+	Controller();
 };

@@ -13,6 +13,11 @@ Mover::Mover(Vector3 &min, Vector3 &max, float speedScale)
 {
 }
 
+Mover::Mover()
+{
+
+}
+
 Mover::~Mover()
 {
 }

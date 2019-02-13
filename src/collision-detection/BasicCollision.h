@@ -17,3 +17,9 @@ private:
 	bool areColliding(Cuboid &a, Cuboid &b);
 };
 
+class Idle : public BasicCollision
+{
+	void markCollisions(std::vector<Cuboid>& items, Collisions & pairs);
+	virtual std::string getInfo() const;
+};
+

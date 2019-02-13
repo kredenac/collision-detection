@@ -1,6 +1,30 @@
 #include "Controller.h"
 
 const float Controller::c_speedMultiplier = 2.f;
+const float Controller::c_lowerBound = -0.99f;
+
+Controller::Controller()
+{
+	resetToDefault();
+}
+
+void Controller::resetToDefault()
+{
+	collisionChecker = nullptr;
+	doResolution = true;
+	delta = 1.f;
+	numPairs = 0;
+	numInCollision = 0;
+	m_algorithmIndex = 1;
+	m_speed = 0.01f;
+	m_cuboidSize = 0.02f;
+	m_containerSize = 2.f;
+	Vector3 min(-m_containerSize, c_lowerBound, -m_containerSize);
+	Vector3 max(m_containerSize, m_containerSize, m_containerSize);
+	setMoverBounds(min, max);
+	lessElements(cuboids.size());
+	moreElements(1000);
+}
 
 void Controller::joltTowards(float x, float y, float z)
 {
@@ -63,6 +87,9 @@ void Controller::resetAlgorithm()
 		collisionChecker = Sap::get(bounds.pos, bounds.size, cuboids);
 		break;
 	}
+	case 4: {
+		collisionChecker = new Idle();
+	}
 	default:
 		break;
 	}
@@ -106,7 +133,7 @@ void Controller::decreaseSpeed()
 
 void Controller::setCuboidSize(float size)
 {
-	if (size < 1e-7) {
+	if (size < 1e-6) {
 		return;
 	}
 	m_cuboidSize = size;
@@ -120,13 +147,30 @@ float Controller::cuboidSize() const
 	return m_cuboidSize;
 }
 
+void Controller::changeContainerSize(bool toBigger)
+{
+	float diff = m_containerSize * 0.01 * delta;
+	if (!toBigger) {
+		diff = -diff;
+	}
+	if (m_containerSize + diff < 0.1f) {
+		return;
+	}
+	m_containerSize += diff;
+	Vector3 min(-m_containerSize, c_lowerBound, -m_containerSize);
+	Vector3 max(m_containerSize, m_containerSize, m_containerSize);
+	setMoverBounds(min, max);
+}
+
 std::string Controller::getInfo() const
 {
 	std::stringstream str;
-
-	return "Number of elements: " + std::to_string(cuboids.size()) +
-		", size: " + std::to_string(m_cuboidSize) + ", colliding: " +
-		std::to_string(numInCollision) + ", pairs : " + std::to_string(numPairs);
+	std::string response = doResolution ? "on" : "off";
+	str << std::setprecision(2) << std::setfill(' ') << std::right << std::setw(5);
+	str << "Number of elements: " << cuboids.size() << ", size: " << m_cuboidSize <<
+		", response: " << response << ", colliding: " << std::setw(4) <<
+		numInCollision << ", pairs : " << std::setw(4) << numPairs;
+	return str.str();
 }
 
 void Controller::changeOcteeMaxDepth(int diff)
