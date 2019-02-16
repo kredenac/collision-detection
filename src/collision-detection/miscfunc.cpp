@@ -7,8 +7,7 @@ int showFps = 0;
 
 static int isequal(float a, float b);
 
-/*funkcija linearne interpolacije. sluzi da se postepeno
-trenutna vrednost priblizava ciljnoj*/
+// linear interpolation
 float approach(float goal, float curr, float dt)
 {
     float diff = goal - curr;
@@ -17,7 +16,6 @@ float approach(float goal, float curr, float dt)
     } else if (diff < -dt) {
         return curr - dt;
     }
-    /*else je u dometu dt*/
     return goal;
 }
 
@@ -36,7 +34,6 @@ void setColor(Object* op, float r, float g, float b)
     op->color[2] = b;
 }
 
-/*na osnovu boje postavlja vrednosti 3 float-a*/
 void set3fWithColor(Color c, float* r1, float* g1, float* b1)
 {
     float r, g, b;
@@ -80,10 +77,8 @@ Color getColor(Object* o)
     return OTHER;
 }
 
-/*zbog reprezentacije float-a cesto ne bude jednak pri poredjenju sa litelarom*/
-/*takodje sluzi ako ne insistiram da boje moraju biti bas identicne*/
+// float comparison
 static const float eps = 0.01;
-
 int isequal(float a, float b)
 {
     if (fabsf(a - b) < eps)
@@ -92,27 +87,25 @@ int isequal(float a, float b)
 }
 
 #define MAX_LINE 100
-/*prodje kroz listu i zapise koordinate i velicine objekata*/
+// saves map to file
 void saveMap()
 {
-    printf("Unesi ime nove mape:\n");
+    printf("Please enter the name of the new map:\n");
 
 	char path[300];
 	char name[200];
 	scanf("%s", name);
-	printf("uneto ime %s\n", name);
-	/*posto bude neko djubre postavim na term nulu*/
+	printf("Entered name: %s\n", name);
 	path[0] = '\0';
 #ifdef _WIN32
 	strcat(path, "../collision-detection/maps/");
 #elif __linux__
 	strcat(path, "./src/collision-detection/maps/");
 #endif
-    /*pravi se putanja do novog fajla*/
     strcat(path, name);
     FILE* f = fopen(path, "w");
     if (f == NULL) {
-        printf("greska pri pravljenju novog fajla\n");
+        printf("Error while trying to make a new file.\n");
         exit(EXIT_FAILURE);
     }
     ObjectNode* l;
@@ -129,27 +122,21 @@ void saveMap()
         fprintf(f, "c %.3f %.3f %.3f\n", block.posx / scale, block.posy / scale,
          block.posz / scale);
     }
-    fprintf(f, "#Num of blocks: %d\n", i);
+    fprintf(f, "Numer of blocks in map: %d\n", i);
     fclose(f);
 }
 
 static int isDefaultMap=1;
-/*Ucitava se fajl koji je sledeceg formata:*/
-/*ako linija pocinje sa s - to su duzina, visina i sirina kvadra*/
-/*ako linija pocinje sa c - to su koordinate objekta. ostale linije se ignorisu*/
-
+// reads map file with the following format:
+// line begins with 's': values are width, height and depth of cubes
+// line begins with 'c': values are coordinates of objects
+// all other lines are ignored
 void loadMap(int defaultMap)
 {
     char path[300];
     char name[200];
-    /*posto bude neko djubre postavim na term nulu*/
     path[0]='\0';
 #ifdef _WIN32
-	//get working directory
-	//char pBuf[100];
-	//GetModuleFileName(NULL, pBuf, 100);
-	//printf("%s\n", pBuf);
-	//scanf("%s", pBuf);
 	strcat(path, "../collision-detection/maps/");
 #elif __linux__
 	strcat(path, "./src/collision-detection/maps/");
@@ -160,27 +147,24 @@ void loadMap(int defaultMap)
         strcat(path, DEFAULT_MAP);
         f = fopen(path, "r");
     } else {
-        printf("Koju mapu da loadujem?\n");
+        printf("Which map to load?\n");
         scanf("%s", name);
-        /*pravi se putanja do novog fajla*/
+		// buling path to new file
         strcat(path, name);
         f = fopen(path, "r");
     }
     if (f == NULL) {
-        printf("greska pri otvaranju .map fajla\n");
+        printf("Error while trying to open .map file.\n");
         exit(EXIT_FAILURE);
     }
-    /*oslobadja se lista proslih blokova*/
     freeList(&Blocks);
     char line[MAX_LINE];
     int count, i=0;
     float x, y, z;
     float currSizex, currSizey, currSizez;
-    /*citaju se linije .map fajla*/
     while (!feof(f)) {
         fgets(line, MAX_LINE, f);
         i++;
-        /*ako je prvi char linije s tad se postavljaju dimenzije blokova*/
         if (line[0] == 's') {
             count = sscanf(&line[1], "%f %f %f", &currSizex, &currSizey, &currSizez);
             if (count != 3) {
@@ -188,7 +172,6 @@ void loadMap(int defaultMap)
                 exit(EXIT_FAILURE);
             }
             setSizes(currSizex, currSizey, currSizez);
-        /*kad je prvi char c to su koordinate blokova*/
         } else if (line[0] == 'c') {
             count = sscanf(&line[1], "%f %f %f", &x, &y, &z);
             if (count != 3) {
@@ -205,7 +188,7 @@ void loadMap(int defaultMap)
     }
 }
 
-/*zluzi i za resetovanje i za inicijalizaciju nove partije*/
+// used to reset and initialize game
 void resetGame(void)
 {
     resetBullets();

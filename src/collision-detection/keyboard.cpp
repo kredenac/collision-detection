@@ -56,12 +56,10 @@ void onMouseLook(int x, int y)
 	float deltaX;
 	float deltaY;
 	if (releaseMouse) {
-		/*pomeraj u odnosu na proslu poziciju*/
 		deltaX = x - prevMouseX;
 		deltaY = y - prevMouseY;
 	}
 	else {
-		/*pomeraj u odnosu na centar*/
 		deltaX = x - width / 2;
 		deltaY = y - height / 2;
 		glutWarpPointer(width / 2, height / 2);
@@ -70,7 +68,6 @@ void onMouseLook(int x, int y)
 	prevMouseY = y;
 	viewAzimuth.curr += deltaX * viewAzimuthdt * mouseSensitivity;
 	viewElevation.curr -= deltaY * viewElevationdt * mouseSensitivity;
-	/*proveri da l su azimut i elevacija 0 do 360 i -max do max*/
 	if (viewAzimuth.curr >= 360) {
 		viewAzimuth.curr -= 360;
 		viewAzimuth.goal -= 360;

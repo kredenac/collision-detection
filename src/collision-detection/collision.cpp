@@ -66,7 +66,7 @@ int isAbove(Object* ap, Object* bp)
 {
     Object a = *ap, b = *bp;
     float y=a.posy-a.vy.curr;
-    /*ako je isti width kao player smatram da je to bas on*/
+	// if same width as a player, it's him
     float offset=(a.width==player.width) ? kneeHeight : 0;
     return y - offset > b.posy + b.height / 2;
 }
@@ -78,10 +78,8 @@ int isBelow(Object* ap, Object* bp)
     if (!aIsInb(ap, bp))
         return 0;
     float y=a.posy-a.vy.curr;
-    /*ako je isti width kao player smatram da je to bas on*/
     float offset=(a.width==player.width) ? playerHeadHeight : 0;
     return y - offset+ a.height / 2 < b.posy - b.height / 2;
-    // return lastPosy - playerHeadHeight + player.height / 2 < b.posy - b.height / 2;
 }
 
 // which side of the box is the collision
@@ -94,7 +92,7 @@ Side aRelativeTob(Object* ap, Object* bp)
     az = a.posz-a.vz.curr;
     leftx = b.posx - b.length / 2 - a.length / 2;
     rightx = b.posx + b.length / 2 + a.length / 2;
-    /*da li je blizi levoj ili desnoj strani*/
+	// is it closer to left or right side
     if (fabsf(leftx - ax) < fabsf(rightx - ax)) {
         x = LEFT;
         ax = fabsf(leftx - ax);
@@ -111,7 +109,7 @@ Side aRelativeTob(Object* ap, Object* bp)
         z = FRONT;
         az = fabsf(frontz - az);
     }
-    /*da li je a blizi b po x ili z osi?*/
+	// is it closer to b on x or z axis
     return (ax < az) ? x : z;
 }
 

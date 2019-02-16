@@ -9,12 +9,11 @@
 typedef enum {
     TOP,
     BOT,
-    FRONT,/*z+*/
-    BACK,/*z-*/
-    LEFT,/*x-*/
-    RIGHT/*x+*/
+    FRONT,//z+
+    BACK,//z-
+    LEFT,//x-
+    RIGHT//x+
 }Side;
-//extern int hasCollision(Object a, Object b);
-extern void playerCollision(void);
-extern void bulletCollision(void);
+void playerCollision(void);
+void bulletCollision(void);
 #endif
