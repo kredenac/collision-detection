@@ -19,14 +19,35 @@
 
 \begin{document}
 
-\title{Detekcija kolizije u realnom vremenu\\ \small{Seminarski rad u okviru kursa\\Metodologija stručnog i naučnog rada\\ Matematički fakultet}}
+\begin{titlepage}
+	\centering
+	{\scshape\LARGE Matematički fakultet \par}
+	\vspace{1cm}
+	{\scshape Master rad\par}
+	\vspace{0.5cm}
+	{\huge\bfseries Detekcija kolizije u realnom vremenu\par}
+	\vspace{0.5cm}
+    \includegraphics[width=0.45\textwidth]{logo-matf.jpg}\par\vspace{1cm}
+    Student:\par
+	{ Nikola Dimitrijević\par}
+	\vfill
+	Mentor:\par
+    dr Vesna Marinković
+	\vfill
+    
+    Članovi komisije:\par
+    dr Predrag Janicić\par
+    dr Ivan Cukić
 
-\author{Nikola Dimitrijević\\ nikoladim95@gmail.com}
-\date{9.~april 2015.}
-\maketitle
+
+	\vfill
+
+% Bottom of the page
+	{\large \today\par}
+\end{titlepage}
 
 \abstract{
-Hmmmmm.
+Abstrakt.
 
 \tableofcontents
 
@@ -34,203 +55,105 @@ Hmmmmm.
 
 \section{Uvod}
 \label{sec:uvod}
+Uvod.
 
-Uz sve novouvedene termine u zagradi naglasiti od koje engleske reči termin potiče. Naredni primeri ilustruju način uvođenja enlegskih termina kao i citiranje.
+\section{Motivacija}
+\label{sec:naslov1}
+Detekcija kolizije je ključan deo svakog pogona igre (eng. {\em game engine}), a danas ga svaka velika
+video igra koristi. Industrija video igara svake godine raste \cite{game_industry},
+toliko da ima veći prihod od filmske i muzičke industrije zajedno! Zaista, industrija igara ima prihod od
+115 milijardi dolara naspram 41 milijardi filmske i 17 milijardi muzičke industrije \cite{music} \cite{movie} \cite{game_industry}.
+Posledice neispravnosti igara nisu dramaticne poput neispravnost softvera u avionskoj ili automobilskoj industriji, ali 
+se svakako jasno odražavaju negativno na prihod.
+Korisnici očekuju visok stepen doteranosti video igara, pa bi postojanje velikog broja bagova 
+ obeshrabrilo potencijalne kupce. Na slici \ref{fig:batman} se vidi bag gde je igrač propao kroz 
+ mapu, a na slici \ref{fig:horse} igrač ne može da se popne na konja pošto on lebdi u vazduhu.
 
-\begin{primer}
-Problem zaustavljanja (eng.~{\em halting problem}) je neodlučiv \cite{haltingproblem}.
-\end{primer}
-
-\begin{primer}
-Za prevođenje programa napisanih u programskom jeziku C može se koristiti GCC kompajler \cite{gcc}.
-\end{primer}
-
-\begin{primer}
- Da bi se ispitivala ispravost softvera, najpre je potrebno precizno definisati njegovo ponašanje \cite{laski2009software}. 
-\end{primer}
-
-Reference koje se koriste u ovom tekstu zadate su u datoteci {\em seminarski.bib}. Prevođenje u pdf format u Linux okruženju može se uraditi na sledeći način:
-\begin{verbatim}
-pdflatex TemaImePrezime.tex 
-bibtex TemaImePrezime.aux 
-pdflatex TemaImePrezime.tex 
-pdflatex TemaImePrezime.tex 
-\end{verbatim}
-Prvo latexovanje je neophodno da bi se generisao {\em .aux} fajl. {\em bibtex} proizvodi odgovarajući {\em .bbl} fajl koji se koristi za generisanje literature. 
-Potrebna su dva prolaza (dva puta pdflatex) da bi se reference ubacile u tekst (tj da ne bi ostali znakovi pitanja umesto referenci). Dodavanjem novih referenci potrebno je ponoviti ceo postupak.  
-
-
-Broj naslova i podnaslova je proizvoljan. Neophodni su samo Uvod i Zaključak. Na poglavlja unutar teksta referisati se po potrebi. 
-\begin{primer}
-U odeljku \ref{sec:naslov1} precizirani su osnovni pojmovi, dok su zaključci dati u odeljku \ref{sec:zakljucak}.
-\end{primer}
-
-Još jednom da napomenem da nema razloga da pišete:
-\begin{verbatim}
-\v{s} i \v{c} i \'c ...
-\end{verbatim}
-Možete koristiti srpska slova
-\begin{verbatim}
-š i č i ć ... 
-\end{verbatim}
-
-
-Ovde pišem uvodni tekst.
-Ovde pišem uvodni tekst. 
-Ovde pišem uvodni tekst. 
-Ovde pišem uvodni tekst. 
-
-
-\section{Slike i tabele}
-\label{slike_i_tabele}
-
-Slike i tabele treba da budu u svom okruženju, sa odgovarajućim naslovima, obeležene labelom da koje omogućava referenciranje. 
-
-\begin{primer} Ovako se ubacuje slika. Obratiti pažnju da je dodato i 
-\begin{verbatim}
-\usepackage{graphicx}
-\end{verbatim}
+Pojavljuju se na tržištu VR rukavice koje simuliraju dodir virtuelnih objekata, a za njih je 
+detekcija kolizije svakako presudna. Potrebno je bar 1000 puta u sekundi pružiti povratnu informaciju
+da bi simulacija dodira bila uverljiva \cite{haptic}. 
 
 \begin{figure}[h!]
 \begin{center}
-\includegraphics[scale=0.75]{collisions_overlap.png}
+\includegraphics[scale=0.15]{batman.jpg}
 \end{center}
-\caption{Pande}
-\label{fig:pande}
+\caption{Propadanje kroz mapu.}
+\label{fig:batman}
 \end{figure}
 
-Na svaku sliku neophodno je referisati se negde u tekstu. Na primer, na slici \ref{fig:pande} prikazane su pande. 
-\end{primer}
+\begin{figure}[h!]
+	\begin{center}
+	\includegraphics[scale=0.35]{horse.png}
+	\end{center}
+	\caption{Levitirajući konj.}
+	\label{fig:horse}
+\end{figure}
 
-\begin{primer} I tabele treba da budu u svom okruženju, i na njih je neophodno referisati se u tekstu. Na primer, u tabeli \ref{tab:tabela1} su prikazana različita poravnanja u tabelama.
+Problem detekcije svih parova kolizije je u najgorem slučaju kvadratne složenosti i od toga se ne može pobeći,
+ali uglavnom ih ima mnogo manje od gornje granice.
+Razlog zahteva da se izvršava u realnom vremenu kod interaktivnih programa je očigledan, ali je takođe
+potrebana mogućnost da se što češće i efikasnije utvrde kolizije. Filmovi nisu interaktivan sadržaj i zato
+je učestalost osvežavanja slike od 24hz, uz korišćenje zamućivanja pokreta (eng. {\em motion blur}),
+dovoljno dobro za većinu ljudi. Standard za igre na konzolama je barem 30hz, a na desktop računarima 
+cilj je barem 60hz. Za VR je potrebno barem 90hz inače će lako prouzrokovati dizorijentaciju, mučninu i druge
+neželjene efekte \cite{importance}.
 
-\begin{table}[h!]
-\begin{center}
-\caption{Razlčita poravnanja u okviru iste tabele ne treba koristiti jer su nepregledna.}
-\begin{tabular}{|c|l|r|} \hline
-centralno poravnanje& levo poravnanje& desno poravnanje\\ \hline
-a &b&c\\ \hline
-d &e&f\\ \hline
-\end{tabular}
-\label{tab:tabela1}
-\end{center}
-\end{table}
-
-\end{primer}
-
-
-
+Nema najboljeg algoritma detekcije kolizije za svaki mogući slučaj. 
+Neki su dobri za uniformno raspoređene objekte u prostoru, ali loši kada su svi na jednom mestu, 
+dok su drugi indiferentni što se tiče raspršenosti i više im je bitna brzina kretanja objekata.
+Takođe, isti algoritam može imati značajno bolje performanse ako su njegovi parametri dobro 
+izabrani za neku hardversku arhitekturu ili scenario. 
+Te okolnosti su inspirisale razvoj programa koji omogućava brzo i interaktivno menjanje različitih
+algoritama detekcije kolizije, postavljanje njihovih parametara kao i posmatranje performansi.
 
 
-\section{Prvi naslov}
-\label{sec:naslov1}
-
-
-Ovde pišem tekst. 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
 Ovde pišem tekst. 
 
 
-\subsection{Prvi podnaslov}
-\label{subsec:podnaslov1}
-
-Ovde pišem tekst. 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
-
-\subsection{Drugi podnaslov}
-\label{subsec:podnaslov2}
-
-Ovde pišem tekst. 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
-
-\section{Drugi naslov}
+\section{Glavne karakteristike}
 \label{sec:naslov2}
 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
+FPS. 
 
-\subsection{... podnaslov}
-\label{subsec:podnaslovN}
+Konzistentnost fpsa.
 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
+Temporalna koherencija.
 
-\section{n-ti naslov}
-\label{sec:naslovN}
+Paralelizacija, memorija.
 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
+Preciznost, preseci zapremina pokretajućih tela.
 
-\subsection{... podnaslov}
-\label{subsec:podnaslovK}
+\section{Neki algoritmi}
+\label{sec:algoritmi}
 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
 
-\subsection{... podnaslov}
-\label{subsec:podnaslovM}
+\subsection{Trivijalni}
+\label{subsec:octree}
 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
 
-\section{Poslednji naslov}
-\label{sec:naslovM}
+\subsection{Octree}
+\label{subsec:octree}
 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
-Ovde pišem tekst. 
+
+\subsection{Sweep and prune}
+\label{subsec:sap}
+
+
+\subsection{BSP}
+\label{subsec:octree}
+
+
+\section{Implementacija}
+\label{sec:implementacija}
+
+
+\section{Evaluacija}
+\label{sec:evaluacija}
 
 \section{Zaključak}
 \label{sec:zakljucak}
 
-Ovde pišem zaključak. 
-Ovde pišem zaključak. 
-Ovde pišem zaključak. 
-Ovde pišem zaključak. 
-Ovde pišem zaključak. 
-Ovde pišem zaključak. 
-Ovde pišem zaključak. 
-Ovde pišem zaključak. 
-Ovde pišem zaključak. 
-Ovde pišem zaključak. 
-Ovde pišem zaključak. 
-Ovde pišem zaključak. 
-
+Zaključak. 
 
 \addcontentsline{toc}{section}{Literatura}
 \appendix
@@ -239,11 +162,5 @@ Ovde pišem zaključak.
 
 \appendix
 \section{Dodatak}
-Ovde pišem dodatne stvari, ukoliko za time ima potrebe.
-Ovde pišem dodatne stvari, ukoliko za time ima potrebe.
-Ovde pišem dodatne stvari, ukoliko za time ima potrebe.
-Ovde pišem dodatne stvari, ukoliko za time ima potrebe.
-Ovde pišem dodatne stvari, ukoliko za time ima potrebe.
-
-
+Dodatak.
 \end{document}
