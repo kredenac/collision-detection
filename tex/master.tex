@@ -14,12 +14,19 @@
 \usepackage[unicode]{hyperref}
 \hypersetup{colorlinks,citecolor=green,filecolor=green,linkcolor=blue,urlcolor=blue}
 
+\usepackage{algorithm}
+%\usepackage{algorithmic}
+\usepackage{algpseudocode}
+
+
 %\newtheorem{primer}{Пример}[section] %ćirilični primer
 \newtheorem{primer}{Primer}[section]
+\newtheorem{defi}{Definicija}[section]
+
 
 \begin{document}
 
-\begin{titlepage}
+\begin{titlepage} 
 	\centering
 	{\scshape\LARGE Matematički fakultet \par}
 	\vspace{1cm}
@@ -107,11 +114,10 @@ Te okolnosti su inspirisale razvoj programa koji omogućava brzo i interaktivno 
 algoritama detekcije kolizije, postavljanje njihovih parametara kao i posmatranje performansi.
 
 
-Ovde pišem tekst. 
-
-
 \section{Glavne karakteristike}
 \label{sec:naslov2}
+
+Broadphase, narrowphase, bounding box.
 
 FPS. 
 
@@ -126,10 +132,53 @@ Preciznost, preseci zapremina pokretajućih tela.
 \section{Neki algoritmi}
 \label{sec:algoritmi}
 
+Rezultat izvršavanja algoritma detekcije kolizije je skup svih parova koji su u koliziji.
+U najgorem slučaju (na primer kada su svi objekti kocke na istoj poziciji) se svaki objekat
+seče sa svim ostalim i tada ima $ {n\choose 2}  $ preseka. Međutim, taj najgori slučaj se retko dešava
+u stvarnim primenama, pa postoji mnoštvo algoritama detekcije kolizije čija složenost zavisi i od broja
+parova koji su u koliziji. Za takave algoritme kažemo da su izlazno-zavisni, tj.
+vreme izvršavanja zavisi i od veličine izlaza. Tokom razmatranja algoritama podrazumeva se da su svi
+objekti ograničavajuće kutije koje su paralelne osama, tj. AABB (eng. {\em axis aligned bounding box}).
+Broj kolizija među elemntima će dalje biti označen kao $R$. 
 
-\subsection{Trivijalni}
+
+
+
+%\begin{defi}
+%\end{defi}
+
+
+\subsection{Trivijalni algoritam}
 \label{subsec:octree}
 
+Intuitivno se može doći do trivijalnog algoritma detekcije kolizije. 
+Jednostavno se svaki za element proveri da li ima presek sa svim ostalim elementima.
+Algoritam je ispravan i njegova vremenska složenost je $\Theta (n^2) $, dok je prostorna složenost
+$O(n^2)$, odnosno $\Theta(R)$, pošto svaki par objekata koji je u koliziji treba sačuvati.
+Glavna mana ovakvog algoritma je kvadratna vremenska složenost čak i kada nema nijedne kolizije.
+Bolji algoritmi rešavaju ovaj problem uglavnom particionisanjem prostora na manje potprostore, tako da
+se provere kolizije vrše samo nad manjim podskupovima svih elemenata.
+
+\begin{algorithm}
+	\caption{Trivijalan algoritam detekcije kolizije}
+    \label{alg:triv}
+	\begin{algorithmic}[1]
+		\Procedure{BasicCollision}{$elements$}\Comment{elements je niz svih objekata}
+		$Parovi := \{ \}$
+		\For{i:=0 to n-1}
+			\For{j:=i+1 to n}
+
+			\If{i-ti i j-ti elementi imaju presek}
+				\State dodaj (i, j) u skup Parovi
+			\EndIf		
+		\EndFor
+		\EndFor
+		\State \textbf{return} $Parovi$
+		\EndProcedure
+		
+		
+    \end{algorithmic}
+\end{algorithm}
 
 \subsection{Octree}
 \label{subsec:octree}
