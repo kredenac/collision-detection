@@ -8,8 +8,8 @@
 #include "blocks.h"
 #include "Cuboid.h"
 
-extern int lightOn[];
-constexpr int MAX_LIGHTS = 7;
+int lightOn[];
+const int MAX_LIGHTS = 7;
 
 void drawCube(Object* o);
 void drawWithColor(Object* o);

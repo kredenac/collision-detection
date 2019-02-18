@@ -4,8 +4,6 @@
 #include <unordered_set>
 #include <algorithm>
 
-// TODO: maybe create a class with overloaded equality
-// to ignore pair ordering
 using CollisionPair = std::pair<int, int>;
 
 struct pairhash {

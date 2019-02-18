@@ -38,9 +38,9 @@ float upx, upy, upz;
 float playerHeadHeight = 0.25f;
 float JUMP_V = 0.1f;
 
-static float* moveRightCam(void);
-static float* moveForwardCam(int yZero);
-static int firstFreeLight(void);
+float* moveRightCam(void);
+float* moveForwardCam(int yZero);
+int firstFreeLight(void);
 
 // updating player position and speed
 void movePlayer()

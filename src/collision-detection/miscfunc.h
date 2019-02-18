@@ -17,14 +17,14 @@ const int UPDATE_TIMER_INTERVAL = 10;
 const float UPDATE_INTERVAL = 1000.f / 60.f;
 extern int showFps;
 
-extern float approach(float goal, float curr, float dt);
-extern void setColor(Object* op, float r, float g, float b);
-extern void set3fWithColor(Color c,float* r1, float* g1, float* b1);
-extern Color getColor(Object* o);
+float approach(float goal, float curr, float dt);
+void setColor(Object* op, float r, float g, float b);
+void set3fWithColor(Color c,float* r1, float* g1, float* b1);
+Color getColor(Object* o);
 
-extern void loadMap(int defaultMap);
-extern void saveMap(void);
-extern void resetGame(void);
-extern void normalize3f(float* x, float* y, float* z);
+void loadMap(int defaultMap);
+void saveMap(void);
+void resetGame(void);
+void normalize3f(float* x, float* y, float* z);
 
 #endif
