@@ -164,7 +164,7 @@ se provere kolizije vrše samo nad manjim podskupovima svih elemenata.
     \label{alg:triv}
 	\begin{algorithmic}[1]
 		\Procedure{BasicCollision}{$elements$}\Comment{elements je niz svih objekata}
-		$Parovi := \{ \}$
+		\State $Parovi := \{ \}$
 		\For{i:=0 to n-1}
 			\For{j:=i+1 to n}
 
@@ -175,13 +175,38 @@ se provere kolizije vrše samo nad manjim podskupovima svih elemenata.
 		\EndFor
 		\State \textbf{return} $Parovi$
 		\EndProcedure
-		
-		
     \end{algorithmic}
 \end{algorithm}
 
 \subsection{Octree}
 \label{subsec:octree}
+
+Oktri (eng. {\em Octree}) je struktura podataka koja se koristi za rekurzivno deljenje trodimenzionog
+prostora na oktante. Oktri je stablo kod koga svaki unutrasnji čvor ima tačno 8 dece, odnosno oktanata. 
+Svaki čvor Oktrija deli prostor na osam oktana.
+Može biti tako implementiran da predstavlja i beskonačan prostor.
+Na slici \ref{fig:oct} je prikazan način particionisanja.j
+
+Objekti se ubacuju u stablo počevši od korena idući rekurzivno kroz one oktante kojima objekat pripara,
+sve dok se ne stigne do lista.
+Nije problem po opisanom postupku ubaciti tačku u stablo, ali se postavlja pitanje šta raditi sa objektima
+koji pripadaju više oktanata.
+Jedno rešenje je da se objekat ubaci u svaki oktant kome bar delimično pripada. 
+Veliki problem sa tim je ako je u pitanju veliki objekat, onda će on pokriti mnoge oktante, njihove 
+podoktante i tako rekurzivno. To nije velika smetnja kada su svi objekti sličnih veličina, ali ako 
+nisu, onda mogu i memorijska i vremenska složenost eksplodirati. 
+Moguće su male nadogradnje Oktrija da bi se taj slučaj izbegao, na primer kada se novi objekat doda 
+u čvor, proveri se da li možda ceo oktant pripada tom objektu, ako je to slučaj onda svi objekti pridruženi
+tom oktantu imaju koliziju i nije potrebno dalje rekurzivno particionisanje tog oktanta.
+
+\begin{figure}[h!]
+	\begin{center}
+	\includegraphics[scale=0.15]{octree.png}
+	\end{center}
+	\caption{Rekurzivno deljenje kocke na oktante.}
+	\label{fig:oct}
+\end{figure}
+
 
 
 \subsection{Sweep and prune}
