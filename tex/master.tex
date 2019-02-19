@@ -134,8 +134,9 @@ tih objekata. Ono što se najčešće radi jeste da se naprave najmanje kutije k
 Te kutije su u obliku kvadra i svaka njegova strana je paralelna nekoj osi koordinatnog sistema. 
 Umesto da se računaju preseci između velikog broja prostih objekata koji čine celinu jednog, sada se posmatraju 
 samo preseci među kutijama koje sadrže sve objekte. Taj metod se naziva ograničavajuće kutije
-porvnane osama (eng. {\em Axis Aligned Bounding Box}), odnosno AABB.
+porvnane prema osama (eng. {\em Axis Aligned Bounding Box}), odnosno AABB.
 
+todo moguće je i sfera, orijentisan Bounding box, convex hull.
 
 \begin{teo}
 	Teorema o razdvajajućim osama. 
@@ -150,32 +151,112 @@ Teorema o razdvajajućim osama daje inspiraciju za konstrukciju algoritma prover
 Dovoljno je pronaći samo jednu pravu tako da se  projekcije tela na njoj ne preklapaju.
 Moguće je na primer da se uzmu normalne svih lica jednog trijangulisanog tela, izračunaju projekcije drugog 
 tela na svaku pravu, i ako postoji neka prava na kojoj ne postoji presek onda uopste i nema preseka između
-dva tela. Međutim to nije dovoljno dobro za potrebe detekcije kolizije u realnom vremenu. Zato se kod 
-broadphase primenjuje samo za proveru preseka među AABB.
+dva tela. Međutim to nije dovoljno dobro za potrebe detekcije kolizije u realnom vremenu. Zato se tokom 
+broadphase ova teorema primenjuje samo za proveru preseka među AABB.
+
+Teorema o razdvajajućim osama je takođe korisna za pronalaženje minimalnog vektora translacije, odnosno
+vektor najmanjeg intenziteta za koji treba jedan objekat da se pomeri da bi prestalo da bude kolizije među dva objekta.
+Minimalni vektor translacije je vrlo koristan prilikom razrešavanja kolizije, odnosno kada se ustanovi da
+se dva objekta prekpapaju, potrebno je pomeriti ih tako da se više ne seku i promeniti im vektore brzina.
+Međutim to je posao koji je odvojen od problema detekcije kolizije pa neće biti mnogo dublje razmatran.
 
 Kada se ustanovi da postoji presek između dve AABB, to ne znači da zaista postoji presek između dva objekta
 koje ti AABB enkapsuliraju. Na primer, jedan AABB može da sadrži loptu prečnika $r$, a drugi 
 da sadrži objekat sagraćen od tankih ivica kocke čija je dužina ivice $r$. Tada se zaista njihove kutije 
 seku, iako tela unutar njih nemaju presek.
 
+todo slika
+
+%https://www.scss.tcd.ie/~manzkem/CS7057/cs7057-1516-07-NarrowPhase-mm.pdf
+Rešavanje problema određivanja da li postoji presek objekata unutar AABB koji su kandidati za koliziju 
+se radi u narrowphase fazi. Bounding volume hierarchies, AABB tree, OBB tree.
+
+
 U slučaju da su ti objekti unutar AABB neka prosta geometrijska tela poput
 lopte ili kvadra, tada možemo lako primeniti teoremu o razdvajajućim osama da bismo videli da li zaista 
-postoji preklapanje među njima. todo nije lako kad su rotirani.
+postoji preklapanje među njima. Međutim, krije se jedan problem.
+AABB se mogu posmatrati kao projekcije tela na sve tri ose u prostoru.
+Tada se dakle posmatraju samo tri prave, ne sve moguće prave. 
+U slučaju prikazanom na "slici" ispod, vidi se krug i rotiran pravougaonik. Ako gledamo njihove projekcije 
+na $x$ i $y$ ose onda oni prema tome imaju presek, iako posmatrajući sliku očigledno nema preseka.
+Pomoću opisanog kontraprimera se vidi da posmatranjem projekcija na samo bazne ose prostora nije dovoljno
+u opštem slučaju. Na slici \ref{fig:counter} prikazana su dva oblika, jedan konveksan a drugi nekonveksan. 
+Za bilo koju pravu projekcija oblika na nju ima presek, iako oni u stvari nemaju presek, što predstavlja 
+primer razloga zašto teorema o razdvajajućim osama zahteva konveksna objekta.
+
+\begin{verbatim}
+todo slika
+
+\-\
+ \ \
+O \_\
+\end{verbatim}
 
 
+\begin{figure}[h!]
+	\begin{center}
+	\includegraphics[scale=0.15]{theorem_counterexample.png}
+	\end{center}
+	\caption{Projekcija nekonveksne površi na pravu.}
+	\label{fig:counter}
+\end{figure}
+
+\subsection{Konzistentnost vremena izvršavanja}
+
+Nekad je od interesa samo ukupno vreme potrošeno za više iteracija provere kolizije.
+To svakako nije slučaj za potrebe izvršavanja u realnom vremenu. Ako samo jedna iteracija 
+detekcije kolizije traje višestruko duže od ostalih onda dolazi do takozvanog "seckanja" što
+kad se dešava  u prevelikoj meri dovodi do neupotrebljivog proizvoda pošto korisnicima postaje nepodnošljivo
+korišćenje takvog programa.
+Opisan problem je jasan i očekivano je da se to želi izbeći. 
+Međutim sledi sličan problem koji nije očigledno da toliko smeta.
+Ekrani imaju fiksnu učestalost osvežavanja, najčešće je 60hz, mada postaju sve više popularni 
+% https://www.blurbusters.com/faq/120hz-monitors/
+ekrani sa 120, 144, pa čak i 240hz učestalošću osvežavanja. Dakle ekran od 60hz će svakih 
+16.67 milisekundi iscrtati sledeću sliku. Ako se između dva osvežavanja ekrana uvek pripremi
+nova slika to je odlično. 
+Još bolje da nova slika bude izračunata neposredno pre osvežavanja ekrana jer se onda 
+prikazuje verodostojnija slika za taj trenutak. 
+Svakako će uvek postojati neko kašnjenje od trenutka interakcije korisnika sa igrom ili simulacijom do
+trenutka kada se prikaže slika, ali je cilj da to kašnjenje bude što manje. 
+Kada se u jednom ciklusu osvežavanja ekrana pripremi više od jedne slike, onda se uzima ona koja je najnovija,
+a prethodne se odbacuju. 
+Dakle praktično je bačen trud uložen u pravljenje svih slika osim poslednje.
+Kada nije izračunata nova slika za sledeći ciklus osvežavanja ekrana onda će opet biti prikazana slika
+iz prošlog ciklusa. Tada se gubi maksimalna glatkoća slike i brzina odziva programa. 
+Broj slika po sekundi (eng. {\em Frames per second}), FPS, je broj slika koje program napravi u jednoj sekundi.
+Naizgled ako program ima 60FPS to je savršeno za ekran od 60hz. To ipak ne mora da bude slučaj.
+U toku jedne sekunde u prvih 500 milisekundi može biti 59 slika, a u preostalih 500 milisekundi samo jedna 
+nova slika. To zaista jeste 60FPS, ali ono što je prikazano na ekranu nije mnogo bolje od 2FPS,
+što je prektično uvek nedopustivo loše. 
+Dakle sa jedne strane nije dobar višak slika jer se nepotrebno troše resursi na njih iako se ne prikazuju, 
+a sa druge strane manjak slika dovodi do neprijatnosti.
+Zato je bitno da cela simulacija, a samim tim i detekcija kolizije ima što konzistentnije vreme izvršavanja.
+
+Na slici <todo> se vidi da je program napravio 60 slika, tj. da praktično ima 60fps, iako je prikaz na ekranu 
+ekvivalentan sa 30FPS, što je još jedan primer nepoželjne posledice nekonzistentnosti vremena izvršavanja. 
+
+todo nacrtaj sliku gde su svaki parni trenutak osvežavanja ekrana sadrži dva frejma, a svaki neparni 
+nijedan
 
 
+\subsection{Temporalna koherencija}
 
+Često nije cilj samo jednom odrediti kolizije za neku scenu, nego i kolizije u trenutku koji ubrzo sledi.
+Objekti na sceni se u glavnom ne teleportuju nego se malo po malo kreću sa prolaskom vremena.
+Tako su pozicije objekata u bliskim trenucima slični i to se može iskoristiti za dodatno ubrzanje algoritama 
+detekcije kolizije. Generalno je princip da se čuvaju svi parovi kolizije i u svakoj iteraciji 
+izbace oni oni koji više nisu u koliziji a dodaju oni koji su u tom trenutku došli u koliziju.
+Na taj način se značajno smanjuje vreme potrebno za izračunavanje kolizija kroz iteracije.
+U slučaju da se objekti jako sporo ili uopšte ne kreću algoritmi koji dobro koriste svojstvo temporalne 
+koherencije će u svakoj iteraciji imati linearno vreme izvršavanja, što će posle biti dublje razmatrano. 
 
-FPS. 
+\subsection{Paralelizacija, memorija}
 
-Konzistentnost fpsa.
+\subsection{Preciznost, preseci zapremina pokretnih tela.}
 
-Temporalna koherencija.
-
-Paralelizacija, memorija.
-
-Preciznost, preseci zapremina pokretajućih tela.
+\subsection{Kako radi na različitim konfiguracijama}
+Primena u igrama.
 
 \section{Neki algoritmi}
 \label{sec:algoritmi}
@@ -188,10 +269,6 @@ parova koji su u koliziji. Za takave algoritme kažemo da su izlazno-zavisni, tj
 vreme izvršavanja zavisi i od veličine izlaza. Tokom razmatranja algoritama podrazumeva se da su svi
 objekti ograničavajuće kutije koje su paralelne osama, tj. AABB.
 Broj kolizija među elemntima će dalje biti označen kao $R$. 
-
-
-
-
 
 \subsection{Trivijalni algoritam}
 \label{subsec:octree}
