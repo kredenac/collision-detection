@@ -22,6 +22,8 @@
 %\newtheorem{primer}{Пример}[section] %ćirilični primer
 \newtheorem{primer}{Primer}[section]
 \newtheorem{defi}{Definicija}[section]
+\newtheorem{teo}{Teorema}[section]
+
 
 
 \begin{document}
@@ -117,7 +119,53 @@ algoritama detekcije kolizije, postavljanje njihovih parametara kao i posmatranj
 \section{Glavne karakteristike}
 \label{sec:naslov2}
 
+\subsection{Faze}
 Broadphase, narrowphase, bounding box.
+
+Celokupan zadatak detekcije kolizije se deli na dve faze: broadphase i narrowphase. 
+U prvoj fazi, broadphase, odbacuje se vecina kandidata mogucih parova koji imaju koliziju, i cilj je da 
+da faza bude sto efikasnija u odnosu na broj svih elemenata.
+Iako postoje slučajevi, u mnogim primenama nisu svi objekti prosta geometrijska tela poput kocki, kvadara ili lopti.
+Mogu biti razna kompleksna tela poput kompozicije prostijih tela, ili trijangulisana reprezentacija 
+nekih objekata. Ta kompleksnija tela mogu biti sastavljena od velikog broja tih prostijih delova ili
+od stotina hiljada trouglova. Tada bi bilo vrlo neefikasno i nepraktično tražiti kolizije posmatrajući
+tako kompleksne strukture objekata. Mnogo je bolje da se razmatra nekakva jednostavnija reprezentacija svih 
+tih objekata. Ono što se najčešće radi jeste da se naprave najmanje kutije koje će sadržati u potpunosti te objekte.
+Te kutije su u obliku kvadra i svaka njegova strana je paralelna nekoj osi koordinatnog sistema. 
+Umesto da se računaju preseci između velikog broja prostih objekata koji čine celinu jednog, sada se posmatraju 
+samo preseci među kutijama koje sadrže sve objekte. Taj metod se naziva ograničavajuće kutije
+porvnane osama (eng. {\em Axis Aligned Bounding Box}), odnosno AABB.
+
+
+\begin{teo}
+	Teorema o razdvajajućim osama. 
+
+	Dva konveksna objekta se ne preklapaju ako postoji prava (osa) na kojoj se projekcije 
+	tih objekata ne preklapaju. 
+\end{teo}
+Nezavisno od dimenzionalnosti, razdvajajuća osa je uvek linija. Na primer, trodimenzionalan prostor
+je razdvojiv ravnima, ali razdvajajuća osa je normalna na razdvajajuću ravan.
+
+Teorema o razdvajajućim osama daje inspiraciju za konstrukciju algoritma provere kolizije.
+Dovoljno je pronaći samo jednu pravu tako da se  projekcije tela na njoj ne preklapaju.
+Moguće je na primer da se uzmu normalne svih lica jednog trijangulisanog tela, izračunaju projekcije drugog 
+tela na svaku pravu, i ako postoji neka prava na kojoj ne postoji presek onda uopste i nema preseka između
+dva tela. Međutim to nije dovoljno dobro za potrebe detekcije kolizije u realnom vremenu. Zato se kod 
+broadphase primenjuje samo za proveru preseka među AABB.
+
+Kada se ustanovi da postoji presek između dve AABB, to ne znači da zaista postoji presek između dva objekta
+koje ti AABB enkapsuliraju. Na primer, jedan AABB može da sadrži loptu prečnika $r$, a drugi 
+da sadrži objekat sagraćen od tankih ivica kocke čija je dužina ivice $r$. Tada se zaista njihove kutije 
+seku, iako tela unutar njih nemaju presek.
+
+U slučaju da su ti objekti unutar AABB neka prosta geometrijska tela poput
+lopte ili kvadra, tada možemo lako primeniti teoremu o razdvajajućim osama da bismo videli da li zaista 
+postoji preklapanje među njima. todo nije lako kad su rotirani.
+
+
+
+
+
 
 FPS. 
 
@@ -138,14 +186,11 @@ seče sa svim ostalim i tada ima $ {n\choose 2}  $ preseka. Međutim, taj najgor
 u stvarnim primenama, pa postoji mnoštvo algoritama detekcije kolizije čija složenost zavisi i od broja
 parova koji su u koliziji. Za takave algoritme kažemo da su izlazno-zavisni, tj.
 vreme izvršavanja zavisi i od veličine izlaza. Tokom razmatranja algoritama podrazumeva se da su svi
-objekti ograničavajuće kutije koje su paralelne osama, tj. AABB (eng. {\em axis aligned bounding box}).
+objekti ograničavajuće kutije koje su paralelne osama, tj. AABB.
 Broj kolizija među elemntima će dalje biti označen kao $R$. 
 
 
 
-
-%\begin{defi}
-%\end{defi}
 
 
 \subsection{Trivijalni algoritam}
