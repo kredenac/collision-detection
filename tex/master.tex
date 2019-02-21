@@ -255,6 +255,46 @@ koherencije će u svakoj iteraciji imati linearno vreme izvršavanja, što će p
 
 \subsection{Preciznost, preseci zapremina pokretnih tela.}
 
+Moguće su različite preciznosti detekcije kolizije. 
+Uglavnom je razlog za odabir nepreciznije opcije kraće vreme izvršavanja i manja potrošnja memorije.
+Pošto se provera kolizije dešava u diskretnim vremenskim trenucima umesto kontinualno, onda je moguće da 
+je između dva uzastopna trenutka bilo kolizije, iako u nijednom od njih nema kolizije. 
+Ovaj fenom se naziva tuneliranje (eng. {\em. tunneling}) i prikazan je primer na slici \ref{fig:tunnel}. 
+
+\begin{figure}[h!]
+	\begin{center}
+	\includegraphics[scale=0.45]{tunnel.png}
+	\end{center}
+	\caption{Tuneliranje.}
+	\label{fig:tunnel}
+\end{figure}
+
+Tuneliranje se češće dešava kod malih objekata, a takođe i kod 
+onih koji se brzo kreću. U oba slučaja problem je u tome što je put koji objekat pređe između dve provere 
+kolizija velik u odnosu na veličinu objekta. 
+Problem se rešava tako što se ne proverava kolizija za sâm objekat, već za celu zapreminu kroz koju je on prošao 
+od prošlog trenutka provere kolizije pa do trenutnog. Na slici \ref{fig:tunnel_fix} je obojena zapremina 
+koja se dodatno proverava umesto samo zapremine objekta.
+
+
+
+\begin{figure}[h!]
+	\begin{center}
+	\includegraphics[scale=0.45]{tunnel_fixed.png}
+	\end{center}
+	\caption{Sprečavanje tuneliranja.}
+	\label{fig:tunnel_fix}
+\end{figure}
+
+Pod preciznošću se može smatrati i verodostojnost među grafičkim modelima i objektima koji predstavljaju njihovu koliziju.
+\begin{figure}[h!]
+	\begin{center}
+	\includegraphics[scale=0.45]{hitbox.png}
+	\end{center}
+	\caption{Reprezentacija modela čoveka.}
+	\label{fig:hitbox}
+\end{figure}
+
 \subsection{Kako radi na različitim konfiguracijama}
 Primena u igrama.
 
