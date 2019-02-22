@@ -1,6 +1,6 @@
 % !TEX encoding = UTF-8 Unicode
 
-\documentclass[a4paper]{article}
+\documentclass{article}
 
 \usepackage{color}
 \usepackage{url}
@@ -18,12 +18,14 @@
 %\usepackage{algorithmic}
 \usepackage{algpseudocode}
 
+%header
+\usepackage{fancyhdr}
+\pagestyle{fancy}
 
 %\newtheorem{primer}{Пример}[section] %ćirilični primer
 \newtheorem{primer}{Primer}[section]
 \newtheorem{defi}{Definicija}[section]
 \newtheorem{teo}{Teorema}[section]
-
 
 
 \begin{document}
@@ -37,22 +39,20 @@
 	{\huge\bfseries Detekcija kolizije u realnom vremenu\par}
 	\vspace{0.5cm}
     \includegraphics[width=0.45\textwidth]{logo-matf.jpg}\par\vspace{1cm}
-    Student:\par
-	{ Nikola Dimitrijević\par}
-	\vfill
-	Mentor:\par
-    dr Vesna Marinković
+    Student:\hfill Mentor: \par
+	{ Nikola Dimitrijević} \hfill dr Vesna Marinković
 	\vfill
     
-    Članovi komisije:\par
-    dr Predrag Janicić\par
-    dr Ivan Cukić
-
-
+	\vfill
+    
+	Članovi komisije:\par
+	dr Vesna Marinković \par
+    dr Predrag Janičić\par
+    dr Ivan Čukić
 	\vfill
 
 % Bottom of the page
-	{\large \today\par}
+	{\large Beograd, 2019. \par}
 \end{titlepage}
 
 \abstract{
@@ -287,6 +287,10 @@ koja se dodatno proverava umesto samo zapremine objekta.
 \end{figure}
 
 Pod preciznošću se može smatrati i verodostojnost među grafičkim modelima i objektima koji predstavljaju njihovu koliziju.
+Na slici \ref{fig:hitbox} je prikazana aproksimacija kompleksnijeg modela čoveka pomoću manjeg broja kvadara.
+Na taj način se može dobiti prostiji, ali dovoljno dobar model za detekciju kolizije koji je značajno 
+jeftiniji za upotrebu u realnom vremenu. 
+
 \begin{figure}[h!]
 	\begin{center}
 	\includegraphics[scale=0.45]{hitbox.png}
@@ -296,7 +300,56 @@ Pod preciznošću se može smatrati i verodostojnost među grafičkim modelima i
 \end{figure}
 
 \subsection{Kako radi na različitim konfiguracijama}
-Primena u igrama.
+
+Simulacija se izvršava u diskretnim koracima, ali je pitanje kolika je vremenska razlika između dva koraka.
+Prevelika razlika između dva koraka je svakako nepoželjna jer je onda i prevelika razlika između dve slike scene.
+
+Na primer, potrebno je objekat pomerati udesno za 10 jedinica svake sekunde. Neka je interval koraka simulacije 
+$p$ jednak $0.01$ sekund, onda je dovoljno da se u svakom koraku vrednost x koordinate tog objekta ažurira na sledeći način:
+
+\begin{primer}
+\label{pr:x}
+
+$$ x:= x + 10 * 0.01 $$
+\end{primer}
+
+Zaista, kako se svakog koraka x uveća za 0.1, a ima tačno 100 koraka u sekundi, onda će se $x$ uvećati za 10 svake sekunde.
+
+Poželjno je da su koraci što bliže, međutim ako bi se izabrao fiksan interval koraka $p$, onda se može desiti
+da se na određenoj konfiguraciji sistema program ne izvršava dovoljno brzo. 
+Tada bi razlika između dva koraka bila $q$ gde je $q > p$, a u svakom koraku bi simulacija napredovala za 
+$p$ jedinica unapred. Kako je $q > p$ onda bi simulacija izgledala kao usporeni snimak.
+
+Rešenje je da se koristi razlika vremena proteklog između dva uzastopna koraka, u oznaci $dt$, (eng. {\em delta time}).
+Korišćenjem $dt$ je moguće izvršavanje simulacije čije vreme teče konzistentno nezavisno od broja izvršenih koraka u 
+jedinici vremena. Ako je harver bolji onda će imati više koraka, odnosno više slika u sekundi, a ako je 
+sporiji onda će biti manje slika u sekundi ali neće izgledati kao da je usporen snimak.
+$dt$ bi u idealnom slučaju bio inverz od fps, tj. $dt = 1/fps$, ali proteklo vreme između dve slike je promenljivo.
+Može se primetiti da dodvanjam promenljivoj $x$ vrednost $dt$ svakog koraka, u stvari se vrednost $x$ povećava 
+za 1 svake sekunde, jer vreme svih koraka tokom jedne sekunde mora ukupno biti baš 1.
+Umesto ažuriranja kao u primeru \ref{pr:x}, sada se vrednost $x$ ažurira na sledeći način:
+\begin{primer}
+	\label{pr:x2}
+	
+	$$ x:= x + 10 * dt $$
+\end{primer}
+
+Kada se koristi $dt$ za ažuiriranje svih objekata onda se lako može simulacija ubrzati množenjem $dt$ 
+sa $k$ za $k$-tostruko ubrzanje, ili deljenjem sa $k$ za $k$-tostruko usporenje. Postavljanjem $dt$ na 0 svi 
+objekti postaju statični. 
+Na vrlo niskim fps igre postaju neprijatne za korišćenje, ali čak mogu postati nestabilne. Dolazi do nepoželjnih efekta 
+poput tuneliranja prikazanog na slici \ref{fig:tunnel}. Tada se često uzima donja gornja granica za $dt$, pa 
+ako je vreme između dva koraka veće od te gornje granice onda će igra biti u usporenom snimku, što se i želelo izbeći 
+ali je često bolji rezultat nego problem tuneliranja.
+
+Pogon igara Unity deli sva ažuriranja na dve vrste: FixedUpdate i Update. 
+FixedUpdate se koristi za promene sila nad objektima pošto se koraci izračunavanja fizike izvode u fiksnim intervalima, 
+dok se Update koristi za operaicje koje je potrebno izvršiti pre svakog iscrtavanja slike. 
+Na primer, izmene korisničkog interfejsa igre spada pod Update, a primena sile ili obrtnog momenta spada pod FixedUpdate.
+Unity izvršava FixedUpdate i fiziku 50 puta u sekundi, nezavisno od broja slika u sekundi \cite{unity}.
+To znači da ako se igra izvršava na 25fps onda će otprilike biti dva poziva FixedUpdate po svakoj slici,
+a ako se izvršava na 100 fps tada između nekih slika neće biti nijednog poziva fizike i FixedUpdate.
+
 
 \section{Neki algoritmi}
 \label{sec:algoritmi}
@@ -311,7 +364,7 @@ objekti ograničavajuće kutije koje su paralelne osama, tj. AABB.
 Broj kolizija među elemntima će dalje biti označen kao $R$. 
 
 \subsection{Trivijalni algoritam}
-\label{subsec:octree}
+\label{subsec:triv}
 
 Intuitivno se može doći do trivijalnog algoritma detekcije kolizije. 
 Jednostavno se svaki za element proveri da li ima presek sa svim ostalim elementima.
@@ -376,7 +429,7 @@ tom oktantu imaju koliziju i nije potrebno dalje rekurzivno particionisanje tog 
 
 
 \subsection{BSP}
-\label{subsec:octree}
+\label{subsec:bsp}
 
 
 \section{Implementacija}
