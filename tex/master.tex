@@ -68,7 +68,9 @@ Uvod.
 
 \section{Motivacija}
 \label{sec:naslov1}
-Detekcija kolizije je ključan deo svakog pogona igre (eng. {\em game engine}), a danas ga svaka velika
+Detekcija kolizije ima široke primene uključujući virtuelnu realnost, računarske igre, planiranje putanje robota i
+fizičko modelovanje.
+Detekcija kolizije u realnom vremenu je ključan deo svakog pogona igre (eng. {\em game engine}), a danas ga svaka velika
 video igra koristi. Industrija video igara svake godine raste \cite{game_industry},
 toliko da ima veći prihod od filmske i muzičke industrije zajedno! Zaista, industrija igara ima prihod od
 115 milijardi dolara naspram 41 milijardi filmske i 17 milijardi muzičke industrije \cite{music} \cite{movie} \cite{game_industry}.
@@ -251,7 +253,26 @@ Na taj način se značajno smanjuje vreme potrebno za izračunavanje kolizija kr
 U slučaju da se objekti jako sporo ili uopšte ne kreću algoritmi koji dobro koriste svojstvo temporalne 
 koherencije će u svakoj iteraciji imati linearno vreme izvršavanja, što će posle biti dublje razmatrano. 
 
-\subsection{Paralelizacija, memorija}
+
+\subsection{Temporalni anti-aliasing}
+
+Temporalni anti-aliasing ima za cilj da smanji ili ukloni efekte temporalnog aliasinga.
+Temporalni aliasing nastaje zbog premalog broja slika u sekundi u poređenju sa brzinom kretanja objekata na sceni.
+Zbog toga objekti izgledaju kao da poskaču  umesto da odaju utisak glatkog kretanja.
+Da bi se izbegao temporalni aliasing potrebno je da broj slika scene u sekundi bude bar duplo veći 
+od objekta koji se najbrže kreće \cite{Grant}. Čest primer temporalnog aliasinga je da se na snimku točkovi naizgled 
+kreću unazad.
+Temporalni anti-aliasing se takođe koristi za smanjenje oštrih ivica koje trepere kada se pomera kamera.
+Na slici \ref{fig:txaa} se vidi jasno poboljšanje kada se koristi TXAA, što je temporalni anti
+aliasing firme NVIDIA.
+
+\begin{figure}[h!]
+	\begin{center}
+	\includegraphics[scale=0.45]{txaa.png}
+	\end{center}
+	\caption{Upoređivanje tehnika anti-aliasinga.}
+	\label{fig:txaa}
+\end{figure}
 
 \subsection{Preciznost, preseci zapremina pokretnih tela.}
 
@@ -459,9 +480,21 @@ Međutim, i za tako izmenjen Oktri postoje nezgodne situacije kada se mnogo pogo
 Ako svi objekti seku više od jenog podoktanta korenog čvora, onda ih sve koren mora da čuva. 
 U tom slučaju se mora proveriti kolizija svih parova od n objekata, što je ekvivalentno trivijalnom kvadratnom algoritmu.
 
-Moguće su male nadogradnje Oktrija da bi se taj slučaj izbegao, na primer kada se novi objekat doda 
-u čvor, proveri se da li možda ceo oktant pripada tom objektu, ako je to slučaj onda svi objekti pridruženi
-tom oktantu imaju koliziju i nije potrebno dalje rekurzivno particionisanje tog oktanta.
+Očekivano vreme izvršavanja za izgradnju Oktrija je $O(n \log n)$, gde je n broj objekata.
+Očekivano vreme potrebno za pronalazak svih kolizija je $O(n \log n + R)$, gde je $R$ broj objekata koji su u koliziji.
+
+Parametri Oktrija $c$ i $h$ značajno menjaju njegovu efikasnost u praksi. 
+Iako broj provera u listu raste kvadratno sa $c$, to nije problem za relativno male vrednosti $c$, i često je bolje 
+imati nešto veći broj elemenata u listu nego da se stablo više particioniše i duže putuje kroz njega.
+Ti parametri su promenljivi u implementiranom programu i mogu se u realnom vremenu njihovim štelovanjem pronaći 
+njihove dobre vrednosti, o čemu će biti reči kasnije.
+
+Kada su svi objekti dinamični onda se u svakom koraku simulacije  gradi novi Oktri u
+koga se ubacuju svi elementi i usput se odrede njihove kolizije. Često je slučaj da je velik 
+broj objekata statički pa je tada dovoljno jednom izgraditi Oktri, a za dinamične objekte u svakom koraku 
+izvršiti detekciju kolizije njihovim ponovnim ubacivanjem u stablo. Time se smanjuje vreme izvršavanja upita 
+kolizije jednog dinamičnog objekta sa $n$ statičkih sa $O(n)$ na očekivanih $O(\log n)$.
+
 
 \begin{figure}[h!]
 	\begin{center}
@@ -475,6 +508,8 @@ tom oktantu imaju koliziju i nije potrebno dalje rekurzivno particionisanje tog 
 
 \subsection{Sweep and prune}
 \label{subsec:sap}
+
+
 
 
 \subsection{BSP}
