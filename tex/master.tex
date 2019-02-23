@@ -386,12 +386,24 @@ računski zahtevan. Što je kruća opruga potrebni su kraći vremenski koraci za
 numerička izračunavanja.
 
 Drugi način je da se analitički izračunaju nova svojstva objekata u jednom koraku.
+Prvo se izračuna minimalni vektor translacije. Npr. za dve sfere $s_1$ i $s_2$ to je vektor $\vec{m}$
+određen centrima $c_1, c_2$ dve sfere čiji je intenzitet jednak razlici intenzitata zbira poluprečnika
+$r_1, r_2$ dve sfere i intenziteta udaljenost centara, odnosno:
+\[  \vec{m} := \frac{{c_1 - c_2}} {\|{c_1 - c_2}\|} 
+ (r_1 + r_2 - \| {c_1 - c_2} \| ) \]
+Potom se jedna sfera translira za $ \frac{ \vec{v} }{ 2 }$, a druga za $ -\frac{ \vec{v} }{ 2 }$.
+Sada sfere vise nisu u koliziji, ali je potrebno da se promene njihovi vektori brzina nakon sudara.
+Kada se koristi elastična kolizija onda se računaju prema formulama:
 
-Ovo je glavni metod koji se koristi u pogonima igara.
-Analitički metod je pogodniji za jake sudare, pošto je dovoljno jednom izračunati sve promene.
+$$  {v}'_1= {v}_1-\frac{2 m_2}{m_1+m_2} \ \frac{\langle  {v}_1- {v}_2,\, {c}_1- {c}_2\rangle}{\| {c}_1- {c}_2\|^2} \ ( {c}_1- {c}_2) $$
+
+$$  {v}'_2= {v}_2-\frac{2 m_1}{m_1+m_2} \ \frac{\langle  {v}_2- {v}_1,\, {c}_2- {c}_1\rangle}{\| {c}_2- {c}_1\|^2} \ ( {c}_2- {c}_1) $$
+
+pri čemu su $m1$ i $m2$ mase lopti.
+Analitičko izračuavanje je glavni metod koji se koristi u pogonima igara.
+On je pogodniji za jake sudare, pošto je dovoljno jednom izračunati sve promene.
 Ipak, za nežnije kolizije poput tela koje je polegnuto na drugo, bolje je koristiti opruge.
 
-%https://en.wikipedia.org/wiki/Elastic_collision
 
 
 \section{Neki algoritmi}
