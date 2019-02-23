@@ -521,7 +521,21 @@ kolizije jednog dinamičnog objekta sa $n$ statičkih sa $O(n)$ na očekivanih $
 \subsection{Sweep and prune}
 \label{subsec:sap}
 
+Briši i odseci (eng. {\em sweep and prune}), skraćeno SAP, je alternativna tehnikama detekcije kolizije 
+zasnovanim na prostornom particionisanju.
+Sweep and prune je broadphase algoritam koji projektuje sve AABB
+na bazne ose pa sortira sve projekcije da bi odredio preseke AABB.
+Ako sve na sve tri ose projekcije para AABB seku, onda se i zaista u prostoru seče taj par AABB.
+Ako je potreban samo jedan rezultat parova koji su u koliziji onda ovaj metod se ne ističe u odnosu na druge.
+Moć sweep and prune algoritma je u tome što iskorišćava svojstvo temporalne koherencije.
+Zbog toga je za svaku iteraciju potreban inkrementalan posao da bi se ažurirali parovi koji su u koliziji.
+Objekti se ne teleportuju nasumično kroz prostor nego se postepeno kreću. 
+Održavaju se tri sortirana niza, svaki je sadržan od $2n$ elemenata, gde je $n$ broj objekata.
+Svaki niz sadrži sve projekcije AABB, po dva elementa za svaku projekciju. 
+Jedan je početak, odnosno teme sa manjom koordinatom, a drugi je kraj projekcije, tj. teme sa većom koordinatom. 
 
+Umesto da se vrše AABB upiti svaki put, moguće je da se čuvaju informacije o presecima 
+na svakoj osi. To zahteva $O(n^2)$ memorije ali smanjuje posao prilikom zamena. \cite{sap}
 
 
 \subsection{BSP}
@@ -549,7 +563,7 @@ Zaključak.
 \bibliography{bibl} 
 \bibliographystyle{plain}
 
-\appendix
-\section{Dodatak}
-Dodatak.
+% \appendix
+% \section{Dodatak}
+% Dodatak.
 \end{document}
