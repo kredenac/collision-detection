@@ -537,6 +537,8 @@ Jedan je početak, odnosno teme sa manjom koordinatom, a drugi je kraj projekcij
 Umesto da se vrše AABB upiti svaki put, moguće je da se čuvaju informacije o presecima 
 na svakoj osi. To zahteva $O(n^2)$ memorije ali smanjuje posao prilikom zamena. \cite{sap}
 
+Ovaj metod radi dobro kada su objekti dobro raspoređeni po većini osa, ali se loše pokazuje kada je
+mnogo objekata zgusnuto duž jedne ose, što vodi kvadratnoj složenosti po broju objekata \cite{glavna2}.
 
 \subsection{BSP}
 \label{subsec:bsp}
