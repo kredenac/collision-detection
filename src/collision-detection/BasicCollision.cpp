@@ -41,6 +41,17 @@ std::string BasicCollision::getInfo() const
 	return "Basic Collision";
 }
 
+std::string BasicCollision::name() const
+{
+	return "BasicCollision";
+}
+
+std::string BasicCollision::additionalLogData() const
+{
+	return std::string();
+}
+
+
 void Idle::markCollisions(std::vector<Cuboid>& items, Collisions &pairs)
 {
 	return;
@@ -49,4 +60,9 @@ void Idle::markCollisions(std::vector<Cuboid>& items, Collisions &pairs)
 std::string Idle::getInfo() const
 {
 	return "Not handling collisions";
+}
+
+std::string Idle::name() const
+{
+	return "Idle";
 }

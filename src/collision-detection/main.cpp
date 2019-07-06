@@ -86,8 +86,9 @@ void updateCollisions()
 	for (auto& cub : cuboids) {
 		cub.setColliding(false);
 	}
+
 	float delta = dt / (float)UPDATE_INTERVAL;
-	control.delta = delta;
+	control.setDelta(delta);
     mover.moveItems(cuboids, delta);
 
 	auto bounds = mover.getBounds();
@@ -102,6 +103,7 @@ void updateCollisions()
 			pair.first->response(*pair.second);
 		}
 	}
+
 	control.numPairs = pairs.size();
 	control.numInCollision = std::count_if(cuboids.cbegin(), cuboids.cend(),
 		[](const auto &c) {return c.hasCollision();});
@@ -134,6 +136,7 @@ void drawCollisions()
 	for (auto& cub : control.cuboids) {
 		drawCuboid(cub);
 	}
+
 	auto bounds = mover.getBounds();
 	drawBox(bounds, 0, 0, 0, 0.1f);
 	//control.collisionChecker->drawSelf(drawBox);
@@ -166,6 +169,7 @@ void onTimerUpdate(int id)
     if (TIMER_UPDATE_ID != id){
         return;
     }
+
     updateDeltaTime();
     movePlayer();
     playerCollision();
@@ -193,6 +197,7 @@ void updateDeltaTime()
     dt = newTime - oldTime;
     oldTime = newTime;
     timeSum += dt;
+
 	if (dt > DT_MAX) {
 		dt = DT_MAX;
 	}
@@ -215,6 +220,7 @@ float fps(int print)
     static int frame = 0;
     static float fps = 0;
     frame++;
+
     if (timeSum >= SECOND){
         fps = frame * SECOND / (float)timeSum;
         if (print){
@@ -225,5 +231,6 @@ float fps(int print)
         maxTime = 0;
         minTime = SECOND;
     }
+
     return fps;
 }

@@ -21,6 +21,9 @@ public:
 	// counts number of elements within inner nodes
 	int countElementsInInnerNodes() const;
 
+	std::string name() const;
+	std::string additionalLogData() const;
+
 	// if true then inner nodes hold children that belong to multiple octants,
 	// otherwise multiple nodes can hold same children if they belong partially to them
 	static bool innerNodesHoldChildren;

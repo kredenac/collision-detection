@@ -99,6 +99,17 @@ std::string Sap::getInfo() const
 	return "Sweep and Prune, number of swaps: " + std::to_string(m_numberOfSwaps);
 }
 
+std::string Sap::name() const
+{
+	return "SweenAndPrune";
+}
+
+// returns data in format numberOfSwaps
+std::string Sap::additionalLogData() const
+{
+	return std::to_string(m_numberOfSwaps);
+}
+
 Sap::Sap(const Vector3 &pos, const Vector3 &size, std::vector<Cuboid>& items)
 	: isInit(true), octPos(pos), octSize(size), m_numberOfSwaps(0), 
 	m_lastNumElements(0), lastCubeSize(0,0,0)

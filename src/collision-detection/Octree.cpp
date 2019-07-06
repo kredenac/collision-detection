@@ -35,6 +35,22 @@ std::string Octree::getInfo() const
 	return outputText;
 }
 
+std::string Octree::name() const
+{
+	std::string holdsChildren = Octree::innerNodesHoldChildren ? "wo_duplicates" : "w_duplicates";
+
+	return "Octree_maxDepth_" + std::to_string(maxDepth) + "_maxInLeaf_" + std::to_string(maxElem) + "_" + holdsChildren;
+}
+
+// returns data in format maxDepth, maxElem, storedElementsCount, innerElementsCount
+std::string Octree::additionalLogData() const
+{
+	int count = countStoredElements();
+	int count2 = countElementsInInnerNodes();
+	std::string inner = Octree::innerNodesHoldChildren ? ", " + std::to_string(count2) : "";
+	return std::to_string(maxDepth) + ", " + std::to_string(maxElem) + ", " + std::to_string(count) + inner;
+}
+
 bool Octree::getIntersectingOctants(const Cuboid &c)
 {
 	bool moreThanOneOctant = false;

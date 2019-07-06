@@ -1,7 +1,7 @@
 #include "Controller.h"
 
 const float Controller::c_speedMultiplier = 2.f;
-const float Controller::c_lowerBound = -0.99f;
+const float Controller::c_containerLowerBound = -0.99f;
 
 Controller::Controller()
 {
@@ -12,18 +12,19 @@ void Controller::resetToDefault()
 {
 	collisionChecker = nullptr;
 	doResolution = true;
-	delta = 1.f;
+	m_delta = 1.f;
 	numPairs = 0;
 	numInCollision = 0;
 	m_algorithmIndex = 1;
 	m_speed = 0.01f;
 	m_cuboidSize = 0.02f;
 	m_containerSize = 2.f;
-	Vector3 min(-m_containerSize, c_lowerBound, -m_containerSize);
+	Vector3 min(-m_containerSize, c_containerLowerBound, -m_containerSize);
 	Vector3 max(m_containerSize, m_containerSize, m_containerSize);
 	setMoverBounds(min, max);
 	lessElements(cuboids.size());
 	moreElements(1000);
+	isMeasurementInProgress = false;
 }
 
 void Controller::joltTowards(float x, float y, float z)
@@ -149,7 +150,7 @@ float Controller::cuboidSize() const
 
 void Controller::changeContainerSize(bool toBigger)
 {
-	float diff = m_containerSize * 0.01 * delta;
+	float diff = m_containerSize * 0.01 * m_delta;
 	if (!toBigger) {
 		diff = -diff;
 	}
@@ -157,7 +158,7 @@ void Controller::changeContainerSize(bool toBigger)
 		return;
 	}
 	m_containerSize += diff;
-	Vector3 min(-m_containerSize, c_lowerBound, -m_containerSize);
+	Vector3 min(-m_containerSize, c_containerLowerBound, -m_containerSize);
 	Vector3 max(m_containerSize, m_containerSize, m_containerSize);
 	setMoverBounds(min, max);
 }
@@ -189,4 +190,34 @@ void Controller::changeOctreeMaxElements(int diff)
 		return;
 	}
 	Octree::maxElem = max;
+}
+
+void Controller::startMeasurement()
+{
+	isMeasurementInProgress = true;
+	std::stringstream str;
+	std::string response = doResolution ? "on" : "off";
+	str << collisionChecker->name() + " _response_" << response;
+	
+	logger.startNewMeasurement(str.str());
+}
+
+void Controller::endMeasurement()
+{
+	isMeasurementInProgress = false;
+	logger.finishMeasurement();
+}
+
+void Controller::setDelta(float dt)
+{
+	m_delta = dt;
+
+	if (isMeasurementInProgress) {
+		logger.addInstance(dt, m_cuboidSize, cuboids.size(), collisionChecker->additionalLogData());
+	}
+}
+
+float Controller::delta() const 
+{
+	return m_delta;
 }

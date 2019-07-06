@@ -94,17 +94,17 @@ void onKeyHold()
 	auto& ctl = Controller::get();
 	if (KEY_LESS) {
 		float percentLess = ctl.cuboids.size() * 0.01f;
-		size_t less = (size_t)ceilf(percentLess * ctl.delta);
+		size_t less = (size_t)ceilf(percentLess * ctl.delta());
 		ctl.lessElements(less);
 	}
 	if (KEY_MORE) { 
 		float percentMore = fmaxf(ctl.cuboids.size() * 0.01f, 1.f);
-		size_t more = (size_t)ceilf(percentMore * ctl.delta);
+		size_t more = (size_t)ceilf(percentMore * ctl.delta());
 		ctl.moreElements(more);
 	}
 	if (KEY_SMALLER || KEY_BIGGER) {
 		float currSize = ctl.cuboidSize();
-		float diff = fmaxf(currSize * 0.01f, 1e-5) * ctl.delta;
+		float diff = fmaxf(currSize * 0.01f, 1e-5) * ctl.delta();
 		diff *= KEY_BIGGER ? 1.f : -1.f;
 		float newSize = currSize + diff;
 		ctl.setCuboidSize(newSize);
@@ -176,22 +176,22 @@ void onKeyboardUp(unsigned char key, int x, int y)
 {
 	(void)x; (void)y;
 	switch (std::tolower(key)) {
-	case('r'):
+	case ('r'):
 		KEY_CONTAINER_SMALLER = false;
 		break;
-	case('t'):
+	case ('t'):
 		KEY_CONTAINER_BIGGER = false;
 		break;
 	case ('v'):
 		KEY_SMALLER = false;
 		break;
-	case('b'):
+	case ('b'):
 		KEY_BIGGER = false;
 		break;
 	case ('n'):
 		KEY_LESS = false;
 		break;
-	case('m'):
+	case ('m'):
 		KEY_MORE = false;
 		break;
 	case ('h'):
@@ -228,10 +228,10 @@ void onKeyboard(unsigned char key, int x, int y)
 	(void)x; (void)y;
 	auto& control = Controller::get();
 	switch (std::tolower(key)) {
-	case('r'):
+	case ('r'):
 		KEY_CONTAINER_SMALLER = true;
 		break;
-	case('t'):
+	case ('t'):
 		KEY_CONTAINER_BIGGER = true;
 		break;
 	case ('z'):
@@ -261,13 +261,13 @@ void onKeyboard(unsigned char key, int x, int y)
 	case ('v'):
 		KEY_SMALLER = true;
 		break;
-	case('b'):
+	case ('b'):
 		KEY_BIGGER = true;
 		break;
 	case ('n'):
 		KEY_LESS = true;
 		break;
-	case('m'):
+	case ('m'):
 		KEY_MORE = true;
 		break;
 	case ('j'):
@@ -278,6 +278,12 @@ void onKeyboard(unsigned char key, int x, int y)
 		break;
 	case ('f'):
 		firePaint();
+		break;
+	case ('g'):
+		control.startMeasurement();
+		break;
+	case ('h'):
+		control.endMeasurement();
 		break;
 	case (' '):
 		KEY_SPACE = 1;

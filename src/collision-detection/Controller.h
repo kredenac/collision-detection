@@ -3,6 +3,7 @@
 #include "BasicCollision.h"
 #include "Octree.h"
 #include "Sap.h"
+#include "Logger.h"
 #include <sstream>
 #include <iomanip>
 
@@ -11,16 +12,25 @@ class Controller
 private:
 	Vector3 m_min;
 	Vector3 m_max;
-public:
-	std::vector<Cuboid> cuboids;
-	std::vector<std::pair<Cuboid*, Cuboid*>> pairs;
-	BasicCollision* collisionChecker;
-	Mover mover;
-	bool doResolution;
 
-	// relative delta time. 1 when its exactly at expected speed,
-	// >1 when slower, <1 when faster
-	float delta;
+public:
+	// all objects to be considered for collision
+	std::vector<Cuboid> cuboids;
+
+	// pairs of colliding objects
+	std::vector<std::pair<Cuboid*, Cuboid*>> pairs;
+
+	// a collision detection algorithm
+	BasicCollision* collisionChecker;
+
+	// saves the delta time measurements in a file
+	Logger logger;
+
+	// updates positions of objects
+	Mover mover;
+
+	// should collision resolution be applied
+	bool doResolution;
 
 	// number of collision pairs
 	int numPairs;
@@ -70,6 +80,7 @@ public:
 
 	float cuboidSize() const;
 
+	// gets description of the current state
 	std::string getInfo() const;
 
 	// newMaxDepth += diff
@@ -84,11 +95,38 @@ public:
 	// resets all parameters to default values
 	void resetToDefault();
 
+	// starts the measurement of time deltas to be written to a file
+	void startMeasurement();
+
+	// ends the measurement
+	void endMeasurement();
+
+	// relative delta time. 1 when its exactly at expected speed,
+	// >1 when slower, <1 when faster
+	void setDelta(float dt);
+
+	// gets the delta time
+	float delta() const;
+
 private:
+	// delta time
+	float m_delta;
+
+	// indicator if measuring time deltas is in progress
+	bool isMeasurementInProgress;
+
+	// number of different algorithms to cycle through
 	static const int c_numAlgorithms = 5;
+
+	// speed multiplier for moving objects
 	static const float c_speedMultiplier;
-	static const float c_lowerBound;
+
+	// lower bound of the container of objects
+	static const float c_containerLowerBound;
+
+	// which algorithm is currently used
 	int m_algorithmIndex;
+
 	float m_speed;
 	float m_cuboidSize;
 	float m_containerSize;

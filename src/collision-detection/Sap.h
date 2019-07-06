@@ -55,6 +55,9 @@ public:
 
 	std::string getInfo() const override;
 
+	std::string name() const;
+
+	std::string additionalLogData() const;
 private:
 	Sap(const Vector3 &pos, const Vector3 &size, std::vector<Cuboid>& items);
 
