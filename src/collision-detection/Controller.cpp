@@ -221,3 +221,8 @@ float Controller::delta() const
 {
 	return m_delta;
 }
+
+bool Controller::isMeasuring() const
+{
+	return isMeasurementInProgress;
+}

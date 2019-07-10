@@ -180,7 +180,7 @@ void onTimerUpdate(int id)
 	updateCollisions();
 
     glutPostRedisplay();
-    glutTimerFunc(UPDATE_TIMER_INTERVAL, onTimerUpdate, TIMER_UPDATE_ID);
+    glutTimerFunc(Controller::get().isMeasuring() ? 1 : UPDATE_TIMER_INTERVAL, onTimerUpdate, TIMER_UPDATE_ID);
 }
 
 // calculation of delta time betweeen two calls to onTimerUpdate function
@@ -198,7 +198,7 @@ void updateDeltaTime()
     oldTime = newTime;
     timeSum += dt;
 
-	if (dt > DT_MAX) {
+	if (dt > DT_MAX && !Controller::get().isMeasuring()) {
 		dt = DT_MAX;
 	}
 }

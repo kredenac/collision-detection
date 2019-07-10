@@ -1,3 +1,9 @@
+.ipynb_checkpoints
+*.py[co]
+__pycache__
+*.py[cod]
+.DS_Store
+
 # Compiled Object files
 *.slo
 *.lo

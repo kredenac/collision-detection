@@ -108,6 +108,8 @@ public:
 	// gets the delta time
 	float delta() const;
 
+	// whether or not measurement is in progress
+	bool isMeasuring() const;
 private:
 	// delta time
 	float m_delta;
