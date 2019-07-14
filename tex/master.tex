@@ -1,69 +1,95 @@
 % !TEX encoding = UTF-8 Unicode
 
-\documentclass{article}
+% Format teze zasnovan je na paketu memoir
+% http://tug.ctan.org/macros/latex/contrib/memoir/memman.pdf ili
+% http://texdoc.net/texmf-dist/doc/latex/memoir/memman.pdf
+% 
+% Prilikom zadavanja klase memoir, navedenim opcijama se podešava 
+% veličina slova (12pt) i jednostrano štampanje (oneside).
+% Ove parametre možete menjati samo ako pravite nezvanične verzije
+% mastera za privatnu upotrebu (na primer, u b5 varijanti ima smisla 
+% smanjiti 
+\documentclass[12pt,oneside]{memoir} 
 
-\usepackage{color}
-\usepackage{url}
-\usepackage[T2A]{fontenc} % enable Cyrillic fonts
-\usepackage[utf8]{inputenc} % make weird characters work
+% Paket koji definiše sve specifičnosti master rada Matematičkog fakulteta
+\usepackage[latinica]{matfmaster} 
+%
+
+% \usepackage{color}
+% \usepackage{url}
+% \usepackage[utf8]{inputenc} % make weird characters work
 \usepackage{graphicx}
+\graphicspath{{figures/}} %Setting the graphicspath
 
-\usepackage[english,serbian]{babel}
-%\usepackage[english,serbianc]{babel} %ukljuciti babel sa ovim opcijama, umesto gornjim, ukoliko se koristi cirilica
+% \usepackage[english,serbian]{babel}
+% \usepackage[english,serbianc]{babel} %ukljuciti babel sa ovim opcijama, umesto gornjim, ukoliko se koristi cirilica
 
 \usepackage[unicode]{hyperref}
 \hypersetup{colorlinks,citecolor=green,filecolor=green,linkcolor=blue,urlcolor=blue}
 
 \usepackage{algorithm}
-%\usepackage{algorithmic}
 \usepackage{algpseudocode}
 
 %header
-\usepackage{fancyhdr}
-\pagestyle{fancy}
+% \usepackage{fancyhdr}
+% \pagestyle{fancy}
 
 %\newtheorem{primer}{Пример}[section] %ćirilični primer
 \newtheorem{primer}{Primer}[section]
 \newtheorem{defi}{Definicija}[section]
 \newtheorem{teo}{Teorema}[section]
 
+% Datoteka sa literaturom u BibTex tj. BibLaTeX/Biber formatu
+\bib{master}
+
+% Ime kandidata na srpskom jeziku (u odabranom pismu)
+\autor{Nikola Dimitrijević}
+% Naslov teze na srpskom jeziku (u odabranom pismu)
+\naslov{Detekcija kolizije u realnom vremenu}
+% Godina u kojoj je teza predana komisiji
+\godina{2019}
+% Ime i afilijacija mentora (u odabranom pismu)
+\mentor{dr Vesna \textsc{Marinković} \\ Univerzitet u Beogradu, Matematički fakultet}
+% Ime i afilijacija prvog člana komisije (u odabranom pismu)
+\komisijaA{dr Predrag \textsc{Janičić } \\ Univerzitet u Beogradu, Matematički fakultet}
+% Ime i afilijacija drugog člana komisije (u odabranom pismu)
+\komisijaB{dr Ivan \textsc{Čukić} \\ Univerzitet u Beogradu, Matematički fakultet}
+% Datum odbrane (odkomentarisati narednu liniju i upisati datum odbrane ako je poznat)
+\datumodbrane{ }
+
+% Apstrakt na srpskom jeziku (u odabranom pismu)
+\apstr{%
+ Apstrakt.
+}
+
+% Ključne reči na srpskom jeziku (u odabranom pismu)
+\kljucnereci{kolizija, grafika, računarstvo, algoritmi}
 
 \begin{document}
+% ==============================================================================
+% Uvodni deo teze
+\frontmatter
+% ==============================================================================
 
-\begin{titlepage} 
-	\centering
-	{\scshape\LARGE Matematički fakultet \par}
-	\vspace{1cm}
-	{\scshape Master rad\par}
-	\vspace{0.5cm}
-	{\huge\bfseries Detekcija kolizije u realnom vremenu\par}
-	\vspace{0.5cm}
-    \includegraphics[width=0.45\textwidth]{logo-matf.jpg}\par\vspace{1cm}
-    Student:\hfill Mentor: \par
-	{ Nikola Dimitrijević} \hfill dr Vesna Marinković
-	\vfill
-    
-	\vfill
-    
-	Članovi komisije:\par
-	dr Vesna Marinković \par
-    dr Predrag Janičić\par
-    dr Ivan Čukić
-	\vfill
+% Naslovna strana
+\naslovna
+% Strana sa podacima o mentoru i članovima komisije
+\komisija
+% Strana sa posvetom (u odabranom pismu)
+% \posveta{Mami, tati i dedi}
+% Strana sa podacima o disertaciji na srpskom jeziku
+\apstrakt
+% Sadržaj teze
+% \pagenumbering{arabic}
+\tableofcontents*
 
-% Bottom of the page
-	{\large Beograd, 2019. \par}
-\end{titlepage}
+\mainmatter
 
-\abstract{
-Abstrakt.
-
-\tableofcontents
-
-\newpage
-
-\section{Uvod}
+% ==============================================================================
+\chapter{Uvod}
 \label{sec:uvod}
+% ==============================================================================
+
 Uvod.
 
 \section{Motivacija}
@@ -85,17 +111,15 @@ detekcija kolizije svakako presudna. Potrebno je bar 1000 puta u sekundi pružit
 da bi simulacija dodira bila uverljiva \cite{haptic}. 
 
 \begin{figure}[h!]
-\begin{center}
-\includegraphics[scale=0.15]{batman.jpg}
-\end{center}
+\centering
+\includegraphics[scale=0.22]{batman.jpg}
 \caption{Propadanje kroz mapu.}
 \label{fig:batman}
 \end{figure}
 
 \begin{figure}[h!]
-	\begin{center}
-	\includegraphics[scale=0.35]{horse.png}
-	\end{center}
+	\centering
+	\includegraphics[scale=0.54]{horse.png}
 	\caption{Levitirajući konj.}
 	\label{fig:horse}
 \end{figure}
@@ -117,11 +141,12 @@ izabrani za neku hardversku arhitekturu ili scenario.
 Te okolnosti su inspirisale razvoj programa koji omogućava brzo i interaktivno menjanje različitih
 algoritama detekcije kolizije, postavljanje njihovih parametara kao i posmatranje performansi.
 
-
-\section{Glavne karakteristike}
+% ==============================================================================
+\chapter{Glavne karakteristike}
 \label{sec:karakteristike}
+% ==============================================================================
 
-\subsection{Faze}
+\section{Faze}
 Broadphase, narrowphase, bounding box.
 
 Celokupan zadatak detekcije kolizije se deli na dve faze: broadphase i narrowphase. 
@@ -197,13 +222,13 @@ O \_\
 
 \begin{figure}[h!]
 	\begin{center}
-	\includegraphics[scale=0.15]{theorem_counterexample.png}
+	\includegraphics[scale=0.2]{theorem_counterexample.png}
 	\end{center}
 	\caption{Projekcija nekonveksne površi na pravu.}
 	\label{fig:counter}
 \end{figure}
 
-\subsection{Konzistentnost vremena izvršavanja}
+\section{Konzistentnost vremena izvršavanja}
 
 Nekad je od interesa samo ukupno vreme potrošeno za više iteracija provere kolizije.
 To svakako nije slučaj za potrebe izvršavanja u realnom vremenu. Ako samo jedna iteracija 
@@ -242,7 +267,7 @@ todo nacrtaj sliku gde su svaki parni trenutak osvežavanja ekrana sadrži dva f
 nijedan
 
 
-\subsection{Temporalna koherencija}
+\section{Temporalna koherencija}
 
 Često nije cilj samo jednom odrediti kolizije za neku scenu, nego i kolizije u trenutku koji ubrzo sledi.
 Objekti na sceni se u glavnom ne teleportuju nego se malo po malo kreću sa prolaskom vremena.
@@ -254,7 +279,7 @@ U slučaju da se objekti jako sporo ili uopšte ne kreću algoritmi koji dobro k
 koherencije će u svakoj iteraciji imati linearno vreme izvršavanja, što će posle biti dublje razmatrano. 
 
 
-\subsection{Temporalni anti-aliasing}
+\section{Temporalni anti-aliasing}
 
 Temporalni anti-aliasing ima za cilj da smanji ili ukloni efekte temporalnog aliasinga.
 Temporalni aliasing nastaje zbog premalog broja slika u sekundi u poređenju sa brzinom kretanja objekata na sceni.
@@ -268,13 +293,13 @@ aliasing firme NVIDIA.
 
 \begin{figure}[h!]
 	\begin{center}
-	\includegraphics[scale=0.45]{txaa.png}
+	\includegraphics[scale=0.65]{txaa.png}
 	\end{center}
 	\caption{Upoređivanje tehnika anti-aliasinga.}
 	\label{fig:txaa}
 \end{figure}
 
-\subsection{Preciznost, preseci zapremina pokretnih tela.}
+\section{Preciznost, preseci zapremina pokretnih tela.}
 
 Moguće su različite preciznosti detekcije kolizije. 
 Uglavnom je razlog za odabir nepreciznije opcije kraće vreme izvršavanja i manja potrošnja memorije.
@@ -284,7 +309,7 @@ Ovaj fenom se naziva tuneliranje (eng. {\em. tunneling}) i prikazan je primer na
 
 \begin{figure}[h!]
 	\begin{center}
-	\includegraphics[scale=0.45]{tunnel.png}
+	\includegraphics[scale=0.55]{tunnel.png}
 	\end{center}
 	\caption{Tuneliranje.}
 	\label{fig:tunnel}
@@ -301,7 +326,7 @@ koja se dodatno proverava umesto samo zapremine objekta.
 
 \begin{figure}[h!]
 	\begin{center}
-	\includegraphics[scale=0.45]{tunnel_fixed.png}
+	\includegraphics[scale=0.55]{tunnel_fixed.png}
 	\end{center}
 	\caption{Sprečavanje tuneliranja.}
 	\label{fig:tunnel_fix}
@@ -314,13 +339,13 @@ jeftiniji za upotrebu u realnom vremenu.
 
 \begin{figure}[h!]
 	\begin{center}
-	\includegraphics[scale=0.45]{hitbox.png}
+	\includegraphics[scale=0.55]{hitbox.png}
 	\end{center}
 	\caption{Reprezentacija modela čoveka.}
 	\label{fig:hitbox}
 \end{figure}
 
-\subsection{Kako radi na različitim konfiguracijama}
+\section{Kako radi na različitim konfiguracijama}
 
 Simulacija se izvršava u diskretnim koracima, ali je pitanje kolika je vremenska razlika između dva koraka.
 Prevelika razlika između dva koraka je svakako nepoželjna jer je onda i prevelika razlika između dve slike scene.
@@ -371,7 +396,7 @@ Unity izvršava FixedUpdate i fiziku 50 puta u sekundi, nezavisno od broja slika
 To znači da ako se igra izvršava na 25fps onda će otprilike biti dva poziva FixedUpdate po svakoj slici,
 a ako se izvršava na 100 fps tada između nekih slika neće biti nijednog poziva fizike i FixedUpdate.
 
-\subsection{Razrešenje kolizije}
+\section{Razrešenje kolizije}
 
 Prilikom razrešenja kolizije zadatak je da se pomere objekti tako da se više ne seku i
 da se postave njihovi novi vektori brzina i ubrzanja nakon kolizije.
@@ -404,10 +429,10 @@ Analitičko izračuavanje je glavni metod koji se koristi u pogonima igara.
 On je pogodniji za jake sudare, pošto je dovoljno jednom izračunati sve promene.
 Ipak, za nežnije kolizije poput tela koje je polegnuto na drugo, bolje je koristiti opruge.
 
-
-
-\section{Neki algoritmi}
+% ==============================================================================
+\chapter{Neki algoritmi}
 \label{sec:algoritmi}
+% ==============================================================================
 
 Rezultat izvršavanja algoritma detekcije kolizije je skup svih parova koji su u koliziji.
 U najgorem slučaju (na primer kada su svi objekti kocke na istoj poziciji) se svaki objekat
@@ -418,7 +443,7 @@ vreme izvršavanja zavisi i od veličine izlaza. Tokom razmatranja algoritama po
 objekti ograničavajuće kutije koje su paralelne osama, tj. AABB.
 Broj kolizija među elemntima će dalje biti označen kao $R$. 
 
-\subsection{Trivijalni algoritam}
+\section{Trivijalni algoritam}
 \label{subsec:triv}
 
 Intuitivno se može doći do trivijalnog algoritma detekcije kolizije. 
@@ -448,7 +473,7 @@ se provere kolizije vrše samo nad manjim podskupovima svih elemenata.
     \end{algorithmic}
 \end{algorithm}
 
-\subsection{Octree}
+\section{Octree}
 \label{subsec:octree}
 
 Oktri (eng. {\em Octree}) je struktura podataka koja se koristi za rekurzivno deljenje trodimenzionog
@@ -510,7 +535,7 @@ kolizije jednog dinamičnog objekta sa $n$ statičkih sa $O(n)$ na očekivanih $
 
 \begin{figure}[h!]
 	\begin{center}
-	\includegraphics[scale=0.15]{octree.png}
+	\includegraphics[scale=0.22]{octree.png}
 	\end{center}
 	\caption{Rekurzivno deljenje kocke na oktante.}
 	\label{fig:oct}
@@ -518,7 +543,7 @@ kolizije jednog dinamičnog objekta sa $n$ statičkih sa $O(n)$ na očekivanih $
 
 
 
-\subsection{Sweep and prune}
+\section{Sweep and prune}
 \label{subsec:sap}
 
 Briši i odseci (eng. {\em sweep and prune}), skraćeno SAP, je alternativna tehnikama detekcije kolizije 
@@ -540,7 +565,7 @@ na svakoj osi. To zahteva $O(n^2)$ memorije ali smanjuje posao prilikom zamena. 
 Ovaj metod radi dobro kada su objekti dobro raspoređeni po većini osa, ali se loše pokazuje kada je
 mnogo objekata zgusnuto duž jedne ose, što vodi kvadratnoj složenosti po broju objekata \cite{glavna2}.
 
-\subsection{BSP}
+\section{BSP}
 \label{subsec:bsp}
 
 
@@ -560,12 +585,26 @@ Grafici i parelele sa prethodno opisanim principima.
 
 Zaključak. 
 
-\addcontentsline{toc}{section}{Literatura}
-\appendix
-\bibliography{bibl} 
-\bibliographystyle{plain}
+% \addcontentsline{toc}{section}{Literatura}
+% \appendix
+% \bibliography{bibl} 
+% \bibliographystyle{plain}
+
+
+% ------------------------------------------------------------------------------
+% Literatura
+% ------------------------------------------------------------------------------
+\literatura
+
+% ==============================================================================
+% Završni deo teze i prilozi
+\backmatter
+% ==============================================================================
+
+
 
 % \appendix
 % \section{Dodatak}
 % Dodatak.
+
 \end{document}
