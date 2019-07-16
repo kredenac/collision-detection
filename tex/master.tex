@@ -430,7 +430,7 @@ On je pogodniji za jake sudare, pošto je dovoljno jednom izračunati sve promen
 Ipak, za nežnije kolizije poput tela koje je polegnuto na drugo, bolje je koristiti opruge.
 
 % ==============================================================================
-\chapter{Neki algoritmi}
+\chapter{Odabrani algoritmi}
 \label{sec:algoritmi}
 % ==============================================================================
 
@@ -644,6 +644,8 @@ Glavne komponente programa su:
 
 Na slici \ref{fig:archi} je prikazana arhitektura programa sa navedenim komponentama.
 
+\subsection{Kontroler komponenta}
+
 Parametri koji se menjaju kroz kontroler komponentu su: 
 \begin{itemize}  
 	\item Broj objekata koji su podložni koliziji. 
@@ -661,7 +663,13 @@ Parametri koji se menjaju kroz kontroler komponentu su:
 	\item Maksimalna dubina Oktrija. Što veća dubina je uglavnom povoljnija, mada treba biti oprezan ako se može desiti 
 	da se velik broj objekata preklapa unutar jednog oktanta, jer se tada samo gubi vreme i troši dodatna memorija. 
 	Pokušavaju se razdvojiti objekti rekurzivnom podelom potprostora, ali pošto se oni presecaju taj put je beznatežan.
-	
+	\item Da li raditi razrešenje kolizije. 
+	Razrešenje kolizije je odvojen problem od detekcije kolizije, a pošto se uglavnom koriste oba, onda je dobro videti 
+	kako razrešenje kolizije deluje na performanse detekcije kolizije. Praktično uvek deluje povoljno, pošto onemogućava da se mnogo 
+	objekata međusobno preseca, pa time smanjuje verovatnoću da se stvori veliki klaster objekata koji bi usporio izvršavanje.
+	\item Koji algoritam detekcije kolizije se koristi. Podržani su: osnovni (trivijalni) algoritam, Oktri sa duplikatima,
+	Oktri bez duplikata i SAP algoritam. Takođe je moguće isključiti detekciju kolizije u celosti da bi se dobila referntna vrednost vremena izvršavanja.
+
 \end{itemize}  
 
 Kontroler komponenta takođe pruža mogućnost menjanja pravca kretanja objekata. 
@@ -669,6 +677,43 @@ Tada svi objekti bivaju usmereni prema trenutnoj poziciji posmatrača.
 Potrebna je takva funkcionalnost pošto ona povećava koncentraciju objekata, 
 pogotovo nakon što se odbiju o ivicu kontejnera. Tada će se većina objekata 
 naći oko centra kontejnera, što dovodi do eksplozije vremena izvršavanja, pogotovo u slučaju Oktrija sa duplikatima.
+
+\subsection{Komponenta za iscrtavanje}
+
+Sve što se želi prikazati mora se iskazati preko GL funkcija. 
+Boje objekata zavise od osvetljenja i materijala ili teksture koja mu je dodeljena.
+
+Ljudska percepcija boje objekta je zapravo spektar elektromagnetnog zračenja koji se odbija o taj objekat i pada na retinu oka.
+U pravom svetu se zraci svetlosti odbijaju od više objekata pre nego što stignu do oka. 
+Simulacija takvog ponašanja se naziva praćenje svetlosti (eng. {\em raytracing}).  
+Praćenje svetlosti je računarski zahtevno, pa do skoro nije bilo moguće izvršavati ga u realnom vremenu, već samo na farmi servera koji renderuju neku scenu.
+2018. godine je firma Nvidia pustila u prodaju novu seriju grafičkih karti koje hardverski implementiraju praćenje svetlosti. 
+U trenutku pisanja se ova tehnologija koristi kao hibrid, odnosno ne kao zamena nego dopuna postojećih metoda.
+
+Uobičajeno je da se materijali objekata opisuju pomoću Fongovog modela senčenja. 
+Fongov model je empirijski model osvetljenja. Razvio ga je Bui Tuong Fong i objavio ga u svojoj doktorskoj tezi 1975. godine.
+Opisuje boju površi kao kombinaciju difuzne refleksije, tj. odbijanja svetlosti sa grubih površi, 
+spekularne refleksije, tj. refleksija sa sjajnih površi, i ambijantne refleksije, koja predstavlja manju količinu svetlosti 
+koja je raspršena kroz celu scenu.
+\cite{Phong} OpenGL nudi Fongov model pa se on koristi za opisivanje materijala svih objekata.
+Todo slika možda.
+Uključeno je jedno globalno svetlo, a moguće je da posmatrač postavi jos najviše osam svetala na 
+proizvoljne statične blokove na mapi.
+Komponenta se brine i o iscrtavanju teksta, što zahteva nešto više gl poziva nego što bi se očekivalo.
+Postavljanje kamere zavisi od pozicije posmatrača i njegovog usmerenja pogleda levo-desno i gore-dole.
+Kamera se usmerava od pozicije posmatrača ka pravcu u kome gleda.
+Vektor pravca gledanja se dobija prema formuli:
+
+$$x = cos(hrot) \cdot cos(vrot)$$
+$$y = sin(vrot) $$
+$$z = cos(hrot) \cdot  cos(vrot)$$
+
+Gde je $vrot$ ugao između $xz$ ravni i pravca gledanja, dok je $hrot$ ugao rotacije oko $y$ ose.
+Napomena da je u OpenGL-u $y$ osa vertikalna, $x$ horizontalna, a $z$ predstavlja dubinu.
+
+
+
+\subsection{Centralna komponenta}
 
 
 
