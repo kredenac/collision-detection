@@ -9,10 +9,6 @@
 
 class Controller
 {
-private:
-	Vector3 m_min;
-	Vector3 m_max;
-
 public:
 	// all objects to be considered for collision
 	std::vector<Cuboid> cuboids;
@@ -110,6 +106,7 @@ public:
 
 	// whether or not measurement is in progress
 	bool isMeasuring() const;
+
 private:
 	// delta time
 	float m_delta;
@@ -132,6 +129,9 @@ private:
 	float m_speed;
 	float m_cuboidSize;
 	float m_containerSize;
+
+	Vector3 m_min;
+	Vector3 m_max;
 
 	Controller();
 };

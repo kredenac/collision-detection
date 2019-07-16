@@ -568,9 +568,10 @@ mnogo objekata zgusnuto duž jedne ose, što vodi kvadratnoj složenosti po broj
 \section{BSP}
 \label{subsec:bsp}
 
-
+% ==============================================================================
 \chapter{Implementacija}
 \label{sec:implementacija}
+% ==============================================================================
 
 Važno pitanje na početku ovog projekta je u kom okruženju ima najviše smisla da se implementira.
 Tri glavna kandidata su OpenGL, Juniti (eng. {\em Unity}) i Anril Endžin (eng. {\em Unreal Engine}).
@@ -623,14 +624,69 @@ funkcije koje su neophodne da bi se to ostvarilo.
 
 \section{Arhitektura}
 
+Glavne komponente programa su:
+\begin{itemize}
+	\item Komponenta za iscrtavanje
+	\item Komponenta za rukovanje ulazima korisnika
+	\item Centralna komponenta - poziva sve ostale komponente i stara se o vremenskim koracima
+	\item Kontroler komponenta za upravljanje svim parametrima algoritama
+	\item Komponenta za merenje performansi
+	\item Komponenta za ažuriranje brzine i pozicije objekata.
+\end{itemize}
+
+\begin{figure}[h!]
+	\centerfloat
+% https://online.visual-paradigm.com/w/jllvezfo/diagrams.jsp#diagramlist:open&mode=Local
+	\includegraphics[trim=150 50 100 50,clip,scale=0.6]{architecture.pdf}
+	\caption{Arhitektura.}
+	\label{fig:archi}
+\end{figure}
+
+Na slici \ref{fig:archi} je prikazana arhitektura programa sa navedenim komponentama.
+
+Parametri koji se menjaju kroz kontroler komponentu su: 
+\begin{itemize}  
+	\item Broj objekata koji su podložni koliziji. 
+	Ovo je parametar koji svakako najviše utiče na ponašanje algoritama.
+	\item Veličina objekata. 
+	Na prvi pogled liči da ne bi mnogo uticalo na perofmanse, međutim veliki objekti u malom prostoru mogu katastrofalno usporiti izvršavanje.
+	\item Brzina kretanja objekata.
+	Ovaj faktor ne utiče na mnoge algoritme, ali je u slučaju SAP algoritma najbitniji. Može promeniti odlično ponašanje SAP algoritma u slučaju sporog kretanja 
+	objekata i učiniti ga praktično algoritmom kvadratne složenosti u najgorem slučaju.
+	\item Veličina kontejnera u kome se nalaze i kreću svi objekti.
+	Daje još jednu perspektivu kako veličina objekata i odnos te veličine sa celim prostorom, ovde kontejnerom, utiču na performanse.
+	\item Maksimalan broj elemenata u listu Oktrija.
+	Promena maksimalnog broja elemenata u listu pre nego što se on podeli na podoktante utiče "samo" na konstantan faktor vremenske složenosti.
+	To uopšte nije zanemarljivo u datom kontekstu i povoljnosti koje daje povoljno izabran parametar su vrlo vidne.
+	\item Maksimalna dubina Oktrija. Što veća dubina je uglavnom povoljnija, mada treba biti oprezan ako se može desiti 
+	da se velik broj objekata preklapa unutar jednog oktanta, jer se tada samo gubi vreme i troši dodatna memorija. 
+	Pokušavaju se razdvojiti objekti rekurzivnom podelom potprostora, ali pošto se oni presecaju taj put je beznatežan.
+	
+\end{itemize}  
+
+Kontroler komponenta takođe pruža mogućnost menjanja pravca kretanja objekata. 
+Tada svi objekti bivaju usmereni prema trenutnoj poziciji posmatrača. 
+Potrebna je takva funkcionalnost pošto ona povećava koncentraciju objekata, 
+pogotovo nakon što se odbiju o ivicu kontejnera. Tada će se većina objekata 
+naći oko centra kontejnera, što dovodi do eksplozije vremena izvršavanja, pogotovo u slučaju Oktrija sa duplikatima.
+
+
+
+% ==============================================================================
 \chapter{Evaluacija}
 \label{sec:evaluacija}
+% ==============================================================================
 
 Merenja vremena izvršavanja i memorije u zavisnosti od algoritma i parametara.
 Grafici i parelele sa prethodno opisanim principima.
 
+
+
+
+% ==============================================================================
 \chapter{Zaključak}
 \label{sec:zakljucak}
+% ==============================================================================
 
 Zaključak. 
 

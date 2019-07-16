@@ -118,7 +118,6 @@ void drawWithColor(float r, float g, float b, float a)
 
 }
 
-
 //https://www.opengl.org/archives/resources/features/KilgardTechniques/oglpitfall/
 // sets up gl for writing text
 void glWindowPos4fMESAemulate(float x, float y, float z, float w) {
