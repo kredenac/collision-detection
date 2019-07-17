@@ -203,7 +203,6 @@ void resetGame(void)
     viewElevation.curr = 0;
     eyex = 0, eyey = 1, eyez = 2;
     lookAtx = 0, lookAty = 0, lookAtz = 0;
-    upx = 0, upy = 1, upz = 0;
     int i;
     for (i = 0; i < MAX_LIGHTS; i++)
         lightOn[i] = 0;

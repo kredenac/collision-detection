@@ -29,12 +29,10 @@ Object player;
 extern int dt;
 
 float GRAVITY = -1.f;
-float rotWorld;
 Val2f viewAzimuth;
 Val2f viewElevation;
 float eyex, eyey, eyez;
 float lookAtx, lookAty, lookAtz;
-float upx, upy, upz;
 float playerHeadHeight = 0.25f;
 float JUMP_V = 0.1f;
 
@@ -88,9 +86,9 @@ static float* moveRightCam(void)
 	float ay = lookAty - eyey;
 	float az = lookAtz - eyez;
 
-	v[0] = ay * upz - upy * az;
+	v[0] = -az;
 	v[1] = 0;
-	v[2] = ax * upy - ay * upx;
+	v[2] = ax;
 	normalize3f(v, v + 1, v + 2);
 	return v;
 }
@@ -136,6 +134,7 @@ void firePaint()
 
 	state.newGame = 0;
 }
+
 // bullets[i].vs.goal is used as a timed counter for bullet lifespan
 static const float MAX_BULLET_LIFE = 10000;
 void moveBullets(void)
@@ -206,6 +205,7 @@ int firstFreeLight(void)
 			oldestIndex = i;
 		}
 	}
+
 	setColor(lightBlock[oldestIndex], 0, 0, 0);
 	return oldestIndex;
 }

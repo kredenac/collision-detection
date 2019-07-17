@@ -11,7 +11,6 @@ typedef enum {
     OTHER
 }Color;
 
-
 const float MAX_ELEVATION = 89.f;
 const int MAX_BULLETS = 100;
 
@@ -19,7 +18,8 @@ const int MAX_BULLETS = 100;
 typedef struct{
     float curr;
     float goal;
-}Val2f;
+} Val2f;
+
 // struct for cubes that make the map
 typedef struct{
     float posx;
@@ -32,8 +32,9 @@ typedef struct{
     float height;//y
     float width;//z
     float color[3];
-}Object;
+} Object;
 
+// global state
 typedef struct{
     int jumping;
     Color fireColor;
@@ -43,7 +44,7 @@ typedef struct{
     int newGame;
     int buildMode;
     int flying;
-}State;
+} State;
 
 
 extern State state;
@@ -67,7 +68,6 @@ void playerOnBlockReact(Object* p);
 
 extern Object player;
 extern float GRAVITY;
-extern float rotWorld;
 extern Val2f viewAzimuth;
 extern Val2f viewElevation;
 extern float JUMP_V;
@@ -78,7 +78,6 @@ extern Val2f viewAzimuth;
 extern Val2f viewElevation;
 extern float eyex, eyey, eyez;
 extern float lookAtx, lookAty, lookAtz;
-extern float upx, upy, upz;
 
 extern Object bullets[];
 extern int bulletsActive[];

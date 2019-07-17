@@ -115,7 +115,6 @@ void drawWithColor(float r, float g, float b, float a)
 	glMaterialfv(GL_FRONT, GL_EMISSION, emissionCoeffs2);
 	glMaterialfv(GL_FRONT, GL_AMBIENT, ambientCoeffs);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuseCoeffs);
-
 }
 
 //https://www.opengl.org/archives/resources/features/KilgardTechniques/oglpitfall/
@@ -165,6 +164,7 @@ void drawTextAt(float x, float y, const char *string)
 	}
 };
 
+const float upx = 0, upy = 1, upz = 0;
 // sets camera on players head position and directs the view
 void positionCam()
 {

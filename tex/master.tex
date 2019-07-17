@@ -15,6 +15,7 @@
 \usepackage[latinica]{matfmaster} 
 %
 
+\usepackage{amsmath}
 % \usepackage{color}
 % \usepackage{url}
 % \usepackage[utf8]{inputenc} % make weird characters work
@@ -417,7 +418,7 @@ $r_1, r_2$ dve sfere i intenziteta udaljenost centara, odnosno:
 \[  \vec{m} := \frac{{c_1 - c_2}} {\|{c_1 - c_2}\|} 
  (r_1 + r_2 - \| {c_1 - c_2} \| ) \]
 Potom se jedna sfera translira za $ \frac{ \vec{v} }{ 2 }$, a druga za $ -\frac{ \vec{v} }{ 2 }$.
-Sada sfere vise nisu u koliziji, ali je potrebno da se promene njihovi vektori brzina nakon sudara.
+Sada sfere više nisu u koliziji, ali je potrebno da se promene njihovi vektori brzina nakon sudara.
 Kada se koristi elastična kolizija onda se računaju prema formulama:
 
 $$  {v}'_1= {v}_1-\frac{2 m_2}{m_1+m_2} \ \frac{\langle  {v}_1- {v}_2,\, {c}_1- {c}_2\rangle}{\| {c}_1- {c}_2\|^2} \ ( {c}_1- {c}_2) $$
@@ -606,9 +607,9 @@ upravljanje ulazima korisnika, razrešenje kolizije, ažuriranje pozicije i brzi
 
 \section{FriGLUT}
 
-FriGLUT je alternativa otvorenog koda za GLUT ({\em OpenGL Utility Toolkit}). 
+FriGLUT je alternativa otvorenog koda za GLUT (eng. {\em OpenGL Utility Toolkit}). 
 GLUT je prvobitno napisan da bi se podržali primeri programa u knjizi "OpenGL:
-vodič za programiranje", poznatija pod nazivom "Crvena Knjiga" ({\em "the Red Book" }).
+vodič za programiranje", poznatija pod nazivom "Crvena Knjiga" (eng. {\em "the Red Book" }).
 GLUT se ne razvija od 1998. godine, pa je još 1999. započet FriGLUT projekat koji 
 se razvija do danas. 
 \cite{freeglut}
@@ -617,7 +618,7 @@ FriGLUT se stara o pravljenju prozora, obrađivanju događaja kroz glavnu petlju
 a i zajedno sa njim su dostupne i standardne funkcije OpenGL-a koje se koriste
 za iscrtavanje poput glTranslatef, glScalef, glLightf, glMaterialfv, glViewPort, itd.
 Za odgovore na događaje pritiskanja tastera, puštanja tastera i pomeraja miša
-FriGLUT propisuje korišćenje funkcija povratnog poziva koje je potrebno implementirati.
+FriGLUT propisuje korišćenje funkcija povratnog poziva  (eng. {\em callbacks }) koje je potrebno implementirati.
 FriGLUT se ne stara o tome da li je u nekom trenutku neko dugme pritisnuto, 
 koliki je pomeraj miša, niti ga automatski repozicionira, ali barem pruža 
 funkcije koje su neophodne da bi se to ostvarilo.
@@ -631,7 +632,7 @@ Glavne komponente programa su:
 	\item Centralna komponenta - poziva sve ostale komponente i stara se o vremenskim koracima
 	\item Kontroler komponenta za upravljanje svim parametrima algoritama
 	\item Komponenta za merenje performansi
-	\item Komponenta za ažuriranje brzine i pozicije objekata.
+	\item Komponenta za ažuriranje brzine i pozicije objekata
 \end{itemize}
 
 \begin{figure}[h!]
@@ -704,18 +705,56 @@ Postavljanje kamere zavisi od pozicije posmatrača i njegovog usmerenja pogleda 
 Kamera se usmerava od pozicije posmatrača ka pravcu u kome gleda.
 Vektor pravca gledanja se dobija prema formuli:
 
-$$x = cos(hrot) \cdot cos(vrot)$$
-$$y = sin(vrot) $$
-$$z = cos(hrot) \cdot  cos(vrot)$$
+\begin{equation}
+\label{eq:camera}
+\begin{split}
+x = cos(hrot) \cdot cos(vrot) \\
+y = sin(vrot) \\
+z = cos(hrot) \cdot  cos(vrot)	
+\end{split}
+\end{equation}
+
 
 Gde je $vrot$ ugao između $xz$ ravni i pravca gledanja, dok je $hrot$ ugao rotacije oko $y$ ose.
 Napomena da je u OpenGL-u $y$ osa vertikalna, $x$ horizontalna, a $z$ predstavlja dubinu.
 
 
-
 \subsection{Centralna komponenta}
 
+Centralna komponenta inicijalizuje GLUT funkcije povratnog poziva, postavlja GL parametre, i pokreće sistem.
+Definiše tajmer koji će periodično pozivati ažuriranje sistema i zakazati njegovo ponovno iscrtavanje. 
+Stara se o računanju vremena dva uzastopna koraka izvršavanja, redosledu pozivanja ažuriranja stanja,
+detekcije kolizije, razrešavanja kolizije i iscrtavanja.
 
+\subsection{Komponenta za ažuriranje brzine i pozicije objekata}
+% ona radi i razresavanje kolizije
+
+Svaki objekat sadrži trojku brojeva u pokretnom zarezu koja označava njegovu poziciju za svaku koordinatu prostora.
+Za održavanje pravca je potrebna još jedna trojka koja predstavlja vektor brzine kretanja.
+Ako se pritom želi da objekat postepeno ubrzava kada se primeni sila na njega, ili da postepeno usporava 
+kada prestane delovanje sile, onda se mora čuvati još jedna trojka brojeva, koja predstavlja ciljnu brzinu.
+Postepeno ubrzavanje se koristi prilikom upravljanja posmatrača. 
+Kada se pritisne dugme na tastaturi za pomeranje posmatrača, očekivano ponašanje je da neće istog trenutka 
+početi da se kreće maksimalnom brzinom, već postepeno da ubrzava.
+Isto, kada se pusti dugme, "sila" koja je delovala na posmatrača je nestala, ali je on imao momentum pa će
+nastaviti malo napred.
+
+Potrebno je posvetiti pažnju kako se posmatrač kreće na komandu da ide napred-nazad ili levo-desno.
+Prva ideja bi bila da se za kretanje levo-desno poveća ili smanji vrednost pozicije $x$ koordinate posmatrača,
+ili da se menja $z$ koordinata posmatrača kada treba da se kreće napred-nazad.
+To ipak nije dobro rešenje pošto kada neko želi da se pomeri ne razmišlja preko strana sveta na koju će stranu, 
+već relativno u odnosu na trenutnu njegovo usmerenje. Usmerenje je dato formulom \ref{eq:camera}.
+Neka je dat trodimenzioni vektor $v$ koji predstavlja usmerenje pogleda, tada je vektor 
+kretanja unapred jednak: 
+$$ v_{napred} = \frac{(v_1, 0, v_2)^T}{||(v_1, 0, v_2)^T||} $$
+Pritom se normira vektor kako se ne bi sporije kretalo u slučaju gledanja gore ili dole, 
+pošto su tada $v_1$ i $v_2$ mali.
+Slično, vektor kretanja u stranu se računa kao:
+$$ v_{bok} = \frac{(-v_2, 0, v_1)^T}{||(-v_2, 0, v_1)^T||} $$
+
+Sada su zamenjene vrednosti prvog i trećeg elementa vektora zato što kada se gleda pravo u smeru $x$ ose, 
+onda je bočno kretanje duž $z$ ose. Razlog za promenu znaka $v_2$ je jednostavno zbog orijentacije $z$ ose u odnosu na $xz$ ravan.
+% todo negde ubaci sliku koordinatnog sistema opengla
 
 % ==============================================================================
 \chapter{Evaluacija}
