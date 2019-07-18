@@ -15,12 +15,18 @@ class Point
 {
 public:
 	Point(int index, float value, bool isBegin);
+
+	// compares order with another point
 	bool operator < (const Point &rhs) const;
 
+	// index of this point within sorted vector
 	int index;
-	float value;
-	bool isBegin;
 
+	// position along axis
+	float value;
+
+	// is the start of a projection along axis
+	bool isBegin;
 };
 
 // pair manager, stores pairs of object indices
@@ -49,6 +55,8 @@ class Sap : public BasicCollision
 enum Axis { xAxis = 0, yAxis = 1, zAxis = 2 };
 
 public:
+	// gets the singleton. if parameters are unchanged, then it returns the same instance
+	// otherwise, makes a new one
 	static Sap* get(const Vector3 &pos, const Vector3 &size, std::vector<Cuboid>& items);
 
 	void markCollisions(std::vector<Cuboid>& items, Collisions &pairs) override;

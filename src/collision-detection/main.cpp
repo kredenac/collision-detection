@@ -91,7 +91,6 @@ void updateCollisions()
 	control.setDelta(delta);
     mover.moveItems(cuboids, delta);
 
-	auto bounds = mover.getBounds();
 	control.resetAlgorithm();
 	auto& collisionChecker = control.collisionChecker;
 
