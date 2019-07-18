@@ -36,7 +36,7 @@ int main(int argc, char** argv)
 {
     initCollision();
     glutInit(&argc,argv);
-    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
+    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH /*| GLUT_MULTISAMPLE*/);
 
     glutInitWindowSize((int)(aspectRatio * initWindowHeight), initWindowHeight);
     glutInitWindowPosition(0, 0);

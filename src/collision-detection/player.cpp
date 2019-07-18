@@ -83,7 +83,6 @@ static float* moveRightCam(void)
 {
 	static float v[3];
 	float ax = lookAtx - eyex;
-	float ay = lookAty - eyey;
 	float az = lookAtz - eyez;
 
 	v[0] = -az;

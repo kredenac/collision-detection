@@ -67,7 +67,6 @@ void PairStorage::setCollisions(std::vector<Cuboid>& items, Collisions &pairs)
 	}
 }
 
-
 Sap* Sap::get(const Vector3 &pos, const Vector3 &size, std::vector<Cuboid>& items)
 {
 	static Sap instance(pos, size, items);
@@ -101,7 +100,7 @@ std::string Sap::getInfo() const
 
 std::string Sap::name() const
 {
-	return "SweenAndPrune";
+	return "SweepAndPrune";
 }
 
 // returns data in format numberOfSwaps

@@ -123,6 +123,9 @@ private:
 	// lower bound of the container of objects
 	static const float c_containerLowerBound;
 
+	// initial speed of objects
+	static const float c_defaultSpeed;
+
 	// which algorithm is currently used
 	int m_algorithmIndex;
 

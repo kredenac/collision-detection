@@ -148,7 +148,6 @@ algoritama detekcije kolizije, postavljanje njihovih parametara kao i posmatranj
 % ==============================================================================
 
 \section{Faze}
-Broadphase, narrowphase, bounding box.
 
 Celokupan zadatak detekcije kolizije se deli na dve faze: broadphase i narrowphase. 
 U prvoj fazi, broadphase, odbacuje se vecina kandidata mogucih parova koji imaju koliziju, i cilj je da 
@@ -300,7 +299,7 @@ aliasing firme NVIDIA.
 	\label{fig:txaa}
 \end{figure}
 
-\section{Preciznost, preseci zapremina pokretnih tela.}
+\section{Preciznost i preseci zapremina pokretnih tela}
 
 Moguće su različite preciznosti detekcije kolizije. 
 Uglavnom je razlog za odabir nepreciznije opcije kraće vreme izvršavanja i manja potrošnja memorije.
@@ -415,15 +414,26 @@ Drugi način je da se analitički izračunaju nova svojstva objekata u jednom ko
 Prvo se izračuna minimalni vektor translacije. Npr. za dve sfere $s_1$ i $s_2$ to je vektor $\vec{m}$
 određen centrima $c_1, c_2$ dve sfere čiji je intenzitet jednak razlici intenzitata zbira poluprečnika
 $r_1, r_2$ dve sfere i intenziteta udaljenost centara, odnosno:
-\[  \vec{m} := \frac{{c_1 - c_2}} {\|{c_1 - c_2}\|} 
- (r_1 + r_2 - \| {c_1 - c_2} \| ) \]
+\begin{equation}
+	\label{eq:razresenje2}
+	 \vec{m} := \frac{{c_1 - c_2}} {\|{c_1 - c_2}\|} 
+	(r_1 + r_2 - \| {c_1 - c_2} \| ) 
+\end{equation}
+
 Potom se jedna sfera translira za $ \frac{ \vec{v} }{ 2 }$, a druga za $ -\frac{ \vec{v} }{ 2 }$.
 Sada sfere više nisu u koliziji, ali je potrebno da se promene njihovi vektori brzina nakon sudara.
 Kada se koristi elastična kolizija onda se računaju prema formulama:
 
-$$  {v}'_1= {v}_1-\frac{2 m_2}{m_1+m_2} \ \frac{\langle  {v}_1- {v}_2,\, {c}_1- {c}_2\rangle}{\| {c}_1- {c}_2\|^2} \ ( {c}_1- {c}_2) $$
 
-$$  {v}'_2= {v}_2-\frac{2 m_1}{m_1+m_2} \ \frac{\langle  {v}_2- {v}_1,\, {c}_2- {c}_1\rangle}{\| {c}_2- {c}_1\|^2} \ ( {c}_2- {c}_1) $$
+\begin{equation}
+	\label{eq:razresenje}
+	\begin{split}
+		{v}'_1= {v}_1-\frac{2 m_2}{m_1+m_2} \ \frac{\langle  {v}_1- {v}_2,\, {c}_1- {c}_2\rangle}{\| {c}_1- {c}_2\|^2} \ ( {c}_1- {c}_2) \\
+		%\\
+		{v}'_2= {v}_2-\frac{2 m_1}{m_1+m_2} \ \frac{\langle  {v}_2- {v}_1,\, {c}_2- {c}_1\rangle}{\| {c}_2- {c}_1\|^2} \ ( {c}_2- {c}_1) 
+	\end{split}
+\end{equation}
+
 
 pri čemu su $m1$ i $m2$ mase lopti.
 Analitičko izračuavanje je glavni metod koji se koristi u pogonima igara.
@@ -439,10 +449,15 @@ Rezultat izvršavanja algoritma detekcije kolizije je skup svih parova koji su u
 U najgorem slučaju (na primer kada su svi objekti kocke na istoj poziciji) se svaki objekat
 seče sa svim ostalim i tada ima $ {n\choose 2}  $ preseka. Međutim, taj najgori slučaj se retko dešava
 u stvarnim primenama, pa postoji mnoštvo algoritama detekcije kolizije čija složenost zavisi i od broja
-parova koji su u koliziji. Za takave algoritme kažemo da su izlazno-zavisni, tj.
+parova koji su u koliziji. Za takve algoritme kažemo da su izlazno-zavisni, tj.
 vreme izvršavanja zavisi i od veličine izlaza. Tokom razmatranja algoritama podrazumeva se da su svi
 objekti ograničavajuće kutije koje su paralelne osama, tj. AABB.
 Broj kolizija među elemntima će dalje biti označen kao $R$. 
+
+Pokazano je da optimalan algoritam koji pronalazi preseke n AABB tela u 3D prostoru ima složenost 
+$O(n \log^2 n + k)$, gde je $k$ broj objekata koji se presecaju \cite{glavna1}. 
+U praksi postoji predstava u kakvim okolnostima treba algoritam detekcije kolizije da bude primenjen, pa 
+se na osnovu toga vrši odabir postojećih ili konstruišu novi algoritmi.
 
 \section{Trivijalni algoritam}
 \label{subsec:triv}
@@ -543,7 +558,6 @@ kolizije jednog dinamičnog objekta sa $n$ statičkih sa $O(n)$ na očekivanih $
 \end{figure}
 
 
-
 \section{Sweep and prune}
 \label{subsec:sap}
 
@@ -561,13 +575,21 @@ Svaki niz sadrži sve projekcije AABB, po dva elementa za svaku projekciju.
 Jedan je početak, odnosno teme sa manjom koordinatom, a drugi je kraj projekcije, tj. teme sa većom koordinatom. 
 
 Umesto da se vrše AABB upiti svaki put, moguće je da se čuvaju informacije o presecima 
-na svakoj osi. To zahteva $O(n^2)$ memorije ali smanjuje posao prilikom zamena. \cite{sap}
+na svakoj osi. To zahteva $O(n^2)$ memorije ali smanjuje posao prilikom zamena \cite{sap}. 
 
 Ovaj metod radi dobro kada su objekti dobro raspoređeni po većini osa, ali se loše pokazuje kada je
 mnogo objekata zgusnuto duž jedne ose, što vodi kvadratnoj složenosti po broju objekata \cite{glavna2}.
 
+Najviše što utiče na performanse prilikom testiranja je brzina kretanja objekata. 
+U slučaju kada se brzo kreću objekti, onda je potrebno raditi zamenu njihovih pozicija u sortiranom nizu,
+što vodi jakom usporavanju pri velikim pomerajima svih objekata. 
+Ipak, kada se svi objekti polako kreću, onda je mali broj zamena, i vreme izvršavanja algoritma je praktično 
+linearno, što omogućava veći broj aktivnih objekata i radi efikasnije od ostalih implementiranih algoritama u tom slučaju.
+
 \section{BSP}
 \label{subsec:bsp}
+
+% todo \cite{ref:glavna2}
 
 % ==============================================================================
 \chapter{Implementacija}
@@ -699,8 +721,13 @@ koja je raspršena kroz celu scenu.
 \cite{Phong} OpenGL nudi Fongov model pa se on koristi za opisivanje materijala svih objekata.
 Todo slika možda.
 Uključeno je jedno globalno svetlo, a moguće je da posmatrač postavi jos najviše osam svetala na 
-proizvoljne statične blokove na mapi.
+proizvoljne statične blokove na mapi. 
+Slabljenje svetlosti se izražava preko tri faktora: konstantnog, linearnog i kvadratnog.
+Konstantan faktor jednako oslabljuje svetlost svuda, dok linearni i kvadratni faktori oslabljuju svetlost
+linearno, odnosno kvadratno, sa rastojanjem od izvora svetlosti.
+
 Komponenta se brine i o iscrtavanju teksta, što zahteva nešto više gl poziva nego što bi se očekivalo.
+
 Postavljanje kamere zavisi od pozicije posmatrača i njegovog usmerenja pogleda levo-desno i gore-dole.
 Kamera se usmerava od pozicije posmatrača ka pravcu u kome gleda.
 Vektor pravca gledanja se dobija prema formuli:
@@ -717,7 +744,6 @@ z = cos(hrot) \cdot  cos(vrot)
 
 Gde je $vrot$ ugao između $xz$ ravni i pravca gledanja, dok je $hrot$ ugao rotacije oko $y$ ose.
 Napomena da je u OpenGL-u $y$ osa vertikalna, $x$ horizontalna, a $z$ predstavlja dubinu.
-
 
 \subsection{Centralna komponenta}
 
@@ -746,15 +772,77 @@ To ipak nije dobro rešenje pošto kada neko želi da se pomeri ne razmišlja pr
 već relativno u odnosu na trenutnu njegovo usmerenje. Usmerenje je dato formulom \ref{eq:camera}.
 Neka je dat trodimenzioni vektor $v$ koji predstavlja usmerenje pogleda, tada je vektor 
 kretanja unapred jednak: 
-$$ v_{napred} = \frac{(v_1, 0, v_2)^T}{||(v_1, 0, v_2)^T||} $$
+$$ v_{napred} = \frac{(v_1, 0, v_2)^T}{\|(v_1, 0, v_2)^T\|} $$
 Pritom se normira vektor kako se ne bi sporije kretalo u slučaju gledanja gore ili dole, 
 pošto su tada $v_1$ i $v_2$ mali.
 Slično, vektor kretanja u stranu se računa kao:
-$$ v_{bok} = \frac{(-v_2, 0, v_1)^T}{||(-v_2, 0, v_1)^T||} $$
+$$ v_{bok} = \frac{(-v_2, 0, v_1)^T}{\|(-v_2, 0, v_1)^T\|} $$
 
 Sada su zamenjene vrednosti prvog i trećeg elementa vektora zato što kada se gleda pravo u smeru $x$ ose, 
 onda je bočno kretanje duž $z$ ose. Razlog za promenu znaka $v_2$ je jednostavno zbog orijentacije $z$ ose u odnosu na $xz$ ravan.
-% todo negde ubaci sliku koordinatnog sistema opengla
+Koordinatni sistem koji se koristi je prikazan na slici \ref{fig:coord}.
+
+\begin{figure}[h!]
+	\centerfloat
+	\includegraphics[scale=1]{coord.png}
+	\caption{OpenGL koordinatni sistem.}
+	\label{fig:coord}
+\end{figure}
+
+Kontejner koji sadrži objekte koji se sudaraju se stara o njihovom pravilnom odbijanju o ivice ograničavajućeg prostora.
+Svakako, potrebno je reflektovati dimenziju vektor brzine koja odgovara osi duž koje se objekat sudara sa ivicom kontejnera.
+Objekti će nekada delom zaći van kontejnera, pa se tada oni pomere u unutrašnjost tako da jedna njihova strana bude uz stranu kontejnera.
+
+Kada se na primer na kuglu koja stoji uz zid primeni sila koja nije normalna na stranu zida, onda kugla neće ostati nepokretna,
+već se kretati paralelno uz stranu zida. Isti princip je obezbeđen za kretanje posmatrača uz zid jer je 
+takvo ponašanje standardno za sve video igre.
+
+Detekcija kolizije kao rezultat daje parove svih objekata u koliziji. Na te parove se primenjuje 
+razrešenje kolizije prema formulama \ref{eq:razresenje} i \ref{eq:razresenje2}.
+
+\subsection{Komponenta za merenje performansi}
+
+Služi za prikupljanje podataka kako bi se uradila evaluacija data u \ref{sec:evaluacija}.
+Jedna instanca merenja predstavlja jedan korak izvršavanja i sastoji se od 
+vremena izvršavanja koraka, veličine objekta, broja objekta, dodatnih podataka u zavisnosti od toga 
+koji algoritam detekcije kolizije se koristi. Ne zapisuje se direktno u izlaznu datoteku, pošto bi 
+to usporavalo izvršavanje, već se čuva u vektoru, pa se napravi datoteka u koju se zapišu rezultati 
+tek kad je gotovo merenje.
+
+\subsection{Komponenta za rukovanje ulazima korisnika}
+
+Definiše funkcije povratnog poziva koje će FreeGLUT pozivati.
+Potrebne su funkcije za akciju pritiska dugmeta tastature, puštanje dugmeta, kao i 
+radnja koja se vrši dok je dugme pritisnuto. Za poslednju stavku se mora ručno implementirati 
+za svako dugme pamćenje stanja pritisnutosti. Ako se želi akcija na pritisak specijalnih dugmeta  
+poput F1, F5, strelice i slično, onda se zahteva definisanje odvojenih funkcija za njih.
+
+Što se tiče reakcija na pritisnuto dugme, prva ideja je da se direktno pozove ta akcija. 
+To je u redu ako je ta akcija na primer izlazak iz programa, promena izabranog algoritma, ili neka druga jedinična akcija.
+Ako je pak slučaj akcije poput kretanja napred, onda bi takvo ponašanje imalo neprijatan efekat. 
+Osljanjalo bi se na učestale ponovljene signale da je dugme pritisnuto, koji u praksi uopšte nisu periodični.
+Tada bi kretanje "seckalo", i njegova brzina bi zavisila od mogućnosti glavne petlje događaja da signal pritiska dugmeta često i ravnomerno poziva.
+Ili obrnuto, mogla bi se desiti dva uzastopna signala pritiska dugmeta za napred između dva iscrtavanja scene. 
+Da li bi tada trebalo da se napravi duplo veći pomeraj? Odgovor je ne, ali bi to bio efekat ovakve implementacije.
+
+Ispravno rešenje je da se zapamti da je dugme pritisnuto, a onda da se reakcija na to desi tek zajedno sa ostalim ažuriranjima 
+stanja i pozicija, što se dešava periodičnim pozivima komponente koja je za to zadužena. Tako je reakcija nezavisna od učestalosti 
+slanja ponovnih signala da je dugme pritisnuto, štaviše, oni su sada nepotrebni. 
+
+Što se tiče miša, postoje tri funkcije koje je potrebno implementirati. Prva je za akcije pritiska 
+dugmeta miša, druga je za pomeraj miša, i treća je za pomeraj miša dok je neko dugme na njemu pritisnuto.
+Potrebno je pratiti veličinu svakog pomeraja miša i na osnovu toga izračunati novu horizontalnu i vertikalnu rotaciju 
+kamere, odnosno posmatračevog usmerenja. Kako kursor miša ne bi napustio prozor programa, potrebno je da se on nakon svakog pomeraja 
+vrati u centar prozora. Kursor miša je takođe sakriven, a dodata je opcija da se prikaže i da dobije nazad slobodu da napusti prozor.
+
+\subsection{Komponenta za detekciju kolizije}
+
+Za projekat najznačajnija funkcionalnost dolazi od ove komponente. 
+Algoritmi su implementirani u odvojenim klasama, ali imaju isti interfejs.
+Svaka klasa implementira metodu kojoj se prosleđuje vektor objekata za koje treba proveriti da li su u koliziji
+i vraća sve parove objekata koji jesu u koliziji. Takođe svaka implementira metod koji daje relevantne podatke 
+o stanju algoritma specifičnom za njega. Npr. broj elemenata u unutrašnjim čvorovima Oktrija ili broj 
+zamena u SAP algoritmu. Oni se koriste za merenje i za ispisivanje trenutnih informacija prilikom testiranja.
 
 % ==============================================================================
 \chapter{Evaluacija}
@@ -762,7 +850,7 @@ onda je bočno kretanje duž $z$ ose. Razlog za promenu znaka $v_2$ je jednostav
 % ==============================================================================
 
 Merenja vremena izvršavanja i memorije u zavisnosti od algoritma i parametara.
-Grafici i parelele sa prethodno opisanim principima.
+Grafici i parelele sa prethodno opisanim principima. 
 
 
 

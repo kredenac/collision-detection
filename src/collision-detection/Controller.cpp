@@ -2,6 +2,7 @@
 
 const float Controller::c_speedMultiplier = 2.f;
 const float Controller::c_containerLowerBound = -0.99f;
+const float Controller::c_defaultSpeed = 0.01f;
 
 Controller::Controller()
 {
@@ -16,7 +17,7 @@ void Controller::resetToDefault()
 	numPairs = 0;
 	numInCollision = 0;
 	m_algorithmIndex = 1;
-	m_speed = 0.01f;
+	m_speed = c_defaultSpeed;
 	m_cuboidSize = 0.02f;
 	m_containerSize = 2.f;
 	Vector3 min(-m_containerSize, c_containerLowerBound, -m_containerSize);
@@ -168,9 +169,14 @@ std::string Controller::getInfo() const
 	std::stringstream str;
 	std::string response = doResolution ? "on" : "off";
 	str << std::setprecision(2) << std::setfill(' ') << std::right << std::setw(5);
-	str << "Number of elements: " << cuboids.size() << ", size: " << m_cuboidSize <<
-		", response: " << response << ", colliding: " << std::setw(4) <<
+	str << "Number of elements: " << cuboids.size() << ", size: " << m_cuboidSize;
+	if (m_speed != c_defaultSpeed) {
+		str << ", speed: " << m_speed;
+	}
+
+	str << ", response: " << response << ", colliding: " << std::setw(4) <<
 		numInCollision << ", pairs : " << std::setw(4) << numPairs;
+
 	return str.str();
 }
 
