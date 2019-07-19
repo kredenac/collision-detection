@@ -25,7 +25,7 @@ public:
 private:
 	std::string getTimeStamp();
 
-	std::vector<std::tuple<float,int, float, std::string>> instances;
+	std::vector<std::tuple<float, float, int, std::string>> instances;
 	const int vectorCapacity = 60 * 60 * 10;
 	std::string fileName;
 	const std::string pathToFile = "../../measurements/";

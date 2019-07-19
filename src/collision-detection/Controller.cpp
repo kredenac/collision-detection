@@ -26,6 +26,7 @@ void Controller::resetToDefault()
 	lessElements(cuboids.size());
 	moreElements(1000);
 	isMeasurementInProgress = false;
+	shouldDraw = true;
 }
 
 void Controller::joltTowards(float x, float y, float z)
@@ -203,7 +204,7 @@ void Controller::startMeasurement()
 	isMeasurementInProgress = true;
 	std::stringstream str;
 	std::string response = doResolution ? "on" : "off";
-	str << collisionChecker->name() + " _response_" << response;
+	str << collisionChecker->name() + "_response_" << response;
 	
 	logger.startNewMeasurement(str.str());
 }

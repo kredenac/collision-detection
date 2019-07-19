@@ -25,6 +25,9 @@ public:
 	// updates positions of objects
 	Mover mover;
 
+	// should skip drawing the scene
+	bool shouldDraw;
+
 	// should collision resolution be applied
 	bool doResolution;
 

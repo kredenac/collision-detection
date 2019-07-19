@@ -28,7 +28,7 @@ void Logger::finishMeasurement()
 	for (const auto & tuple : instances) {
 		float delta; float objectSize; int objectCount; std::string bonusData;
 		std::tie(delta, objectSize, objectCount, bonusData) = tuple;
-
+		std::cout << objectSize << std::endl;
 		if (bonusData.empty()) {
 			file << delta << ", " << objectSize << ", " << objectCount << "\n";
 		}

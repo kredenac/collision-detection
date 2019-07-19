@@ -79,6 +79,9 @@ int main(int argc, char** argv)
 void updateCollisions()
 {
 	auto& control = Controller::get();
+	float delta = dt / (float)UPDATE_INTERVAL;
+	control.setDelta(delta);
+
 	auto& mover = control.mover;
 	auto& cuboids = control.cuboids;
 
@@ -86,9 +89,7 @@ void updateCollisions()
 	for (auto& cub : cuboids) {
 		cub.setColliding(false);
 	}
-
-	float delta = dt / (float)UPDATE_INTERVAL;
-	control.setDelta(delta);
+	
     mover.moveItems(cuboids, delta);
 
 	control.resetAlgorithm();
@@ -131,6 +132,7 @@ void drawAllText(float fpsCount)
 void drawCollisions()
 {
 	auto& control = Controller::get();
+
 	auto& mover = control.mover;
 	for (auto& cub : control.cuboids) {
 		drawCuboid(cub);
@@ -147,15 +149,17 @@ void onDisplay()
     float fpsCount = fps(showFps);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+	
+	if (Controller::get().shouldDraw) {
+		positionCam();
 
-	positionCam();
+		lightSetup();
 
-	lightSetup();
+		drawMap();
+		drawBullets();
 
-	drawMap();
-	drawBullets();
-
-	drawCollisions();
+		drawCollisions();
+	}
 
 	drawAllText(fpsCount);
 

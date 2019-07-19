@@ -690,6 +690,9 @@ Parametri koji se menjaju kroz kontroler komponentu su:
 	Razrešenje kolizije je odvojen problem od detekcije kolizije, a pošto se uglavnom koriste oba, onda je dobro videti 
 	kako razrešenje kolizije deluje na performanse detekcije kolizije. Praktično uvek deluje povoljno, pošto onemogućava da se mnogo 
 	objekata međusobno preseca, pa time smanjuje verovatnoću da se stvori veliki klaster objekata koji bi usporio izvršavanje.
+	\item Da li je iscrtavanje uključeno ili isključeno. 
+	S obzirom da je projekat više procesorski nego grafički zahtevan, iscrtavanje uglavnom ne oslabljuje performanse više od 2 do 3 posto.
+	Svakako, kada je na sceni više od 30 000 objekata počinje značajno da ima uticaj, pa je za te slučajeve dodata opcija kako bi merenja bila nepristrasna.
 	\item Koji algoritam detekcije kolizije se koristi. Podržani su: osnovni (trivijalni) algoritam, Oktri sa duplikatima,
 	Oktri bez duplikata i SAP algoritam. Takođe je moguće isključiti detekciju kolizije u celosti da bi se dobila referntna vrednost vremena izvršavanja.
 
@@ -852,8 +855,33 @@ zamena u SAP algoritmu. Oni se koriste za merenje i za ispisivanje trenutnih inf
 Merenja vremena izvršavanja i memorije u zavisnosti od algoritma i parametara.
 Grafici i parelele sa prethodno opisanim principima. 
 
+Sva merenja su izvršena na računaru sa sledećom konfiguracijom:
+\begin{itemize}  
+	\item Procesor - Intel® Core™ i5-6600K 
+	\item Grafička - Nvidia GeForce GTX 1060 WINDFORCE OC 6G
+	\item RAM - Kingston HyperX FURY Black 8GB 2133MHz DDR4 
+	\item Matična - ASUS Z170-A
+\end{itemize}  
+Pritom se pazi da nisu pokrenuti drugi programi koji bi uticali na rezultate.
+Procesorski takt je postavljen na 4.4 GHz.
 
+\begin{figure}[h!]
+	\centerfloat
+	\includegraphics[
+		trim=0 0 0 31,clip,
+		scale=1]{oktri_dt_vs_numobj.pdf}
+	\caption{lmao.}
+	\label{fig:oktri1}
+\end{figure}
 
+\begin{figure}[h!]
+	\centerfloat
+	\includegraphics[
+		trim=0 0 0 31,clip,
+		scale=1]{oktri_dt_vs_numobj_zoomout.pdf}
+	\caption{lmao.}
+	\label{fig:oktri1}
+\end{figure}
 
 % ==============================================================================
 \chapter{Zaključak}

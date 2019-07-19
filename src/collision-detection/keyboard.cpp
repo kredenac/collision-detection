@@ -258,6 +258,9 @@ void onKeyboard(unsigned char key, int x, int y)
 	case ('i'):
 		control.joltTowards(player.posx, player.posy, player.posz);
 		break;
+	case ('o'):
+		control.shouldDraw = !control.shouldDraw;
+		break;
 	case ('v'):
 		KEY_SMALLER = true;
 		break;
