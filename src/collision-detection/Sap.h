@@ -88,19 +88,25 @@ private:
 	// returns the number of moved elements
 	int sortAxis(std::vector<Point> &axis, std::vector<Cuboid> &items);
 
-private:
 	// information about cuboids from last frame
 	Vector3 lastCubeSize;
 	size_t m_lastNumElements;
+
 	// used for reporting number of swamps per update
 	int m_numberOfSwaps;
+
 	// needed to construct helper octree in first iteration
 	Vector3 octPos;
 	Vector3 octSize;
-	// when an instance is called first time, it uses other algorithm
+
+	// when an instance is called the first time, it uses another algorithm
 	// to produce the first batch of collision pairs
 	bool isInit;
+
+	// saved collision pairs from last frame
 	PairStorage m_pairs;
 	static const unsigned c_axes = 3;
+
+	// axes that contain projections
 	std::vector<Point> m_axes[c_axes];
 };

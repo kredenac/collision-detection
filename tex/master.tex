@@ -548,7 +548,6 @@ broj objekata statički pa je tada dovoljno jednom izgraditi Oktri, a za dinami�
 izvršiti detekciju kolizije njihovim ponovnim ubacivanjem u stablo. Time se smanjuje vreme izvršavanja upita 
 kolizije jednog dinamičnog objekta sa $n$ statičkih sa $O(n)$ na očekivanih $O(\log n)$.
 
-
 \begin{figure}[h!]
 	\begin{center}
 	\includegraphics[scale=0.22]{octree.png}
@@ -557,27 +556,43 @@ kolizije jednog dinamičnog objekta sa $n$ statičkih sa $O(n)$ na očekivanih $
 	\label{fig:oct}
 \end{figure}
 
-
 \section{Sweep and prune}
 \label{subsec:sap}
 
 Briši i odseci (eng. {\em sweep and prune}), skraćeno SAP, je alternativna tehnikama detekcije kolizije 
 zasnovanim na prostornom particionisanju.
-Sweep and prune je broadphase algoritam koji projektuje sve AABB
+SSAP je broadphase algoritam koji projektuje sve AABB
 na bazne ose pa sortira sve projekcije da bi odredio preseke AABB.
-Ako sve na sve tri ose projekcije para AABB seku, onda se i zaista u prostoru seče taj par AABB.
+Ako se na sve tri ose projekcije para AABB seku, onda se i zaista u prostoru seče taj par AABB.
 Ako je potreban samo jedan rezultat parova koji su u koliziji onda ovaj metod se ne ističe u odnosu na druge.
-Moć sweep and prune algoritma je u tome što iskorišćava svojstvo temporalne koherencije.
+Moć briši i odseci algoritma je u tome što iskorišćava svojstvo temporalne koherencije.
 Zbog toga je za svaku iteraciju potreban inkrementalan posao da bi se ažurirali parovi koji su u koliziji.
 Objekti se ne teleportuju nasumično kroz prostor nego se postepeno kreću. 
 Održavaju se tri sortirana niza, svaki je sadržan od $2n$ elemenata, gde je $n$ broj objekata.
 Svaki niz sadrži sve projekcije AABB, po dva elementa za svaku projekciju. 
 Jedan je početak, odnosno teme sa manjom koordinatom, a drugi je kraj projekcije, tj. teme sa većom koordinatom. 
 
+Na slici \ref{fig:sap} je prikazana projekcija 4 objekta na osu. 
+Tačka $b_i$ je početak duži projekcije, a $e_i$ je kraj projekcije $i$-tog objekta.
+$e3$ se nalazi desno od $b4$, što posmatranjem projekcije na jednoj osi govori da su njihovi AABB možda u koliziji.
+Potrebno je proveriti i ostale (u ovom slučaju samo još jednu) osu sa projekcijama da bi se utvrdilo da li se stvarno seku.
+Svi parovi objekata koji su u koliziji se zapamte, u ovom slučaju samo par $(3, 4)$.
+U sledećem koraku se proverava da li je neki par koji je bio u koliziji prestao da bude, ili da li ima novi par objekata koji je u koliziji.
+Potrebno je ažurirati sortirane projekcije kada se objekti pomere. Prilikom sortiranja se u stvari dodaju i uklanjaju kolizije.
+Todo ispiši slučajeve kada je nova kad se uklanja.
+
+\begin{figure}[h!]
+	\begin{center}
+	\includegraphics[scale=1]{sap.jpg}
+	\end{center}
+	\caption{Projekcije tela u dva koraka.}
+	\label{fig:sap}
+\end{figure}
+
 Umesto da se vrše AABB upiti svaki put, moguće je da se čuvaju informacije o presecima 
 na svakoj osi. To zahteva $O(n^2)$ memorije ali smanjuje posao prilikom zamena \cite{sap}. 
 
-Ovaj metod radi dobro kada su objekti dobro raspoređeni po većini osa, ali se loše pokazuje kada je
+Ovaj metod radi dobro kada su objekti dobro raspoređeni duž većine osa, ali se loše pokazuje kada je
 mnogo objekata zgusnuto duž jedne ose, što vodi kvadratnoj složenosti po broju objekata \cite{glavna2}.
 
 Najviše što utiče na performanse prilikom testiranja je brzina kretanja objekata. 
@@ -586,10 +601,64 @@ U slučaju kada se brzo kreću objekti, onda je potrebno raditi zamenu njihovih 
 Ipak, kada se svi objekti polako kreću, onda je mali broj zamena, i vreme izvršavanja algoritma je praktično 
 linearno, što omogućava veći broj aktivnih objekata i radi efikasnije od ostalih implementiranih algoritama u tom slučaju.
 
-\section{BSP}
-\label{subsec:bsp}
+\section{Čelije i portali}
+\label{subsec:cells}
 
-% todo \cite{ref:glavna2}
+Postojanje dodatnog modela particionisanja prostora samo za detekciju kolizije nije uvek neophodno.
+Postojeća hijerarhijska organizacija koja se koristi za renderovanje je nekad dovoljna.
+Takva organizacija je na primer graf scene. Orgaizaciona struktura koja je vrlo pogodna
+za primenu i na detekciju kolizije je metod ćelija i portala.
+
+Ova metoda je razvijena za renderovanje sistema arhitekturalnog prolaska. 
+Za njih je karakteristično okruženje koje se sastoji od velikog broja prostorija, tako da je 
+većina objekata koji se nalaze u zarubljenuoj četvorostranoj piramidi pogleda (eng. {\em frustum}).
+nevidljivo u svakom trenutku, pošto je skoro sva vidljiva geometrija unutar trenutne sobe
+u kojoj se posmatrač nalazi.
+Metoda ćelija i portala deli svet u regije, odnosno ćelije, i granice, odnosno portale, koje 
+ih spajaju. Dakle u običnom slučaju zgrada, sobe odgovaraju ćelijama, a vrata odgovaraju
+portalima. 
+
+Renderovanje scene koja je podeljena u ćelije i portale počinje prvo od one ćelije u 
+kojoj se nalazi posmatrač. Nakon što je početna ćelija renderovana, poziva se rekurzivno
+za susedne ćelije čiji su portali vidljivi posmatraču. Radi se presek novih portala
+sa pogledom trenutnog portala čime se sužava vidljivost scene. Rekurzija se zaustavlja 
+kada je presek novog portala sa trenutnim prazan, ili kada su posećene sve dostupne susedne ćelije \cite{glavnaKnjiga}.
+
+\begin{figure}[h!]
+	\begin{center}
+	\includegraphics[scale=1]{cellsRooms.jpg}
+	\end{center}
+	\caption{Osenčen region predstavlja ono što posmatrač vidi. 
+	Potrebno je da se renderuju samo tri od šest ćelija. }
+	\label{fig:cellsRooms}
+\end{figure}
+
+Ista struktura ćelija i portala može da koristi za brzu detekciju kolizije. 
+Objekti su pridruženi ćeliji gde im se nalazi centar. Kada se objekti kreću vrši 
+se provera da li je objekat napustio svoju ćeliju. Ako jeste, onda se radi presek tog objekta
+sa susednim ćelijama da bi se saznalo gde je otišao. 
+
+Kada se radi detekcija kolizije između pokretnih objekata, za objekat X 
+potrebno je samo proveriti objekte koji su dodeljeni istoj ćeliji kao i X, i u slučaju
+da X preseca neki portal, uraditi i proveru sa objektima koji su u ćeliji sa druge strane tog portala \cite{cells}.
+Traženje preseka objekata u okviru jedne ćelije zahteva kvadratan broj operacija.
+Uglavnom se koristi algoritam binarnog particionisanja prostora, BSP, da bi se konstruisale
+ćelije i portali.
+
+\begin{figure}[h!]
+	\begin{center}
+	\includegraphics[scale=1]{cellsObj.jpg}
+	\end{center}
+	\caption{ Objekti B i C se moraju proveriti da li imaju presek, dok objekat A ne mora da se proveri ni sa jednim objektom. }
+	\label{fig:cellsObj}
+\end{figure}
+
+Ova metoda se najbolje ponaša kada svaka ćelija ima isti broj objekata i kada ima dovoljno 
+veći broj ćelija sa što manjim portalima.
+Tada se velik broj objekata može podeliti u ćelije tako da u svakoj ćeliji ima mali broj objekata,
+pa se kvadratan broj provera u okviru jedne ćelije neće naduvati.
+Metoda se ne koristi u modernim igarama, ali je odlična u scenarijima za
+koje je zamišljena, i daje nov način razmatranja konstrukcije rešenja za detekciju kolizije.
 
 % ==============================================================================
 \chapter{Implementacija}
@@ -597,7 +666,7 @@ linearno, što omogućava veći broj aktivnih objekata i radi efikasnije od osta
 % ==============================================================================
 
 Važno pitanje na početku ovog projekta je u kom okruženju ima najviše smisla da se implementira.
-Tri glavna kandidata su OpenGL, Juniti (eng. {\em Unity}) i Anril Endžin (eng. {\em Unreal Engine}).
+Tri glavna kandidata su OpenGL, Juniti (eng. {\em Unity}) i Anril Endžin 4 (eng. {\em Unreal Engine}).+
 
 Unity i Unreal su oba pokretači igara, pa samim tim imaju sve što je neophodno da 
 bi se krenuo ravoj igre ili neke druge aplikacije.
@@ -804,6 +873,7 @@ Detekcija kolizije kao rezultat daje parove svih objekata u koliziji. Na te paro
 razrešenje kolizije prema formulama \ref{eq:razresenje} i \ref{eq:razresenje2}.
 
 \subsection{Komponenta za merenje performansi}
+\label{sec:perf}
 
 Služi za prikupljanje podataka kako bi se uradila evaluacija data u \ref{sec:evaluacija}.
 Jedna instanca merenja predstavlja jedan korak izvršavanja i sastoji se od 
@@ -852,23 +922,85 @@ zamena u SAP algoritmu. Oni se koriste za merenje i za ispisivanje trenutnih inf
 \label{sec:evaluacija}
 % ==============================================================================
 
-Merenja vremena izvršavanja i memorije u zavisnosti od algoritma i parametara.
-Grafici i parelele sa prethodno opisanim principima. 
+U ovom poglavlju će biti izloženi rezultati merenja vremena izvršavanja koraka simulacije.
+Da bi se dobile vrednost $dt$ koje predstavljaju proteklo vreme između dva uzastopna ažuriranja scene
+koristi se komponenta \ref{sec:perf}, a za dobijanje preciznog trenutnog vremena se koristi funkcija iz GLUT biblioteke.
+U daljem tekstu se pod "relativan $dt$" podrazumeva:
+$$ \frac{ dt }{16.667} $$
+
+Razlog za deljenjebrojem 16.667 je taj što je poželjan minimalan broj iscrtavanja u sekundi 60, 
+što je $1/60$ u terminima proteklog vremena $dt$.
 
 Sva merenja su izvršena na računaru sa sledećom konfiguracijom:
 \begin{itemize}  
-	\item Procesor - Intel® Core™ i5-6600K 
+	\item Procesor - Intel Core i5-6600K 
 	\item Grafička - Nvidia GeForce GTX 1060 WINDFORCE OC 6G
-	\item RAM - Kingston HyperX FURY Black 8GB 2133MHz DDR4 
+	\item RAM - Kingston HyperX FURY 8GB 2133MHz DDR4 
 	\item Matična - ASUS Z170-A
 \end{itemize}  
 Pritom se pazi da nisu pokrenuti drugi programi koji bi uticali na rezultate.
 Procesorski takt je postavljen na 4.4 GHz.
 
+Za preprocesiranje i prikaz podataka korišćen je programski jezik \textbf{Python},
+biblioteka \textbf{pandas} za manipulisanje podacima i biblioteka \textbf{matplotlib}
+za pravljenje grafika.
+
+\subsection{Opšte}
+
+Za početak, potrebno je ustanoviti koliki uticaj ima postupak iscrtavanja na vreme izvršavanja.
+U slučaju da iscrtavanje troši veći ili približan deo vremena u odnosu na detekciju kolizije, onda 
+bi bilo nepravilno meriti ih zajedno. Zato je obezbežen način da se isključi iscrtavanje ako bi se to dešavalo.
+
+
+Na slici \ref{fig:drawVsNoDraw} i sledećim graficima su date referentne vrednosti:
+\begin{itemize}  
+	\item Prava koja predstavlja linearnu zavisnost $y$ od $x$ prikazana isprekidanom zelenom bojom.
+	Prava je sa koeficijentom pravca jednakim $y_0/x_0$.
+	\item Ciljna vrednost od 60 slika po sekundi prikazana žutom bojom.
+	60 slika po sekundi je traženi minimum za računare.
+	\item Ciljna vrednost od 30 slika po sekundi prikazana crvenom bojom.
+	30 slika po sekundi je traženi minimum za igre na konzolama.
+\end{itemize}  
+
 \begin{figure}[h!]
 	\centerfloat
 	\includegraphics[
-		trim=0 0 0 31,clip,
+		trim= 0 0 0 19, clip,
+		scale=1]{idleDrawVsNoDraw.pdf}
+	\caption{Relativan dt u zavisnosti od broja objekata - isključena detekcija kolizije.}
+	\label{fig:drawVsNoDraw}
+\end{figure}
+
+Na slici \ref{fig:drawVsNoDraw} prikazan je grafik zavisnosti relativnog dt u odnosu na broj objekata.
+Detekcija kolizije je isključena, tako da na vreme utiče samo kretanje objekata i iscrtavanje.
+Kada je iscrtavanje uključeno onda vreme izvršavanja raste linearno (sa koeficijentom manjim od 1).
+Na oko 24 000 objekata relativan dt prelazi 1, a na 50 000 objekata dt prelazi 2. 
+Sa druge strane, kada je crtanje isključeno vreme izvršavanja je mnogo manje. Svakako raste linearno 
+sa brojem objekata, ali sa konstantom koja je preko red veličine manja od iscrtavanja. 
+Čak i kada ima preko 180 000 objekata program se izvršava sa malim relativnim dt, 
+što znači da je to vreme zanemarljivo u odnosu na vreme potrebno za detekciju kolizije.
+
+Na slici \ref{fig:basic} prikazana je zavisnost relativnog dt od broja objekata kada se koristi 
+trivijalan algoritam kolizije. Na grafiku se naravno vidi nagli rast, što je i očekivano pošto 
+je algoritam kvadratne vremenske složenosti. Čak pre 2000 objekata relativan dt postaje veći od 1, 
+a na 2500 veći od 2. Takvo rešenje je neupotrebljivo za veći broj objekata. Jedina "prednost" je što 
+je složenost vremena izvršavanja ista koliko god da se brzo objekti kreću, koje god da su veličine i koliko god 
+da ih se preseca.
+
+\begin{figure}[h!]
+	\centerfloat
+	\includegraphics[
+		trim= 0 0 0 19, clip,
+		scale=1]{BasicCollision.pdf}
+	\caption{Relativan dt u zavisnosti od broja objekata - trivijalan algoritam.}
+	\label{fig:basic}
+\end{figure}
+
+
+\begin{figure}[h!]
+	\centerfloat
+	\includegraphics[
+		trim=0 0 0 19,clip,
 		scale=1]{oktri_dt_vs_numobj.pdf}
 	\caption{lmao.}
 	\label{fig:oktri1}
@@ -877,7 +1009,7 @@ Procesorski takt je postavljen na 4.4 GHz.
 \begin{figure}[h!]
 	\centerfloat
 	\includegraphics[
-		trim=0 0 0 31,clip,
+		trim=0 0 0 19,clip,
 		scale=1]{oktri_dt_vs_numobj_zoomout.pdf}
 	\caption{lmao.}
 	\label{fig:oktri1}
