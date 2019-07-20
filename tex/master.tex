@@ -270,7 +270,7 @@ nijedan
 \section{Temporalna koherencija}
 
 Često nije cilj samo jednom odrediti kolizije za neku scenu, nego i kolizije u trenutku koji ubrzo sledi.
-Objekti na sceni se u glavnom ne teleportuju nego se malo po malo kreću sa prolaskom vremena.
+Objekti na sceni se uglavnom ne teleportuju več se postepeno kreću sa prolaskom vremena.
 Tako su pozicije objekata u bliskim trenucima slični i to se može iskoristiti za dodatno ubrzanje algoritama 
 detekcije kolizije. Generalno je princip da se čuvaju svi parovi kolizije i u svakoj iteraciji 
 izbace oni oni koji više nisu u koliziji a dodaju oni koji su u tom trenutku došli u koliziju.
@@ -459,14 +459,16 @@ $O(n \log^2 n + k)$, gde je $k$ broj objekata koji se presecaju \cite{glavna1}.
 U praksi postoji predstava u kakvim okolnostima treba algoritam detekcije kolizije da bude primenjen, pa 
 se na osnovu toga vrši odabir postojećih ili konstruišu novi algoritmi.
 
-\section{Trivijalni algoritam}
+\section{Osnovni algoritam}
 \label{subsec:triv}
 
 Intuitivno se može doći do trivijalnog algoritma detekcije kolizije. 
 Jednostavno se svaki za element proveri da li ima presek sa svim ostalim elementima.
 Algoritam je ispravan i njegova vremenska složenost je $\Theta (n^2) $, dok je prostorna složenost
 $O(n^2)$, odnosno $\Theta(R)$, pošto svaki par objekata koji je u koliziji treba sačuvati.
+Na složenost vremena izvršavanja ne utiču veličina objekata, njihova brzina, a ni broj parova kolizije.
 Glavna mana ovakvog algoritma je kvadratna vremenska složenost čak i kada nema nijedne kolizije.
+
 Bolji algoritmi rešavaju ovaj problem uglavnom particionisanjem prostora na manje potprostore, tako da
 se provere kolizije vrše samo nad manjim podskupovima svih elemenata.
 
@@ -556,30 +558,43 @@ kolizije jednog dinamičnog objekta sa $n$ statičkih sa $O(n)$ na očekivanih $
 	\label{fig:oct}
 \end{figure}
 
-\section{Sweep and prune}
+\section{Briši i odseci}
 \label{subsec:sap}
 
-Briši i odseci (eng. {\em sweep and prune}), skraćeno SAP, je alternativna tehnikama detekcije kolizije 
+Briši i odseci (eng. {\em sweep and prune}), skraćeno SAP, je alternativa tehnikama detekcije kolizije 
 zasnovanim na prostornom particionisanju.
-SSAP je broadphase algoritam koji projektuje sve AABB
-na bazne ose pa sortira sve projekcije da bi odredio preseke AABB.
-Ako se na sve tri ose projekcije para AABB seku, onda se i zaista u prostoru seče taj par AABB.
-Ako je potreban samo jedan rezultat parova koji su u koliziji onda ovaj metod se ne ističe u odnosu na druge.
-Moć briši i odseci algoritma je u tome što iskorišćava svojstvo temporalne koherencije.
-Zbog toga je za svaku iteraciju potreban inkrementalan posao da bi se ažurirali parovi koji su u koliziji.
+SAP je broadphase algoritam koji projektuje sve AABB
+na bazne ose (u trodimenzionalnom slučaju to je tri skupa projekcija) pa sortira projekcije da bi odredio preseke AABB.
+Ako se na sve tri ose projekcije nekog para AABB seku, onda se i zaista u prostoru seče taj par AABB.
+
+Ako je potrebno naći sve parove koji su u koliziji samo u jednom trenutku vremena onda se ovaj metod ne ističe u odnosu na druge.
+Moć briši i odseci algoritma je u tome što iskorišćava svojstvo temporalne koherencije. 
 Objekti se ne teleportuju nasumično kroz prostor nego se postepeno kreću. 
+Zbog toga je za svaku iteraciju potreban inkrementalan posao da bi se ažurirali parovi koji su u koliziji.
 Održavaju se tri sortirana niza, svaki je sadržan od $2n$ elemenata, gde je $n$ broj objekata.
 Svaki niz sadrži sve projekcije AABB, po dva elementa za svaku projekciju. 
 Jedan je početak, odnosno teme sa manjom koordinatom, a drugi je kraj projekcije, tj. teme sa većom koordinatom. 
 
-Na slici \ref{fig:sap} je prikazana projekcija 4 objekta na osu. 
+Na slici \ref{fig:sap} je prikazana projekcija 4 objekta na jednu osu. 
 Tačka $b_i$ je početak duži projekcije, a $e_i$ je kraj projekcije $i$-tog objekta.
 $e3$ se nalazi desno od $b4$, što posmatranjem projekcije na jednoj osi govori da su njihovi AABB možda u koliziji.
-Potrebno je proveriti i ostale (u ovom slučaju samo još jednu) osu sa projekcijama da bi se utvrdilo da li se stvarno seku.
-Svi parovi objekata koji su u koliziji se zapamte, u ovom slučaju samo par $(3, 4)$.
+Potrebno je proveriti i ostale (ovde samo još jednu) osu sa projekcijama da bi se utvrdilo da li se stvarno seku.
+Svi parovi objekata koji su u koliziji se zapamte u kolekciji parova kolizija, u ovom slučaju samo par $(3, 4)$.
 U sledećem koraku se proverava da li je neki par koji je bio u koliziji prestao da bude, ili da li ima novi par objekata koji je u koliziji.
-Potrebno je ažurirati sortirane projekcije kada se objekti pomere. Prilikom sortiranja se u stvari dodaju i uklanjaju kolizije.
-Todo ispiši slučajeve kada je nova kad se uklanja.
+Potrebno je ažurirati projekcije kada se objekti pomere tako da nizovi ponovo budu sortirani. Prilikom sortiranja se u stvari dodaju i uklanjaju kolizije.
+
+Za održavanje sortiranosti se koristi sortiranje umetanjem (eng. {\em insertion sort}) pošto je odličan za skoro sortirane nizove.
+Dok se sortira niz posmatraju se elementi koji predstavljaju projekcije s leva (početak niza) na desno i za svaki element $A$ se proverava da li treba da se elementi $B_i$ levo od $A$
+pomere za jednu poziciju udesno. Postoje dva uslova koji utiču na postojanje kolizija:
+\begin{itemize}  
+	\item Ako je $A$ krajnja tačka projekcije i ako je $B$ početna onda izbaci njihov par iz kolekcije parova kolizije.
+	Naravno prave kolizije nije moralo ni biti u slučaju da se projekcije ne seku na ostalim osama, 
+	pa se tada ništa neće ni desiti pokušavanjem da se izbaci taj par.
+	\item Ako je $A$ početna tačka projekcije i ako je $B$ krajnja onda proveri da li se seku i na ostalim osama (AABB upit) i ako se seku onda
+	dodaj njihov par u kolekciju parova kolizija.
+
+\end{itemize}  
+
 
 \begin{figure}[h!]
 	\begin{center}
@@ -592,16 +607,17 @@ Todo ispiši slučajeve kada je nova kad se uklanja.
 Umesto da se vrše AABB upiti svaki put, moguće je da se čuvaju informacije o presecima 
 na svakoj osi. To zahteva $O(n^2)$ memorije ali smanjuje posao prilikom zamena \cite{sap}. 
 
-Ovaj metod radi dobro kada su objekti dobro raspoređeni duž većine osa, ali se loše pokazuje kada je
-mnogo objekata zgusnuto duž jedne ose, što vodi kvadratnoj složenosti po broju objekata \cite{glavna2}.
+Ovaj metod radi najbolje kada su objekti uniformno raspoređeni, ali se loše pokazuje kada je
+prisutan klaster većine objekata na nekoj osi, što vodi kvadratnoj složenosti po broju objekata \cite{glavna2}.
 
-Najviše što utiče na performanse prilikom testiranja je brzina kretanja objekata. 
+Najviše što utiče na performanse prilikom evaluacije je brzina kretanja objekata. 
 U slučaju kada se brzo kreću objekti, onda je potrebno raditi zamenu njihovih pozicija u sortiranom nizu,
-što vodi jakom usporavanju pri velikim pomerajima svih objekata. 
-Ipak, kada se svi objekti polako kreću, onda je mali broj zamena, i vreme izvršavanja algoritma je praktično 
-linearno, što omogućava veći broj aktivnih objekata i radi efikasnije od ostalih implementiranih algoritama u tom slučaju.
+što vodi jakom usporavanju pri velikim pomerajima svih objekata. Tada svaka tačka projekcije u nizovima mora 
+da se poredi sa većim brojem ostalih što dovodi do izražavanje kvadratne vremenske složenosti algoritma sortiranja umetanjem.
+Ipak, kada se svi objekti polako kreću, onda je mali broj pomeraja u nizu, i vreme izvršavanja algoritma je praktično 
+linearno, što omogućava veći broj pokretnih objekata i radi efikasnije od ostalih razmatranih algoritama u tom slučaju.
 
-\section{Čelije i portali}
+\section{Ćelije i portali}
 \label{subsec:cells}
 
 Postojanje dodatnog modela particionisanja prostora samo za detekciju kolizije nije uvek neophodno.
@@ -666,7 +682,7 @@ koje je zamišljena, i daje nov način razmatranja konstrukcije rešenja za dete
 % ==============================================================================
 
 Važno pitanje na početku ovog projekta je u kom okruženju ima najviše smisla da se implementira.
-Tri glavna kandidata su OpenGL, Juniti (eng. {\em Unity}) i Anril Endžin 4 (eng. {\em Unreal Engine}).+
+Tri glavna kandidata su OpenGL, Juniti (eng. {\em Unity}) i Anril Endžin 4 (eng. {\em Unreal Engine}).
 
 Unity i Unreal su oba pokretači igara, pa samim tim imaju sve što je neophodno da 
 bi se krenuo ravoj igre ili neke druge aplikacije.

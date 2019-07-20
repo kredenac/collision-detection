@@ -6,11 +6,13 @@
 
 using CollisionPair = std::pair<int, int>;
 
+// unordered_set requires a custom hash to store collision pairs
 struct pairhash {
 public:
 	std::size_t operator()(const CollisionPair &x) const;
 };
 
+// contains data of points of objects projection on axes
 class Point
 {
 public:

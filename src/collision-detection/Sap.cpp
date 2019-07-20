@@ -21,9 +21,11 @@ bool PairStorage::has(CollisionPair &p) const
 	if (p.first == p.second) {
 		//throw std::runtime_error("indices can't be the same");
 	}
+
 	if (p.first > p.second) {
 		std::swap(p.first, p.second);
 	}
+
 	return m_set.find(p) != m_set.cend();
 }
 
@@ -32,9 +34,11 @@ void PairStorage::add(CollisionPair &p)
 	if (p.first == p.second) {
 		//throw std::runtime_error("indices can't be the same");
 	}
+
 	if (p.first > p.second) {
 		std::swap(p.first, p.second);
 	}
+
 	m_set.insert(p);
 }
 
@@ -49,9 +53,11 @@ void PairStorage::remove(int a, int b)
 	if (a == b) {
 		//throw std::runtime_error("indices can't be the same");
 	}
+
 	if (a > b) {
 		std::swap(a, b);
 	}
+
 	auto p = std::make_pair(a, b);
 	m_set.erase(p);
 }
@@ -70,6 +76,7 @@ void PairStorage::setCollisions(std::vector<Cuboid>& items, Collisions &pairs)
 Sap* Sap::get(const Vector3 &pos, const Vector3 &size, std::vector<Cuboid>& items)
 {
 	static Sap instance(pos, size, items);
+
 	// if number of elements or their size has changed, needs to bee reinitialized
 	if (instance.m_lastNumElements != items.size() ||
 		instance.lastCubeSize != items[0].size) {
@@ -126,6 +133,7 @@ void Sap::initAxes(std::vector<Cuboid>& items)
 	for (auto &axis : m_axes) {
 		axis.reserve(items.size() * 2);
 	}
+
 	// fill all three axes with 2n points each
 	for (size_t i = 0; i < items.size(); i++) {
 
@@ -137,6 +145,7 @@ void Sap::initAxes(std::vector<Cuboid>& items)
 			l, // value
 			true // isBegin
 		);
+
 		// xEnd
 		m_axes[xAxis].emplace_back(i, r, false);
 
@@ -150,6 +159,7 @@ void Sap::initAxes(std::vector<Cuboid>& items)
 		//zEnd
 		m_axes[zAxis].emplace_back(i, f, false);
 	}
+
 	for (auto &axis : m_axes) {
 		std::sort(axis.begin(), axis.end());
 	}
@@ -162,10 +172,12 @@ void Sap::updateAxesPoints(std::vector<Cuboid>& items) {
 		auto &elem = items[point.index];
 		point.value = point.isBegin ? elem.left() : elem.right();
 	}
+
 	for (auto &point : m_axes[yAxis]) {
 		auto &elem = items[point.index];
 		point.value = point.isBegin ? elem.down() : elem.up();
 	}
+
 	for (auto &point : m_axes[zAxis]) {
 		auto &elem = items[point.index];
 		point.value = point.isBegin ? elem.back() : elem.front();
@@ -204,7 +216,8 @@ int Sap::sortAxis(std::vector<Point> &axis, std::vector<Cuboid> &items)
 		auto currPoint = axis[i];
 		float value = currPoint.value;
 
-		// currPoint is moved to the left .
+		// currPoint is moved to the left by moving the points with larger .value
+		// one place to the right, and putting currPoint in the gap.
 		// update position of elements using insertion sort
 		// add/remove collisions accordingly. 
 		int j;
@@ -217,7 +230,7 @@ int Sap::sortAxis(std::vector<Point> &axis, std::vector<Cuboid> &items)
 				m_pairs.remove(toMove.index, currPoint.index);
 			}
 
-			// toMove.end skips oevr currPoint.begin, which means
+			// toMove.end skips over currPoint.begin, which means
 			// that they now they might have an intersection
 			if (!toMove.isBegin && currPoint.isBegin) {
 				auto &first = items[toMove.index];
@@ -226,10 +239,15 @@ int Sap::sortAxis(std::vector<Point> &axis, std::vector<Cuboid> &items)
 					m_pairs.add(toMove.index, currPoint.index);
 				}
 			}
+
+			// this doesn't overwrite any other point because they were all
+			// moved to the right, or axis[j+1] is currPoint which is saved
 			axis[j + 1] = toMove;
 		}
+
 		numMoved += i - j - 1;
 		axis[j + 1] = currPoint;
 	}
+
 	return numMoved;
 }
