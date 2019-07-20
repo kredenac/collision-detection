@@ -29,7 +29,7 @@
 \hypersetup{colorlinks,citecolor=green,filecolor=green,linkcolor=blue,urlcolor=blue}
 
 \usepackage{algorithm}
-\usepackage{algpseudocode}
+\usepackage[noend]{algpseudocode}
 
 %header
 % \usepackage{fancyhdr}
@@ -172,7 +172,7 @@ Zato je bitno uzeti u obzir sve relevantno što utiče na performanse implementa
 
 \section{Faze}
 
-Celokupan zadatak detekcije kolizije se deli na dve faze: široku (eng. {\em broadphase}) i usku fazu (eng. {\em narrowphase}). 
+Celokupan zadatak detekcije kolizije se deli na dve etape: \textbf{ široku fazu }(eng. {\em broadphase}) i \textbf{usku fazu} (eng. {\em narrowphase}). 
 U prvoj, širokoj, fazi odbacuje se većina kandidata mogućih parova koji imaju koliziju. Cilj je da 
 da faza bude sto efikasnija u odnosu na broj objekata.
 Iako postoje takvi slučajevi, u mnogim primenama nisu svi objekti prosta geometrijska tela poput kocki, kvadara ili lopti.
@@ -220,46 +220,53 @@ Kada se ustanovi da se dva objekta preklapaju, potrebno je pomeriti ih tako da s
 Taj postupak se naziva razrešenje kolizije i opisan je u delu \ref{sec:razresenje}, a ključnu ulogu igra minimalan vektor translacije.
 
 Kada se ustanovi da postoji presek između dve AABB, to ne znači da zaista postoji presek između dva objekta
-koje ti AABB enkapsuliraju.
+koje ti AABB enkapsuliraju, čak i ako su ti objekti konveksni. Takav slučaj je prikazan na slici \ref{fig:2dfalse}. 
 
-\begin{verbatim}
-	todo slika
-	
-	\-\
-	 \ \
-	O \_\
-\end{verbatim}
+\begin{figure}[h!]
+	\begin{center}
+	\includegraphics[scale=0.2]{2dfalseCol.png}
+	\end{center}
+	\caption{Krug i rotiran pravugaonik nemaju presek dok njihovi granični opsezi imaju.}
+	\label{fig:2dfalse}
+\end{figure}
 
 %https://www.scss.tcd.ie/~manzkem/CS7057/cs7057-1516-07-NarrowPhase-mm.pdf
 Rešavanje problema određivanja da li postoji presek objekata unutar AABB koji su kandidati za koliziju 
-se radi u uskoj fazi. Bounding volume hierarchies, AABB tree, OBB tree.
-
-
+se radi u uskoj fazi.
 U slučaju da su ti objekti unutar AABB neka prosta geometrijska tela poput
 lopte ili kvadra, tada se može lako primeniti teorema o razdvajajućim osama da bi se videlo da li zaista 
 postoji preklapanje među njima. Međutim, krije se jedan problem.
 AABB se mogu posmatrati kao projekcije tela na sve tri ose u prostoru.
 Tada se dakle posmatraju samo tri prave, ne sve moguće prave. 
-U slučaju prikazanom na "slici" ispod, vidi se krug i rotiran pravougaonik. Ako gledamo njihove projekcije 
-na $x$ i $y$ ose onda oni prema tome imaju presek, iako posmatrajući sliku očigledno nema preseka.
-Pomoću opisanog kontraprimera se vidi da posmatranjem projekcija na samo bazne ose prostora nije dovoljno
-u opštem slučaju. Na slici \ref{fig:counter} prikazana su dva oblika, jedan konveksan a drugi nekonveksan. 
-Za bilo koju pravu projekcija oblika na nju ima presek, iako oni u stvari nemaju presek, što predstavlja
-primer zašto teorema o razdvajajućim osama zahteva konveksne objekte.
+U slučaju prikazanom na slici \ref{fig:2dfalse}, vidi se krug i rotiran pravougaonik. 
+Ako se posmatraju samo projekcije na $x$ i $y$ ose onda oni prema tome imaju presek, iako posmatrajući sliku očigledno nema preseka.
 
-Još jedan primer u tri dimenzije: jedan AABB može da sadrži izduženu loptu, a drugi 
-da sadrži objekat koji izgleda kao ram slike, kao što je na slici TODO. 
-Tada se zaista njihove kutije seku, iako tela unutar njih nemaju presek.
-
-todo slika
+Pomoću opisanog kontraprimera se vidi da razmatranjem projekcija na samo bazne ose prostora nije dovoljno
+u opštem slučaju. Moguće je naći neku drugu pravu koja ih razdvaja, ili odrediti postojanje preseka na drugi način, 
+samo je potrebno više vremena i zato se takav posao ostavlja za usku fazu.
 
 \begin{figure}[h!]
 	\begin{center}
-	\includegraphics[scale=0.2]{theorem_counterexample.png}
+	\includegraphics[scale=0.17]{theorem_counterexample.png}
 	\end{center}
 	\caption{Projekcija nekonveksne površi na pravu.}
 	\label{fig:counter}
 \end{figure}
+
+Na slici \ref{fig:counter} prikazana su dva oblika, jedan konveksan a drugi nekonveksan. 
+Za bilo koju pravu projekcija oblika na nju ima presek, iako oni u stvari nemaju presek, što predstavlja
+primer zašto teorema o razdvajajućim osama zahteva konveksne objekte. 
+Primer u tri dimenzije dat je na slici \ref{fig:falseCollision}.
+
+\begin{figure}[h!]
+	\begin{center}
+	\includegraphics[scale=0.5]{falseCollision.jpg}
+	\end{center}
+	\caption{Lažni presek konveksnog i nekonveksnog objekta u prostoru. 
+	Sa desne strane su granični opsezi tela. }
+	\label{fig:falseCollision}
+\end{figure}
+
 
 \section{Konzistentnost vremena izvršavanja}
 
@@ -512,15 +519,15 @@ Bolji algoritmi rešavaju ovaj problem uglavnom particionisanjem prostora na man
 se provere kolizije vrše samo nad manjim podskupovima svih elemenata.
 
 \begin{algorithm}
-	\caption{Trivijalan algoritam detekcije kolizije}
+	\caption{Osnovni algoritam detekcije kolizije}
     \label{alg:triv}
 	\begin{algorithmic}[1]
-		\Procedure{BasicCollision}{$elements$}\Comment{elements je niz svih objekata}
+		\Procedure{osnovnaDetekcijaKolizije}{$objekti$}%\Comment{elements je niz svih objekata}
 		\State $Parovi := \{ \}$
 		\For{i:=0 to n-1}
 			\For{j:=i+1 to n}
 
-			\If{i-ti i j-ti elementi imaju presek}
+			\If{i-ti i j-ti objekti imaju presek}
 				\State dodaj (i, j) u skup Parovi
 			\EndIf		
 		\EndFor
@@ -530,7 +537,7 @@ se provere kolizije vrše samo nad manjim podskupovima svih elemenata.
     \end{algorithmic}
 \end{algorithm}
 
-\section{Octree}
+\section{Oktri}
 \label{subsec:octree}
 
 Oktri (eng. {\em Octree}) je struktura podataka koja se koristi za rekurzivno deljenje trodimenzionog
@@ -573,7 +580,7 @@ Kada neki objkat seče više od jednog oktanta nekog unutrašnjeg čvora $U$, ta
 u podoktante čvora $U$, nego se pamti u čvoru $U$. Time se može značajno uštedeti na memoriji i vremenu izvršavanja.
 Međutim, i za tako izmenjen Oktri postoje nezgodne situacije kada se pogoršava vreme izvršavanja.
 Ako svi objekti seku više od jenog podoktanta korenog čvora, onda svi moraju biti sačuvani u njemu. 
-U tom slučaju se mora proveriti kolizija svih parova od $n$ objekata, što je ekvivalentno trivijalnom kvadratnom algoritmu.
+U tom slučaju se mora proveriti kolizija svih parova od $n$ objekata, što je ekvivalentno osnovnom kvadratnom algoritmu.
 
 Očekivano vreme izvršavanja za izgradnju Oktrija je $O(n \log n)$, gde je n broj objekata.
 Očekivano vreme potrebno za pronalazak svih kolizija je $O(n \log n + k)$, gde je $k$ broj objekata koji su u koliziji.
@@ -817,7 +824,7 @@ Parametri koji se menjaju kroz kontroler komponentu su:
 	\item Da li je iscrtavanje uključeno ili isključeno. 
 	S obzirom da je projekat više procesorski nego grafički zahtevan, iscrtavanje uglavnom ne oslabljuje performanse više od 2 do 3 posto.
 	Svakako, kada je na sceni više od 30 000 objekata počinje značajno da ima uticaj, pa je za te slučajeve dodata opcija kako bi merenja bila nepristrasna.
-	\item Koji algoritam detekcije kolizije se koristi. Podržani su: osnovni (trivijalni) algoritam, Oktri sa duplikatima,
+	\item Koji algoritam detekcije kolizije se koristi. Podržani su: osnovan (trivijalan) algoritam, Oktri sa duplikatima,
 	Oktri bez duplikata i SAP algoritam. Takođe je moguće isključiti detekciju kolizije u celosti da bi se dobila referntna vrednost vremena izvršavanja.
 
 \end{itemize}  
@@ -1000,7 +1007,7 @@ Za preprocesiranje i prikaz podataka korišćen je programski jezik \textbf{Pyth
 biblioteka \textbf{pandas} za manipulisanje podacima i biblioteka \textbf{matplotlib}
 za pravljenje grafika.
 
-\subsection{Opšte}
+\section{Opšte}
 
 Za početak, potrebno je ustanoviti koliki uticaj ima postupak iscrtavanja na vreme izvršavanja.
 U slučaju da iscrtavanje troši veći ili približan deo vremena u odnosu na detekciju kolizije, onda 
@@ -1048,16 +1055,22 @@ da ih se preseca.
 		trim= 0 0 0 19, clip,
 		scale=1]{basicCollision.pdf}
 	\caption{Relativan dt u zavisnosti od broja objekata - trivijalan algoritam.}
-	\label{fig:basic}
+	\label{fig:basic} 
 \end{figure}
 
+\section{Oktri}
+
+Na slici \ref{fig:oktri1} su prikazane performanse Oktrija sa maksimalnom dubinom od deset nivoa i četri maksimalna elementa u listu pre podele na podoktante.
+Dobro prati referentnu liniju linearne zavisnosti na početku. 
+Već na početku je višestruko bolji u odnosu na prethodno prikazani, pada ispod 60fps tek nakon 12 000 objekata, i ispod 30fps nakon 20 000.
+Ipak, na slici \ref{fig:oktri2} se primećuje brže udaljavanje od linearne prave, što je za očekivati pošto algoriam nije linearne vremenske složenosti.
 
 \begin{figure}[h!]
 	\centerfloat
 	\includegraphics[
 		trim=0 0 0 19,clip,
 		scale=1]{oktri_dt_vs_numobj.pdf}
-	\caption{lmao.}
+	\caption{Zavisnost relativnog dt od broja objekata - Oktri.}
 	\label{fig:oktri1}
 \end{figure}
 
@@ -1066,8 +1079,25 @@ da ih se preseca.
 	\includegraphics[
 		trim=0 0 0 19,clip,
 		scale=1]{oktri_dt_vs_numobj_zoomout.pdf}
-	\caption{lmao.}
-	\label{fig:oktri1}
+	\caption{Zavisnost relativnog dt od broja objekata - Oktri, više objekata.}
+	\label{fig:oktri2}
+\end{figure}
+
+Oktri sa i bez duplikata su često sličnih performansi. Jedan primer kada je razlika ogromna je kada je veliki broj objekata na istom mestu.
+Za potrebe demonstriranja se koristi scenario gde se objekti nasumično kreću i onda svi bivaju povučeni ka jednoj istoj tački.
+Tada se svi nalaze na istom mestu za trenutak, i potom se razilaze.
+Na slici \ref{fig:octreSpike} se vide tri manja plava skoka za Oktri bez duplikata, i dva narandžasta skoka reda veličine za Oktri sa duplikatima.
+Za ovo merenje je isključeno razrešenje kolizije da bi više objekata bilo u koliziji, što pokazuje interesantno svojstvo da iako je potrebna dodatna obrada za razrešenje kolizije, 
+ona onemogućava grupisanje preseka objekata i time ubrzava izvršavanje Oktrija (i mnogih drugih algoritama detekcije kolizije).
+
+
+\begin{figure}[h!]
+	\centerfloat
+	\includegraphics[
+		trim=0 0 0 19,clip,
+		scale=1]{octreeSpikes.pdf}
+	\caption{Usporenje Oktrija pri klasterovanju objektata.}
+	\label{fig:octreSpike}
 \end{figure}
 
 % ==============================================================================

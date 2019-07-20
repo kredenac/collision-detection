@@ -115,12 +115,14 @@ void Octree::insert(Cuboid *c, bool markColl)
 			}
 		}
 	}
+
 	elements.push_back(c);
 
 	// if there's space, or max depth reached, just put it and return 
 	if (elements.size() <= maxElem || depth == maxDepth) {
 		return;
 	}
+
 	// if max elem reached, subdivide
 	subdivide();
 
@@ -129,6 +131,7 @@ void Octree::insert(Cuboid *c, bool markColl)
 	for (size_t i = 0; i < elements.size(); i++) {
 		insertDownward(elements[i]);
 	}
+
 	elements.clear();
 }
 
@@ -137,6 +140,7 @@ void Octree::findIntersectionDownward(Cuboid *c)
 	if (innerNodesHoldChildren == false) {
 		//throw std::runtime_error("only use this method when inner nodes hold children");
 	}
+
 	for (auto e : innerElements) {
 		if (e->isCollidingWith(*c)) {
 			pairs->push_back(std::make_pair(c, e));			
@@ -144,6 +148,7 @@ void Octree::findIntersectionDownward(Cuboid *c)
 			c->setColliding(true);
 		}
 	}
+
 	if (isLeaf()) {
 		for (auto e : elements) {
 			if (e->isCollidingWith(*c)) {
@@ -154,6 +159,7 @@ void Octree::findIntersectionDownward(Cuboid *c)
 		}
 		return;
 	}
+
 	for (unsigned i = 0; i < c_octants; i++) {
 		if (whichOctants[i]) {
 			octants[i]->findIntersectionDownward(c);

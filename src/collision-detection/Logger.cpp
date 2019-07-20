@@ -38,6 +38,7 @@ void Logger::finishMeasurement()
 	}
 
 	file.close();
+	instances.resize(0);
 }
 
 std::string Logger::getTimeStamp()

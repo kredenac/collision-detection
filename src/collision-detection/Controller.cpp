@@ -211,8 +211,10 @@ void Controller::startMeasurement()
 
 void Controller::endMeasurement()
 {
-	isMeasurementInProgress = false;
-	logger.finishMeasurement();
+	if (isMeasurementInProgress) {
+		isMeasurementInProgress = false;
+		logger.finishMeasurement();
+	}
 }
 
 void Controller::setDelta(float dt)
