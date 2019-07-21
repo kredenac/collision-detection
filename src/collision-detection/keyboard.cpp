@@ -34,9 +34,11 @@ void onMouseButton(int button, int pressed, int x, int y)
 			firePaint();
 		}
 	}
+
 	if (button == GLUT_RIGHT_BUTTON) {
 		if (pressed == GLUT_DOWN) {
 			fireBlackPaint();
+			Controller::get().showControls = !Controller::get().showControls;
 		}
 	}
 }

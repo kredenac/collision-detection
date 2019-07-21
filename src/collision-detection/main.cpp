@@ -125,6 +125,16 @@ void drawAllText(float fpsCount)
 
 	outputText = control.getInfo();
 	drawTextAt(100, 55, outputText.c_str());
+
+	if (control.showControls) {
+		const int decrementHeight = 23;
+		int height = glutGet(GLUT_WINDOW_HEIGHT);
+		
+		for (const auto& line : control.getControlsInfo()) {
+			height -= decrementHeight;
+			drawTextAt(10, height, line.c_str());
+		}
+	}
 	
 	glEnable(GL_LIGHTING);
 }

@@ -142,7 +142,7 @@ da bi simulacija dodira bila uverljiva \cite{haptic}.
 	\label{fig:horse}
 \end{figure}
 
-Problem detekcije svih parova kolizije je u najgorem slučaju kvadratne složenosti i od toga se ne može pobeći,
+Problem detekcije svih parova kolizije je u najgorem slučaju kvadratne vremenske i prostorne složenosti i od toga se ne može pobeći,
 ali uglavnom ih ima mnogo manje od gornje granice.
 Razlog zahteva da se izvršava u realnom vremenu kod interaktivnih programa je očigledan, ali je takođe
 potrebana mogućnost da se što češće i efikasnije utvrde kolizije. Filmovi nisu interaktivan sadržaj i zato
@@ -160,7 +160,7 @@ Te okolnosti su inspirisale razvoj programa koji omogućava brzo i interaktivno 
 algoritama detekcije kolizije, postavljanje njihovih parametara kao i posmatranje performansi.
 
 % ==============================================================================
-\chapter{Glavne karakteristike}
+\chapter{Relevantni mehanizmi}
 \label{sec:karakteristike}
 % ==============================================================================
 
@@ -1061,8 +1061,8 @@ da ih se preseca.
 \section{Oktri}
 
 Na slici \ref{fig:oktri1} su prikazane performanse Oktrija sa maksimalnom dubinom od deset nivoa i četri maksimalna elementa u listu pre podele na podoktante.
-Dobro prati referentnu liniju linearne zavisnosti na početku. 
-Već na početku je višestruko bolji u odnosu na prethodno prikazani, pada ispod 60fps tek nakon 12 000 objekata, i ispod 30fps nakon 20 000.
+Prati referentnu liniju linearne zavisnosti na početku. 
+I za manji broj objekata je višestruko bolji u odnosu na prethodno prikazani, pada ispod 60fps tek nakon 12 000 objekata, i ispod 30fps nakon 20 000.
 Ipak, na slici \ref{fig:oktri2} se primećuje brže udaljavanje od linearne prave, što je za očekivati pošto algoriam nije linearne vremenske složenosti.
 
 \begin{figure}[h!]
@@ -1099,6 +1099,31 @@ ona onemogućava grupisanje preseka objekata i time ubrzava izvršavanje Oktrija
 	\caption{Usporenje Oktrija pri klasterovanju objektata.}
 	\label{fig:octreSpike}
 \end{figure}
+
+
+Dok se razvijao projekat odabrana je konstanta 4 za maksimalan broj elemenata u listu Oktrija proizvoljno, 
+vodeći se logikom da je mali broj povoljan zbog izbegavanja kvadratnog broja upoređivanja, a da nije baš jedinica, kada bi se previše listovi delili.
+Na slici \ref{fig:octree_leaf} se zapaža da četvorka nije loš izbor i tada je u proseku 69fps. 
+Jedinica je najgori parametar pošto dovodi do viška rekurzivnog particionisanja prostora, relativan dt opada do koeficijenta 32 i nadalje naste.
+Najbolja vrednost parametra je 32, kada je prosečno 94 što je čak 26.5\% bolje! 
+Ubrzanje od 26.5\% je u praksi impresivno, pogotovo što je postignuto samo promenom jednog koeficijenta.
+Pri merenju je fiskno 10 000 objekata i korišćen je Oktri sa duplikatima.
+
+\begin{figure}[h!]
+	\centerfloat
+	\includegraphics[
+		trim=0 0 0 19,clip,
+		scale=1]{octree_leaf.pdf}
+	\caption{Relativan dt u zavisnosti od maksimalnog broja elemenata u listu Oktrija}
+	\label{fig:octree_leaf}
+\end{figure}
+
+
+Maksimalna dubina Oktrija je postavljena na 10 tokom razvoja projekta. 
+Njenom promenom se ne postiže mnogo, osim jakog usporenja kad bi se postavila na 1 ili 2, jer se tad skoro svi parovi moraju ispitati.
+Vrednosti 9 do 12 predstavljaju razuman segment za odabir maksimalne dubine, jer omogućavaju dovoljno particionisanje prostora 
+da se izbegne kvadratan broj operacija ispitivanja preseka,
+a u slučaju da se više objekata preklapa će zaustaviti rano rekurzivne podele koje pokušavaju da ih podele u više oktanata.
 
 \section{SAP}
 

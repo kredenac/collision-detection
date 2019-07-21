@@ -27,6 +27,7 @@ void Controller::resetToDefault()
 	moreElements(1000);
 	isMeasurementInProgress = false;
 	shouldDraw = true;
+	showControls = false;
 }
 
 void Controller::joltTowards(float x, float y, float z)
@@ -152,7 +153,7 @@ float Controller::cuboidSize() const
 
 void Controller::changeContainerSize(bool toBigger)
 {
-	float diff = m_containerSize * 0.01 * m_delta;
+	float diff = m_containerSize * 0.01f * m_delta;
 	if (!toBigger) {
 		diff = -diff;
 	}
@@ -197,6 +198,41 @@ void Controller::changeOctreeMaxElements(int diff)
 		return;
 	}
 	Octree::maxElem = max;
+}
+
+const std::vector<std::string> Controller::getControlsInfo()
+{
+	static const std::vector<std::string> info = {
+		"R - smaller container",
+		"T - bigger container",
+		"Z - decrease speed",
+		"X - incraese speed",
+		"C - toggle collision resolution",
+		"V - object size--",
+		"B - object size++",
+		"N - object count--",
+		"M - object count++",
+		"G - start measurement",
+		"H - end measurement",
+		"J - previous algorithm",
+		"K - next algorithm",
+		"7 - octree maxdepth--",
+		"8 - octree maxdepth++",
+		"9 - octree maxleaf--",
+		"0 - octree maxleaf++",
+		"i - jolt objects",
+		"O - toggle drawing",
+
+		"W,S,A,D - move",
+		"Mouse - look",
+		"Right mouse button - this info",
+
+		"- - mouse sensitivity--",
+		"+ - mouse sensitivity++",
+		"ESC - quit",
+	};
+
+	return info;
 }
 
 void Controller::startMeasurement()

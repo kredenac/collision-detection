@@ -28,6 +28,12 @@ public:
 	// should skip drawing the scene
 	bool shouldDraw;
 
+	// whether to print controls or not
+	bool showControls;
+
+	// control info to be shown
+	const std::vector<std::string> getControlsInfo();
+
 	// should collision resolution be applied
 	bool doResolution;
 

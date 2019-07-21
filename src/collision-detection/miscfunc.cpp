@@ -207,4 +207,5 @@ void resetGame(void)
     for (i = 0; i < MAX_LIGHTS; i++)
         lightOn[i] = 0;
 }
+
 #pragma warning(pop)
