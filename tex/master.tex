@@ -1100,17 +1100,79 @@ ona onemogućava grupisanje preseka objekata i time ubrzava izvršavanje Oktrija
 	\label{fig:octreSpike}
 \end{figure}
 
+\section{SAP}
+
+
+SAP se ponaša dopustivo do 11 000 objekata, što se vidi na slici \ref{fig:sap1}.
+
+\begin{figure}[h!]
+	\centerfloat
+	\includegraphics[
+		trim=0 0 0 19,clip,
+		scale=1]{sap1.pdf}
+	\caption{Zavisnost relativnog dt od broja objekata - SAP.}
+	\label{fig:sap1}
+\end{figure}
+
+Preko 11 000 objekata počinje da se manifestuje njegova glavna razlika u odnosu na ostale algoritme.
+Za veći broj objekata potrebno je više vremena da se obradi detekcija kolizije, što produžava vreme između dva ažuriranja pozicija.
+Što je vreme između dva ažuriranja pozicija veće, to je i više vremena proteklo u simulaciji, samim tim će i objekti biti udaljeniji od svojih prethodnih pozicija 
+nego što bi bio slučaj sa kraćim vremenom između dva koraka. Veći pomeraj objekata znači da je niz koji se održava sortiranim u SAP algoritmu daleko od toga da bude 
+sortiran, pa je potrebno dodatno zamena elemenata u nizu dok on ponovo postane sortiran. 
+To opet povećava vreme izvršavanja između dva koraka, što vodi većoj udaljenosti objekta od prošle pozicije, i tako u krug.
+
+Taj princip je prikazan na slici \ref{fig:dtSapCrawl}, gde je fiskno 12 800 objekata na sceni, a vreme izvršavanja eksplodira, čak ispod jednog iscrtavanja u sekundi.
+Vidi se direktna veza broja zamena i relativnog dt pošto se zbog kvadratnog broja zamena katastrofalno uspori algoritam.
+
+\begin{figure}[h!]
+	\centerfloat
+	\includegraphics[
+		trim=0 0 0 19,clip,
+		scale=1]{dtSapCrawl.pdf}
+	\caption{SAP: povratna sprega povećava dt, iako je fiksan broj objekata.}
+	\label{fig:dtSapCrawl}
+\end{figure}
+
+Osim što brzina kretanja može katastrofalno da utiče na performanse SAP algoritma, tako i smanjivanje brzine utiče povoljno na njegovo vreme izvršavanja.
+Upoređivanje vremena za tri različite brzine objekata je dato na slici \ref{fig:sap3speeds}. 
+Prvi je meren pri podrazumevanoj brzini, drugi pri duplo manjoj i treći pri četri puta manjoj brzini.
+Što se sporije objekti kreću to je tačka kada počinje povratna sprega da uzima maha više odložena.
+U svakom slučaju će se to desiti nakon nekog broja elemenata, tako da u zavisnosti od situacije SAP algoritam može biti loš ili idealan.
+
+\begin{figure}[h!]
+	\centerfloat
+	\includegraphics[
+		trim=0 0 0 19,clip,
+		scale=1]{sap3speeds.pdf}
+	\caption{Upoređivanje rasta relativnog dt u zavisnosti od objekta pri njihovim različitim brzinama - SAP.}
+	\label{fig:sap3speeds}
+\end{figure}
+
+U do sada razmatranim slučajevima svi prelaze granicu od dva relativna dt pre 20 000 objekata.
+Na slici \ref{fig:sap_great} je prikazana situacija kada je SAP algoritam ubedljivo najbolji.
+Prilikom merenja je isključeno iscrtavanje pošto ono traje duže od samog algoritma kolizije u ovakvom slučaju,
+što se može videti na \ref{fig:drawVsNoDraw}, jer na oko 50 000 objekata relativan dt prelazi 2.
+Ovde je išestruko je bolji SAP od ostalih, dostižući 60fps tek na 75 000, a 30fps na 92 000 objekata.
+Pritom ostaje ispod referentne linearne prave, sve do kraja kada se približava broju objekata koji vodi 
+do akumuliranja usporavanja, što je oko 100 000.
+
+
+\begin{figure}[h!]
+	\centerfloat
+	\includegraphics[
+		trim=0 0 0 19,clip,
+		scale=1]{sap_great.pdf}
+	\caption{Relativan dt u zavisnosti od objekta kada se sporo kreću - SAP.}
+	\label{fig:sap_great}
+\end{figure}
+
+
 % ==============================================================================
 \chapter{Zaključak}
 \label{sec:zakljucak}
 % ==============================================================================
 
 Zaključak. 
-
-% \addcontentsline{toc}{section}{Literatura}
-% \appendix
-% \bibliography{bibl} 
-% \bibliographystyle{plain}
 
 
 % ------------------------------------------------------------------------------
@@ -1122,7 +1184,6 @@ Zaključak.
 % Završni deo teze i prilozi
 \backmatter
 % ==============================================================================
-
 
 
 % \appendix

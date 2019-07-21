@@ -26,7 +26,7 @@ private:
 	std::string getTimeStamp();
 
 	std::vector<std::tuple<float, float, int, std::string>> instances;
-	const int vectorCapacity = 60 * 60 * 10;
+	const int vectorCapacity = 500 * 60 * 100;
 	std::string fileName;
 	const std::string pathToFile = "../../measurements/";
 	const std::string fileExtension = ".csv";
