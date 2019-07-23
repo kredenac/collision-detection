@@ -94,7 +94,7 @@
 Problematika kojom se bavi ovaj rad je detekcija kolizije, široka tema koja ima naizgled jednostavan zadatak:
 naći sve parove objektata koji međusobno imaju presek. Nekad se dodatno zahteva tačno vreme i oblik preseka. 
 
-Lako se konstruiše prost algoritam koji utvrđuje preseke osnovnih geometrijskih tela.
+Lako se konstruiše prost algoritam koji utvrđuje postojanje preseka osnovnih geometrijskih tela.
 Međutim, današnji virtuelni svetovi imaju hiljade pokretnih tela i stotine miliona poligona i 
 zato je potrebno konstruisati sofisticirane strukture podataka i algoritme. 
 Nepogodno izabrano rešenje za detekciju kolizije može predstavljati usko grlo sistema.
@@ -103,10 +103,10 @@ Jedan objekat može biti jednostavna kocka ili izgrađen od desetine hiljada pol
 da se svi poligoni svih objekata jedan po jedan proveravaju da li imaju presek.
 Umesto toga, složeni objekti se zamenjuju kvadrima koji su opisani oko njih.
 Na taj način se prvo nalaze preseci prostih objekata, pa tek ako se oni seku se traže preseci između njihovih 
-poligona. Ovaj rad je usmeren na prvi deo detekcije kolizije - široku fazu (eng. {\em broadphase}) pošto je on 
+poligona. Drugi deo se naziva uska faza (eng. {\em narrowphase}) i nije uvek neophodan, na primer kada su svi objekti na koje se primenjuje 
+kocke, kao što je slučaj u nekim igrama.  Ovaj rad je usmeren na prvi deo detekcije kolizije - široku fazu (eng. {\em broadphase}) pošto je on 
 ključan kada se radi o velikom broju objekata.
-Drugi deo se naziva uska faza (eng. {\em narrowphase}) nije uvek neophodan, na primer kada su svi objekti na koje se primenjuje 
-kocke, kao što je slučaj u nekim igrama. 
+
 
 \section{Motivacija}
 \label{sec:naslov1}
@@ -164,11 +164,11 @@ algoritama detekcije kolizije, postavljanje njihovih parametara kao i posmatranj
 \label{sec:karakteristike}
 % ==============================================================================
 
-U ovom poglavju su opisani mehanizmi i fenomeni čije poznavanje je ključno za razumevanje i konstrukciju 
+U ovom poglavju su opisani mehanizmi i fenomeni čije poznavanje je potrebno za razumevanje i konstrukciju 
 uspešnog rešenja za detekciju kolizije.
 Algoritam detekcije kolizije se ne koristi u izolaciji nego se izvršava zajedno sa renderovanjem,
-animacijama, puštanjem zvuka, mrežnom komunikacijom, rukovanju ulaza, simulacijom fizike, itd. 
-Zato je bitno uzeti u obzir sve relevantno što utiče na performanse implementaicije.
+puštanjem zvuka, mrežnom komunikacijom, rukovanju ulaza, animacijama, simulacijom fizike, itd. 
+Zato treba uzeti u obzir sve relevantno što utiče na performanse implementaicije.
 
 \section{Faze}
 
@@ -608,9 +608,9 @@ kolizije jednog dinamičnog objekta sa $n$ statičkih sa $O(n)$ na očekivanih $
 \section{Briši i odseci}
 \label{subsec:sap}
 
-Briši i odseci (eng. {\em sweep and prune}), skraćeno SAP, je alternativa tehnikama detekcije kolizije 
+Briši i odseci (eng. {\em sweep and prune}), skraćeno \textbf{SAP}, je alternativa tehnikama detekcije kolizije 
 zasnovanim na prostornom particionisanju.
-SAP je broadphase algoritam koji projektuje sve AABB
+SAP je algoritam široke faze koji projektuje sve AABB
 na bazne ose (u trodimenzionalnom slučaju to je tri skupa projekcija) pa sortira projekcije da bi odredio preseke AABB.
 Ako se na sve tri ose projekcije nekog para AABB seku, onda se i zaista u prostoru seče taj par AABB.
 
