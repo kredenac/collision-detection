@@ -46,13 +46,13 @@
 % Ime kandidata na srpskom jeziku (u odabranom pismu)
 \autor{Nikola Dimitrijević}
 % Naslov teze na srpskom jeziku (u odabranom pismu)
-\naslov{Detekcija kolizije u realnom vremenu}
+\naslov{Algoritmi za otkrivanje kolizije u realnom vremenu}
 % Godina u kojoj je teza predana komisiji
 \godina{2019}
 % Ime i afilijacija mentora (u odabranom pismu)
-\mentor{dr Vesna \textsc{Marinković} \\ Univerzitet u Beogradu, Matematički fakultet}
+\mentor{doc. dr Vesna \textsc{Marinković} \\ Univerzitet u Beogradu, Matematički fakultet}
 % Ime i afilijacija prvog člana komisije (u odabranom pismu)
-\komisijaA{dr Predrag \textsc{Janičić } \\ Univerzitet u Beogradu, Matematički fakultet}
+\komisijaA{prof. dr Predrag \textsc{Janičić } \\ Univerzitet u Beogradu, Matematički fakultet}
 % Ime i afilijacija drugog člana komisije (u odabranom pismu)
 \komisijaB{dr Ivan \textsc{Čukić} \\ Univerzitet u Beogradu, Matematički fakultet}
 % Datum odbrane (odkomentarisati narednu liniju i upisati datum odbrane ako je poznat)
@@ -64,7 +64,7 @@
 }
 
 % Ključne reči na srpskom jeziku (u odabranom pismu)
-\kljucnereci{detekcija kolizije, grafika, računarstvo, algoritmi}
+\kljucnereci{detekcija kolizije, računarska grafika, vremenska koherentnost, algoritmi}
 
 \begin{document}
 % ==============================================================================
@@ -92,20 +92,31 @@
 % ==============================================================================
 
 Problematika kojom se bavi ovaj rad je detekcija kolizije, široka tema koja ima naizgled jednostavan zadatak:
-naći sve parove objektata koji međusobno imaju presek. Nekad se dodatno zahteva tačno vreme i oblik preseka. 
+naći sve parove objekata koji se presecaju. Nekada je potrebno odrediti i tačni oblik preseka i precizan trenutak početka preseka. 
 
-Lako se konstruiše prost algoritam koji utvrđuje postojanje preseka osnovnih geometrijskih tela.
-Međutim, današnji virtuelni svetovi imaju hiljade pokretnih tela i stotine miliona poligona i 
-zato je potrebno konstruisati sofisticirane strukture podataka i algoritme. 
-Nepogodno izabrano rešenje za detekciju kolizije može predstavljati usko grlo sistema.
+Nije teško konstruisati naivni algoritam koji utvrđuje da li postoji presek jednostavnih geometrijskih tela.
+Međutim, današnji virtuelni svetovi sadrže hiljade pokretnih tela i stotine miliona poligona i 
+zato je potrebno koristiti napredne strukture podataka i razviti efikasne algoritme. 
+Nedovoljno efikasan algoritam za otkrivanje kolizije može predstavljati usko grlo sistema.
 
-Jedan objekat može biti jednostavna kocka ili izgrađen od desetine hiljada poligona, tako da ne bi bilo praktično 
-da se svi poligoni svih objekata jedan po jedan proveravaju da li imaju presek.
+Objekat čiji se presek razmatra može biti jednostavan kao što je recimo kocka, a može biti izgrađen i od desetine hiljada poligona.
+Stoga nije praktično da se 
+za sve poligone svih objekata proverava da li postoji presek sa nekim poligonom nekog drugog objekta.
 Umesto toga, složeni objekti se zamenjuju kvadrima koji su opisani oko njih.
-Na taj način se prvo nalaze preseci prostih objekata, pa tek ako se oni seku se traže preseci između njihovih 
-poligona. Drugi deo se naziva uska faza (eng. {\em narrowphase}) i nije uvek neophodan, na primer kada su svi objekti na koje se primenjuje 
-kocke, kao što je slučaj u nekim igrama.  Ovaj rad je usmeren na prvi deo detekcije kolizije - široku fazu (eng. {\em broadphase}) pošto je on 
-ključan kada se radi o velikom broju objekata.
+Na taj način se prvo nalaze preseci prostih objekata, pa tek ako se oni seku traže se preseci konkretnih poligona od kojih je objekat sastavljen.
+%
+Prvi deo ovog postupka naziva se široka faza (eng. {\em broadphase}), a drugi deo se naziva uska faza (eng. {\em narrowphase}).
+Drugi deo ovog procesa nije uvek neophodan, na primer kada su svi objekti na koje se primenjuje algoritam kocke, kao što je slučaj u nekim igrama.
+Ovaj rad je usmeren na široku fazu (eng. {\em broadphase}) pošto je ona od ključnog značaja kada se radi o velikom broju objekata.
+Široka faza je tako bitna pošto je problem koji ona rešava u najgorem slučaju kvadratne vremenske i prostorne složenosti.
+Uglavnom je broj parova objekata koji se presecaju neznatan u odnosu na broj potencijalnih parova. 
+Zato je uticaj uske faze na performanse manji u odnosu na široku fazu za koju je važno imati što efikasniju implementaciju.
+
+Za interaktivne svetove je neophodno otkrivanje kolizije u realnom vremenu. 
+Potreba izvršavanja u realnom vremenu nosi sa sobom nove probleme za čije rešavanje se koriste posebni mehanizmi 
+i zahteva nagodbu preciznosti i efikasnosti.
+
+% todo pregled rada
 
 
 \section{Motivacija}
@@ -1096,7 +1107,7 @@ ona onemogućava grupisanje preseka objekata i time ubrzava izvršavanje Oktrija
 	\includegraphics[
 		trim=0 0 0 19,clip,
 		scale=1]{octreeSpikes.pdf}
-	\caption{Usporenje Oktrija pri klasterovanju objektata.}
+	\caption{Usporenje Oktrija pri klasterovanju objekata.}
 	\label{fig:octreSpike}
 \end{figure}
 
@@ -1197,7 +1208,7 @@ do akumuliranja usporavanja, što je oko 100 000.
 \label{sec:zakljucak}
 % ==============================================================================
 
-Zaključak. 
+Zaključak... 
 
 
 % ------------------------------------------------------------------------------
