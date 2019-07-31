@@ -112,37 +112,42 @@ Ovaj rad je usmeren na široku fazu (eng. {\em broadphase}) pošto je ona od klj
 Uglavnom je broj parova objekata koji se presecaju neznatan u odnosu na broj potencijalnih parova. 
 Zato je uticaj uske faze na performanse manji u odnosu na široku fazu za koju je važno imati što efikasniju implementaciju.
 
-Za interaktivne svetove je neophodno otkrivanje kolizije u realnom vremenu. 
+Za interaktivne svetove je neophodno otkrivanje kolizija u realnom vremenu. 
 Potreba izvršavanja u realnom vremenu nosi sa sobom nove probleme za čije rešavanje se koriste posebni mehanizmi 
-i zahteva nagodbu preciznosti i efikasnosti.
+i uglavnom dolazi do nagodbe preciznosti i efikasnosti.
 
 % todo pregled rada
+
+U prvom poglavlju rada biće data motivacija. 
+Pregled relevantnih pojmova i fenomena će biti prikazanu u drugom poglavlju uz fokus na konzistentne korake izvršavanja.
+Odabrani algoritmi široke faze će biti predstavljeni u trećoj glavi. 
+Implementacija projekta je biće opisana u četvrtoj, 
+a evaluacija performansi i demonstracija nekih principa će se razmatrati u petoj glavi.
 
 
 \section{Motivacija}
 \label{sec:naslov1}
-Detekcija kolizije ima široke primene uključujući virtuelnu realnost, računarske igre, planiranje putanje robota, kompjuterski 
-pomognuto dizajniranje (eng. {Computer aided design, CAD}) i fizičke simulacije. 
-Za neke primere zahtev realnog vremena nije neophodan, kao na primer pri planiranju putanje robota ili pri renderovanju 
-animiranih filmova.
-Detekcija kolizije u realnom vremenu je ključan deo svakog pogona igre (eng. {\em game engine}), a danas ga svaka velika
+Otkrivanje kolizije ima široke primene u kontekstu virtuelne realnosti, računarskih igrara, planiranja putanje robota,
+dizajna uz pomoć računara (eng. {Computer aided design, CAD}) i fizičkih simulacija. 
+Za neke od navedenih primena zahtev realnog vremena nije neophodan, kao što su planiranje putanje robota ili renderovanje računarski generisanih slika filmova.
+Međutim, detekcija kolizije u realnom vremenu je ključan deo svakog pogona igre (eng. {\em game engine}), a danas ga svaka velika
 video igra koristi. Industrija video igara svake godine raste \cite{game_industry},
-toliko da ima veći prihod od filmske i muzičke industrije zajedno! Zaista, industrija igara ima prihod od
-115 milijardi dolara naspram 41 milijardi filmske i 17 milijardi muzičke industrije \cite{music} \cite{movie} \cite{game_industry}.
-Posledice neispravnosti igara nisu dramatične poput neispravnost softvera u avionskoj ili automobilskoj industriji, ali 
-se svakako jasno odražavaju negativno na prihod.
+u toj meri da ima veći prihod od filmske i muzičke industrije zajedno! Zaista, 2018. godine industrija igara imala je prihod od
+137 milijardi Američkih dolara naspram 41 milijardi filmske i 17 milijardi dolara prihoda muzičke industrije \cite{music, movie, game_industry}.
+Posledice manjih grešaka (bagova) u igrama nisu dramatične poput neispravnost softvera u avionskoj ili automobilskoj industriji, ali 
+se svakako negativno odražavaju na prihod.
 Korisnici očekuju visok stepen doteranosti video igara, pa bi postojanje velikog broja bagova 
- obeshrabrilo potencijalne kupce. Na slici \ref{fig:batman} se vidi bag gde je igrač propao kroz 
- mapu, a na slici \ref{fig:horse} igrač ne može da se popne na konja pošto on lebdi u vazduhu.
+obeshrabrilo potencijalne kupce. Na slici \ref{fig:batman} je prikazana greška gde je igrač propao kroz
+pod virtuelnog sveta, a na slici \ref{fig:horse} igrač ne može da se popne na konja pošto on lebdi u vazduhu.
 
-Pojavljuju se na tržištu rukavice za virtuelnu realnost koje simuliraju dodir virtuelnih objekata, a za njih je 
-detekcija kolizije svakako presudna. Potrebno je bar 1000 puta u sekundi pružiti povratnu informaciju
-da bi simulacija dodira bila uverljiva \cite{haptic}. 
+Na tržištu se poslednjih godina pojavljuju rukavice za virtuelnu realnost koje simuliraju dodir virtuelnih objekata, a za njih je 
+detekcija kolizije i izvršavanje u realnom vremenu presudno.
+Potrebno je bar 1000 puta u sekundi pružiti povratnu informaciju da bi simulacija dodira bila uverljiva \cite{haptic}. 
 
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.22]{batman.jpg}
-\caption{Propadanje kroz mapu.}
+\caption{Propadanje ispod modelovanog sveta.}
 \label{fig:batman}
 \end{figure}
 
@@ -153,25 +158,25 @@ da bi simulacija dodira bila uverljiva \cite{haptic}.
 	\label{fig:horse}
 \end{figure}
 
-Problem detekcije svih parova kolizije je u najgorem slučaju kvadratne vremenske i prostorne složenosti i od toga se ne može pobeći,
-ali uglavnom ih ima mnogo manje od gornje granice.
-Razlog zahteva da se izvršava u realnom vremenu kod interaktivnih programa je očigledan, ali je takođe
-potrebana mogućnost da se što češće i efikasnije utvrde kolizije. Filmovi nisu interaktivan sadržaj i zato
-je učestalost osvežavanja slike od 24Hz, uz korišćenje zamućivanja pokreta (eng. {\em motion blur}),
-dovoljno dobro za većinu ljudi. Standard za igre na konzolama je barem 30Hz, a na desktop računarima 
-cilj je barem 60Hz. Za virtuelnu realnost je potrebno barem 90Hz inače će lako prouzrokovati dizorijentaciju, mučninu i druge
-neželjene efekte \cite{importance}.
+Problem detekcije kolizije svih parova objekata je u najgorem slučaju kvadratne vremenske i prostorne složenosti i od toga se ne može pobeći,
+ali preseka uglavnom ima mnogo manje od gornje granice. Taj najgori slučaj je na primer kada se svaka dva objekta seku.
+Potreba da se algoritam izvršava u realnom vremenu je očigledna kod interaktivnih primena.
+Međutim i za neinteraktivne primene, potrebno je imati što efikasniji algoritam za utvrđivanje kolizije koji bi mogao da se često pokreće.
+Filmovi nisu interaktivan sadržaj i zato je učestalost osvežavanja slike od 24Hz, uz korišćenje zamućivanja pokreta (eng. {\em motion blur}),
+dovoljno dobro za većinu ljudi. Standard za igre na konzolama je barem 30Hz, a na desktop računarima  barem 60Hz. 
+Za primene u oblasti virtuelne realnosti potrebno je postići učestalost osvežavanja slike od barem 90Hz, jer manje frekvencije često prouzrokuju
+dizorijentaciju, mučninu i druge neželjene efekte kod korisnika \cite{importance}.
 
-Nema najboljeg algoritma detekcije kolizije koji će pokriti svaki mogući slučaj. 
-Neki su dobri za uniformno raspoređene objekte u prostoru, ali loši kada su svi na jednom mestu, 
-dok na druge manje utiče raspršenosti i više im je bitna brzina kretanja objekata.
+Ne postoji najbolji algoritam za detekciju kolizije koji će pokriti svaki mogući slučaj. 
+Neki algoritmi su dobri za uniformno raspoređene objekte u prostoru, ali pokazuju loše performanse kada su svi na jednom mestu, 
+dok na druge manje utiče prostorni raspored objekata ali im efikasnost varira u zavisnosti od brzine kretanja objekata.
 Takođe, isti algoritam može imati značajno bolje performanse ako su njegovi parametri dobro 
-izabrani za neku hardversku arhitekturu ili scenario. 
-Te okolnosti su inspirisale razvoj programa koji omogućava brzo i interaktivno menjanje različitih
+izabrani za neku hardversku arhitekturu ili okečivani raspored objekata. 
+Sve pomenute činjenice inspirisale su razvoj programa koji omogućava brzo i interaktivno menjanje različitih
 algoritama detekcije kolizije, postavljanje njihovih parametara kao i posmatranje performansi.
 
 % ==============================================================================
-\chapter{Relevantni mehanizmi}
+\chapter{Pregled relevantnih pojmova}
 \label{sec:karakteristike}
 % ==============================================================================
 
