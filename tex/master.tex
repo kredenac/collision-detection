@@ -121,7 +121,7 @@ i uglavnom dolazi do nagodbe preciznosti i efikasnosti.
 U prvom poglavlju rada biće data motivacija. 
 Pregled relevantnih pojmova i fenomena će biti prikazanu u drugom poglavlju uz fokus na konzistentne korake izvršavanja.
 Odabrani algoritmi široke faze će biti predstavljeni u trećoj glavi. 
-Implementacija projekta je biće opisana u četvrtoj, 
+Implementacija projekta biće opisana u četvrtoj, 
 a evaluacija performansi i demonstracija nekih principa će se razmatrati u petoj glavi.
 
 
@@ -180,60 +180,64 @@ algoritama detekcije kolizije, postavljanje njihovih parametara kao i posmatranj
 \label{sec:karakteristike}
 % ==============================================================================
 
-U ovom poglavju su opisani mehanizmi i fenomeni čije poznavanje je potrebno za razumevanje i konstrukciju 
-uspešnog rešenja za detekciju kolizije.
-Algoritam detekcije kolizije se ne koristi u izolaciji nego se izvršava zajedno sa renderovanjem,
-puštanjem zvuka, mrežnom komunikacijom, rukovanju ulaza, animacijama, simulacijom fizike, itd. 
-Zato treba uzeti u obzir sve relevantno što utiče na performanse implementaicije.
+U ovom poglavju biće opisani mehanizmi i fenomeni čije je poznavanje potrebno za razumevanje i konstrukciju 
+efikasnog rešenja problema detekcije kolizije.
+Algoritam detekcije kolizije se ne koristi kao iyolovani algoritam nego se izvršava zajedno sa renderovanjem slike,
+puštanjem zvuka, mrežnom komunikacijom, rukovanjem ulaza, animacijama, simulacijom fizike, itd. 
+Zato treba uzeti u obzir sve relevantne činjenice koje utiču na performanse implementacije.
 
-\section{Faze}
+\section{Faze problema detekcije kolizjie}
 
-Celokupan zadatak detekcije kolizije se deli na dve etape: \textbf{ široku fazu }(eng. {\em broadphase}) i \textbf{usku fazu} (eng. {\em narrowphase}). 
-U prvoj, širokoj, fazi odbacuje se većina kandidata mogućih parova koji imaju koliziju. Cilj je da 
-da faza bude sto efikasnija u odnosu na broj objekata.
+Celokupan zadatak detekcije kolizije se deli na dve etape: \textbf{ široku fazu } i \textbf{usku fazu}. 
+U prvoj, širokoj, fazi
+odbacuje se (često) većina kandidata od svih mogućih parova objekata za koje ispitujemo da li postoji presek.
+Zadatak uske faze je da se za parove objekata dobijenih u širokoj fazi utvrdi da li oni zaista imaju presek.
+Cilj je razviti što efikasniji algoritam prve faze (u funkciji broja objekata) za odbacivanje ovakvih parova objekata.
 Iako postoje takvi slučajevi, u mnogim primenama nisu svi objekti prosta geometrijska tela poput kocki, kvadara ili lopti.
-Mogu biti razna kompleksna tela poput kompozicije prostijih tela, ili trijangulisana reprezentacija 
-nekih objekata. Ta kompleksna tela mogu biti sastavljena od velikog broja prostijih delova ili
-od stotina hiljada trouglova. Tada bi bilo vrlo neefikasno i nepraktično tražiti kolizije posmatrajući
-tako kompleksne strukture objekata. Mnogo je bolje da se razmatra nekakva jednostavnija reprezentacija tih objekata.
+Objekti koji se razmatraju mogu biti veoma složeni, predstavljeni kao kompozicija velikog broja prostijih tela ili kao mreže sastavljene od stotina hiljada trouglova.
+Mnogo je bolje razmatrati nekakvu jednostavniju reprezentaciju tih objekata.
 
-Granični opsezi prestavljaju ovakav tip rešenja i umesto kvadara se mogu koristiti sfere, kapsule i druga tela.
-Ono što se najčešće radi jeste da se naprave najmanje kutije koje će sadržati u potpunosti te objekte.
-Te kutije su u obliku kvadra čije su strane poravnate sa osama koordinatnog sistema. 
-Umesto da se računaju preseci između velikog broja prostih objekata koji čine celinu jednog, sada se posmatraju 
-samo preseci među kutijama koje sadrže sve objekte. Taj metod se naziva ograničavajuće kutije
-poravnate prema osama (eng. {\em Axis Aligned Bounding Box}), skraćeno \textbf{ AABB }.
+\textbf{Granični opsezi} (eng. {\em bounding volume}) prestavljaju jedan tip jednostavnije reprezentacije.
+Za granične opsege se uglavnom koristi kvadar, a pored toga se mogu koristiti sfere, kapsule i druga tela.
+Ono što se najčešće radi jeste da se naprave najmanje "kutije" koje će sadržati u potpunosti te objekte.
+Te "kutije" su u obliku kvadra čije su strane poravnate sa osama koordinatnog sistema i nazivaju se
+\textbf{ograničavajuće kutije poravnate prema osama} (eng. {\em Axis Aligned Bounding Box}), skraćeno \textbf{ AABB }.
+Umesto da se računaju preseci između velikog broja prostih objekata od kojih je telo sastavljeno, sada se posmatraju 
+samo preseci među kutijama koje sadrže sve objekte.
 
-Umesto AABB moguće je koristiti konveksne omotače tela ili orijentisane ograničavajuće kutije (eng. {\em Oriented Bounding Box}), skraćeno \textbf{OBB}.
-Hijerarhije graničnih opsega (eng. {\em Bounding Volume Hierarchy}), skraćeno \textbf{BVH}, su stabla koja se grade rekurzivnom podelom 
+Umesto AABB moguće je koristiti konveksne omotače tela ili \textbf{orijentisane ograničavajuće kutije} (eng. {\em Oriented Bounding Box}), skraćeno \textbf{OBB}.
+\textbf{Hijerarhije graničnih opsega} (eng. {\em Bounding Volume Hierarchy}), skraćeno \textbf{BVH}, su stabla koja se grade rekurzivnom podelom 
 prostora na granične opsege. Što je granični opseg bliže telima koje aproksimira to bolje, pošto to vodi do manjeg broja 
-lažno pozitivnih kolizija na koje se bez razloga troši vreme u uskoj fazi. OBB su fleksibilnije od AABB pošto rotiranjem 
-mogu uže da opišu tela. Ipak, zbog složenije provere preseka OBB-ova i zbog nepoznavanja dobrih metoda konstrukcije hijerarhije graničnih
-opsega od OBB-ova istorijski se nije koristilo u praksi takvo rešenje \cite{obb}. 
+lažno pozitivnih kolizija na koje se bez razloga troši vreme u uskoj fazi. 
+Reprezentacija koja koristi OBB je fleksibilnija od one koja koristi AABB pošto rotiranjem mogu uže da opišu tela. 
+Ipak, zbog složenije provere preseka i zbog nepoznavanja dobrih metoda konstrukcije hijerarhije graničnih
+opsega, rešenje koje koristi OBB nije nikada zaživelo u praksi \cite{obb}. 
 
-Danas se najčešće koriste stabla izgrađena od AABB poput Oktrija opisanom u \ref{subsec:octree} i njegovih modifikacija. 
+Danas se najčešće koriste stabla izgrađena od AABB poput oktrija opisanog u \ref{subsec:octree} i njegovih modifikacija. 
 Teorema o razdvajajućim osama daje inspiraciju za konstrukciju algoritma provere kolizije koristeći AABB.
 
 \begin{teo}
-	Teorema o razdvajajućim osama. 
+	\textbf{[Teorema o razdvajajućim osama]}
 
-	Dva konveksna objekta se ne preklapaju ako postoji prava (osa) na kojoj se projekcije 
-	tih objekata ne preklapaju. 
+	Dva konveksna objekta se ne presecaju ako postoji prava (osa) na kojoj se projekcije 
+	tih objekata ne presecaju. 
 \end{teo}
 
 Nezavisno od dimenzionalnosti, razdvajajuća osa je uvek prava. Na primer, trodimenzionalan prostor
 je razdvojiv ravnima, ali razdvajajuća osa je normalna na razdvajajuću ravan.
 
-Dovoljno je pronaći samo jednu pravu tako da se  projekcije tela na njoj ne preklapaju.
-Moguće je na primer da se uzmu normale svih lica jednog trijangulisanog tela, izračunaju projekcije drugog 
-tela na svaku pravu, i ako postoji neka prava na kojoj ne postoji presek onda nema preseka između
-dva tela. Međutim, to nije dovoljno dobro za potrebe detekcije kolizije u realnom vremenu. 
+Dovoljno je pronaći samo jednu pravu tako da se projekcije tela na njoj ne presecaju.
+Moguće je na primer da se uzmu normale svih strana jednog triangulisanog tela, izračunaju projekcije drugog 
+tela na svaku pravu, i za neku od tih prava važi da ne postoji presek onda se razmatrana tela ne seku.
+Međutim, ovakav pristup nije dovoljno dobar za potrebe detekcije kolizije u realnom vremenu. 
 Zato se  ova teorema primenjuje samo za proveru preseka između AABB.
 
 Teorema o razdvajajućim osama je takođe korisna za pronalaženje \textbf{minimalnog vektora translacije}, odnosno
-vektor najmanjeg intenziteta za koji treba jedan objekat da se pomeri da bi prestalo da bude kolizije među dva objekta.
-Kada se ustanovi da se dva objekta preklapaju, potrebno je pomeriti ih tako da se oni više ne seku i promeniti im vektore brzina.
-Taj postupak se naziva razrešenje kolizije i opisan je u delu \ref{sec:razresenje}, a ključnu ulogu igra minimalan vektor translacije.
+vektora najmanjeg intenziteta za koji je potrebno translirati jedan objekat da bi objekti prestali da se seku.
+Najčešće se simuliraju interakcije objekata koji su čvrsti i ne mogu prolaziti jedni kroz druge.
+Zato je potrebno da se predstavi njihovo odbijanje promenom prvca kretanja i postarati se da ti objekati više nemaju presek.
+Zbog toga, kada se ustanovi da se dva objekta presecaju potrebno je translirati ih tako da oni više nemaju presek i promeniti im vektore brzina.
+Taj postupak se naziva razrešenje kolizije i opisan je u delu \ref{sec:razresenje} i u njemu ključnu ulogu igra minimalan vektor translacije.
 
 Kada se ustanovi da postoji presek između dve AABB, to ne znači da zaista postoji presek između dva objekta
 koje ti AABB enkapsuliraju, čak i ako su ti objekti konveksni. Takav slučaj je prikazan na slici \ref{fig:2dfalse}. 
@@ -251,7 +255,7 @@ Rešavanje problema određivanja da li postoji presek objekata unutar AABB koji 
 se radi u uskoj fazi.
 U slučaju da su ti objekti unutar AABB neka prosta geometrijska tela poput
 lopte ili kvadra, tada se može lako primeniti teorema o razdvajajućim osama da bi se videlo da li zaista 
-postoji preklapanje među njima. Međutim, krije se jedan problem.
+postoji presek među njima. Međutim, krije se jedan problem.
 AABB se mogu posmatrati kao projekcije tela na sve tri ose u prostoru.
 Tada se dakle posmatraju samo tri prave, ne sve moguće prave. 
 U slučaju prikazanom na slici \ref{fig:2dfalse}, vidi se krug i rotiran pravougaonik. 
