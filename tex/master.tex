@@ -239,8 +239,8 @@ Zato je potrebno da se predstavi njihovo odbijanje promenom prvca kretanja i pos
 Zbog toga, kada se ustanovi da se dva objekta presecaju potrebno je translirati ih tako da oni više nemaju presek i promeniti im vektore brzina.
 Taj postupak se naziva razrešenje kolizije i opisan je u delu \ref{sec:razresenje} i u njemu ključnu ulogu igra minimalan vektor translacije.
 
-Kada se ustanovi da postoji presek između dve AABB, to ne znači da zaista postoji presek između dva objekta
-koje ti AABB enkapsuliraju, čak i ako su ti objekti konveksni. Takav slučaj je prikazan na slici \ref{fig:2dfalse}. 
+Kada se utvrdi da postoji presek između dva AABB, to ne znači da zaista postoji presek između dva objekta
+sadržana u datim AABB, čak i ako su ti objekti konveksni. Jedan takav slučaj je prikazan na slici \ref{fig:2dfalse}. 
 
 \begin{figure}[h!]
 	\begin{center}
@@ -251,20 +251,17 @@ koje ti AABB enkapsuliraju, čak i ako su ti objekti konveksni. Takav slučaj je
 \end{figure}
 
 %https://www.scss.tcd.ie/~manzkem/CS7057/cs7057-1516-07-NarrowPhase-mm.pdf
-Rešavanje problema određivanja da li postoji presek objekata unutar AABB koji su kandidati za koliziju 
-se radi u uskoj fazi.
-U slučaju da su ti objekti unutar AABB neka prosta geometrijska tela poput
-lopte ili kvadra, tada se može lako primeniti teorema o razdvajajućim osama da bi se videlo da li zaista 
-postoji presek među njima. Međutim, krije se jedan problem.
-AABB se mogu posmatrati kao projekcije tela na sve tri ose u prostoru.
-Tada se dakle posmatraju samo tri prave, ne sve moguće prave. 
-U slučaju prikazanom na slici \ref{fig:2dfalse}, vidi se krug i rotiran pravougaonik. 
-Ako se posmatraju samo projekcije na $x$ i $y$ ose onda oni prema tome imaju presek, iako posmatrajući sliku očigledno nema preseka.
+Utvrđivanje da li postoji presek objekata sadržanih u AABB koji se seku radi se u uskoj fazi.
+U slučaju kada su ti objekti unutar AABB neka prosta geometrijska tela poput
+lopte ili kvadra može se primeniti teorema o razdvajajućim osama da bi se videlo da li zaista postoji presek među njima. 
 
-Pomoću opisanog kontraprimera se vidi da razmatranjem projekcija na samo bazne ose prostora nije dovoljno
-u opštem slučaju. Moguće je naći neku drugu pravu koja ih razdvaja, ili odrediti postojanje preseka na drugi način, 
-samo je potrebno više vremena i zato se takav posao ostavlja za usku fazu.
 
+Međutim, nije dovoljno razmatrati samo projekcije na koordinatne ose, 
+jer na primeru sa slike \ref{fig:2dfalse} vidi se da se krug i rotiran pravougaonik ne presecaju, iako se njihove projekcije 
+na koordinantne ose seku. Za konveksne objekte je moguće naći neku drugu pravu koja ih razdvaja ili odrediti postojanje preseka 
+na neki drugi način, ali se to ostavlja za usku fazu.
+
+% https://en.wikipedia.org/wiki/User:Oleg_Alexandrov/Pictures
 \begin{figure}[h!]
 	\begin{center}
 	\includegraphics[scale=0.17]{theorem_counterexample.png}
@@ -273,36 +270,37 @@ samo je potrebno više vremena i zato se takav posao ostavlja za usku fazu.
 	\label{fig:counter}
 \end{figure}
 
-Na slici \ref{fig:counter} prikazana su dva oblika, jedan konveksan a drugi nekonveksan. 
-Za bilo koju pravu projekcija oblika na nju ima presek, iako oni u stvari nemaju presek, što predstavlja
-primer zašto teorema o razdvajajućim osama zahteva konveksne objekte. 
-Primer u tri dimenzije dat je na slici \ref{fig:falseCollision}.
+Na slici \ref{fig:counter} prikazana su dve površi, jedna konveksna a druga nekonveksna. 
+Za svaku pravu se projekcije datih površi na njoj seku, iako površi u stvari nemaju presek, što predstavlja
+primer zašto teorema o razdvajajućim osama ne radi za nekonveksne objekte. 
+Primer u tri dimenzije dat je na slici \ref{fig:falseCollision}, gde iako ne postoji presek dva konveksna objekta, 
+posmatranjem njihovih graničnih opsega bi se zaključilo da postoji presek.
 
 \begin{figure}[h!]
 	\begin{center}
 	\includegraphics[scale=0.5]{falseCollision.jpg}
 	\end{center}
-	\caption{Lažni presek konveksnog i nekonveksnog objekta u prostoru. 
-	Sa desne strane su granični opsezi tela. }
+	
+	\caption{Konveksan i nekonveksan objekat u prostoru bez preseka sa leve strane i
+	njihovi granični opsezi koji se presecaju sa desne strane. }
 	\label{fig:falseCollision}
 \end{figure}
 
 
 \section{Konzistentnost vremena izvršavanja}
 
-Nekad je od interesa samo ukupno vreme potrošeno za više iteracija provere kolizije.
-To svakako nije slučaj za potrebe izvršavanja u realnom vremenu. Ako samo jedna iteracija 
-detekcije kolizije traje višestruko duže od ostalih onda dolazi do takozvanog "seckanja" što
-kad se dešava  u prevelikoj meri dovodi do neupotrebljivog proizvoda.
-% pošto korisnicima postaje nepodnošljivo korišćenje takvog programa.
-Opisan problem je jasan i očekivano je da se to želi izbeći. 
-Međutim sledi sličan problem koji nije očigledno da toliko smeta.
+Prilikom razmatranja vremena izvršavanja algoritma, nekada je od interesa 
+samo ukupno vreme koje je potrošeno za izvršavanje većeg broja iteracija provere da li je došlo do kolizije. 
+Međutim, to nije dovoljno dobro za potrebe izvršavanja algoritma u realnom vremenu.
+Ako samo jedna iteracija 
+detekcije kolizije traje višestruko duže od ostalih onda dolazi do takozvanog "seckanja"
+koje, ukoliko se dešava često, dovodi neupotrebljivog proizvoda.
+Razmatranjem sledeće situacije se uviđa još jedan problem.
 
-Ekrani imaju fiksnu učestalost osvežavanja, najčešće je 60Hz, mada postaju sve više popularni 
+Ekrani imaju fiksnu učestalost osvežavanja koja najčešće iznosti 60Hz, mada postaju sve popularniji
 % https://www.blurbusters.com/faq/120hz-monitors/
-ekrani sa 120Hz, 144Hz, pa čak i 240Hz. Dakle ekran od 60Hz će svakih 
-16.67 milisekundi prikazati sledeću sliku. Ako se između dva osvežavanja ekrana uvek pripremi
-nova slika to je odlično. 
+ekrani sa 120Hz, 144Hz, pa čak i 240Hz. Dakle ekran od 60Hz će svakih 16.67 milisekundi prikazati sledeću sliku. 
+Ako se između dva osvežavanja ekrana uvek pripremi nova slika to je odlično. 
 Još bolje da nova slika bude izračunata neposredno pre osvežavanja ekrana jer se onda 
 prikazuje verodostojnija slika za taj trenutak. 
 Svakako će uvek postojati neko kašnjenje od trenutka interakcije korisnika sa igrom ili simulacijom do
@@ -315,49 +313,57 @@ iz prošlog ciklusa. Tada se gubi na glatkoći prikazanog sadržaja i na brzini 
 
 Broj slika po sekundi (eng. {\em frames per second}), skraćeno \textbf{fps}, je broj slika koje program napravi u jednoj sekundi.
 Naizgled ako program ima 60fps to je savršeno za ekran od 60Hz. To ipak ne mora da bude slučaj.
-U toku jedne sekunde u prvih 500 milisekundi može biti 59 slika, a u preostalih 500 milisekundi samo jedna nova slika. 
+U toku jedne sekunde u prvih 500 milisekundi može biti kreirano 59 slika, a u preostalih 500 milisekundi samo jedna nova slika. 
 To zaista jeste 60fps, ali ono što je prikazano na ekranu nije mnogo bolje od 2fps, 
-što je prektično uvek nedopustivo. 
+što je prektično nedopustivo. 
 Dakle sa jedne strane nije dobar višak slika jer se nepotrebno troše resursi na njih iako se ne prikazuju, 
 a sa druge strane manjak slika dovodi do neprijatnosti.
 Zato je bitno da cela simulacija, a samim tim i detekcija kolizije ima što konzistentnije vreme izvršavanja.
+Konzistentno vreme izvršavanja podrazumeva da je vreme između dve prikazane slike isto.
 
-Na slici <todo> se vidi da je program napravio 60 slika, tj. da praktično ima 60fps, iako je prikaz na ekranu 
-ekvivalentan sa 30fps, što je još jedan primer nepoželjne posledice nekonzistentnosti vremena izvršavanja. 
+Na slici \ref{fig:fpsdiv2} se vidi da je kreirano 6 slika, tj. da praktično ima 6fps, iako je prikaz na ekranu 
+ekvivalentan sa 3fps, što je još jedan primer nepoželjne posledice nekonzistentnosti vremena izvršavanja. 
 
-todo nacrtaj sliku gde su svaki parni trenutak osvežavanja ekrana sadrži dva frejma, a svaki neparni 
-nijedan
+\begin{figure}[h!]
+	\begin{center}
+	\includegraphics[scale=0.5]{fpsdiv2.png}
+	\end{center}
+	\caption{ Trenuci kreiranja nove slike (crvena boja) i trenuci osvežavanja ekrana (crna boja) koji su loše sinhronizovani. }
+	\label{fig:fpsdiv2}
+\end{figure}
 
+\section{Vremenska koherentnost}
 
-\section{Temporalna koherencija}
-
-Često nije cilj samo jednom odrediti kolizije za neku scenu, nego i kolizije u trenutku koji ubrzo sledi.
-Objekti na sceni se uglavnom ne teleportuju več se postepeno kreću sa prolaskom vremena.
-Tako su pozicije objekata u bliskim trenucima slični i to se može iskoristiti za dodatno ubrzanje algoritama 
-detekcije kolizije. Generalno je princip da se čuvaju svi parovi kolizije i u svakoj iteraciji 
-izbace oni oni koji više nisu u koliziji a dodaju oni koji su od tog trenutka u koliziji.
+Često je cilj odrediti ne samo kolizije za tekuću scenu, već i kolizije u trenutku koji ubrzo sledi.
+Objekti na sceni se uglavnom ne teleportuju već se postepeno kreću kako vreme teče.
+Tako su pozicije objekata u bliskim trenucima slične i to se može iskoristiti za dodatno ubrzanje algoritama detekcije kolizije. 
+Opšti princip je da se čuvaju svi parovi objekata koji se seku i da se u svakoj iteraciji 
+izbace oni parovi objekata koji više nisu u koliziji a dodaju oni koji su od tog trenutka u koliziji.
 Na taj način se značajno smanjuje vreme potrebno za izračunavanje kolizija kroz iteracije.
-U slučaju da se objekti jako sporo ili uopšte ne kreću algoritmi koji dobro koriste svojstvo temporalne 
-koherencije će u svakoj iteraciji imati linearno vreme izvršavanja, što će posle biti dublje razmatrano. 
+U slučaju da se objekti jako sporo ili uopšte ne kreću 
+vremenska složenost svake iteracije algoritma biće linearna (ovo tvrđenje biće kasnije detaljnije razmatrano).
 
 
-\subsection{Temporalni anti-aliasing}
+\subsection{Vremenski antialiasing}
 
-Temporalni anti-aliasing ima za cilj da smanji ili ukloni efekte temporalnog aliasinga.
-Temporalni aliasing nastaje zbog premalog broja slika u sekundi u poređenju sa brzinom kretanja objekata na sceni.
+Vremenski antialiasing ima za cilj da smanji ili ukloni efekte vremenskog aliasinga.
+Vremenski aliasing nastaje kada je premali broj slika u sekundi u poređenju sa brzinom kretanja objekata na sceni.
 Zbog toga objekti izgledaju kao da poskaču  umesto da odaju utisak glatkog kretanja.
-Da bi se izbegao temporalni aliasing potrebno je da broj slika scene u sekundi bude bar duplo veći 
-od objekta koji se najbrže kreće \cite{Grant}. 
-Čest primer temporalnog aliasinga je da se na snimku točkovi automobila naizgled kreću unazad.
-Temporalni anti-aliasing se takođe koristi za smanjenje oštrih ivica koje trepere kada se pomera kamera.
-Na slici \ref{fig:txaa} se vidi jasno poboljšanje kada se koristi TXAA, što je temporalni anti
-aliasing firme NVIDIA.
+Da bi se izbegao vremenski aliasing potrebno je da broj slika scene u sekundi bude bar duplo veći 
+od brzine objekta koji se najbrže kreće \cite{Grant}. 
+Čest primer vremenskog aliasinga je da se na snimku točkovi automobila naizgled kreću unazad.
+Vremenski antialiasing se takođe koristi za smanjenje oštrih ivica koje trepere kada se pomera kamera.
+Na slici \ref{fig:txaa} se vidi jasno poboljšanje kada se koristi TXAA,
+tehnika koju koristi kompanija NVIDIA da bi umanjila efekat vremenskog i prostornog aliasinga.
+Prostorni aliasing nastaje usled prikazivanja slike veće rezolucije na nižoj rezoluciji.
+MSAA (eng. {\em multisample anti-aliasing}) je tehnika umanjenja prostornog aliasinga 
+uzimanjem više uzoraka vrednosti boja u svakom pikselu.
 
 \begin{figure}[h!]
 	\begin{center}
 	\includegraphics[scale=0.65]{txaa.png}
 	\end{center}
-	\caption{Upoređivanje tehnika anti-aliasinga.}
+	\caption{Upoređivanje tehnika antialiasinga.}
 	\label{fig:txaa}
 \end{figure}
 
@@ -635,7 +641,7 @@ na bazne ose (u trodimenzionalnom slučaju to je tri skupa projekcija) pa sortir
 Ako se na sve tri ose projekcije nekog para AABB seku, onda se i zaista u prostoru seče taj par AABB.
 
 Ako je potrebno naći sve parove koji su u koliziji samo u jednom trenutku vremena onda se ovaj metod ne ističe u odnosu na druge.
-Moć briši i odseci algoritma je u tome što iskorišćava svojstvo temporalne koherencije. 
+Moć briši i odseci algoritma je u tome što iskorišćava svojstvo vremenske koherentnosti. 
 Objekti se ne teleportuju nasumično kroz prostor nego se postepeno kreću. 
 Zbog toga je za svaku iteraciju potreban inkrementalan posao da bi se ažurirali parovi koji su u koliziji.
 Održavaju se tri sortirana niza, svaki je sadržan od $2n$ elemenata, gde je $n$ broj objekata.
