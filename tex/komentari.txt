@@ -203,69 +203,73 @@ y strana 15: Bolji algoritmi rešavaju ovaj problem uglavnom -> Do efikasnijih a
 y strana 16: U kodu u delu "u skup Parovi", promenljiva Parovi nije italic
 y strana 16: Negde u prvom pasusu poglavlja 3.1. reci da je pseudokod algoritma prikazan tu i tu
 y strana 16: Oktri je struktura podataka -> Oktri je prostorna struktura podataka
-strana 16: Oktri je stablo -> Suštinski, oktri je stablo
-strana 16: odnosno oktanata. Time .... -> što odgovara podeli prostora koji odgovara tom unutrašnjem čvoru na osam podkocki (oktanata).
-strana 16: Ja ne bih Oktri pisala velikim slovom u tekstu
-strana 16: pripadaju tom oktantu -> pripadaju oktantu
-strana 16:  način particionisanja. -> način particionisanja trodimenizionog prostora korišćenjem oktrija.
-strana 16:  Odabere se konstsanta c ... -> Pritom, postoji namenska konstanta c koja sadži vrednost najvećeg dozvoljenog broja elemenata koji list stabla može da sadrži.
-strana 16:  Oktrja -> oktrija
-strana 16: Ako h nije ograničeno -> Ukoliko maksimalna dubina stabla ne bi bila ograničena
-strana 16: kod priče o beskonačnoj podeli prilikom ubacivanja n identičnih objekata, da li je potrebno da postoji neki uslov za n i c da bi se ovo desilo?
-strana 16: Parovi koji su u koliziji se pronalaze na sledeći način: -> Parovi objekata koji su u koliziji se onda mogu pronaći na sledeći način:
-strana 16:  pa tek naknadno prođe kroz sve listove i proveri kolizija. ->  pa da se naknadno prođe kroz sve listove i za svaka dva objekta koji pripadaju istom listu proveri da li su u koliziji.
-strana 17: Nije problem po opisanom postupku ubaciti tačku u stablo, -> Ukoliko razmatramo tačkasti objekat, opisani postupak umetanja radi korektno,
-strana 17: onda mogu i memorijska i vremenska složenost eksplodirati -> onda i memorijska i vremenska složenost mogu eksplodirati
-strana 17:  objkat -> objekat
-strana 17: jenog -> jednog
-strana 17:  gde je n broj ->  gde je $n$ broj
-strana 17: značajno menjaju njegovu efikasnost -> utiču značajno na njegovu efikasnost 
-strana 17: mogu se u realnom vremenu njihovim štelovanjem pronaći dobre vrednosti, -> i dobre vrednosti ovih parametara mogu se odrediti njihovim podešavanjem u realnom vremenu,
-strana 17: Kada su svi objekti dinamični -> Kada se svi objekti kreću
-strana 17:  usput se odrede njihove kolizije ->  usput se ispituje postojanje kolizije između njih
-strana 17: a za dinamične objekte -> a za objekte koji se kreću
+y strana 16: Oktri je stablo -> Suštinski, oktri je stablo
+y strana 16: odnosno oktanata. Time .... -> što odgovara podeli prostora koji odgovara tom unutrašnjem čvoru na osam podkocki (oktanata).
+y strana 16: Ja ne bih Oktri pisala velikim slovom u tekstu
+y strana 16: pripadaju tom oktantu -> pripadaju oktantu
+y strana 16:  način particionisanja. -> način particionisanja trodimenizionog prostora korišćenjem oktrija.
+y strana 16:  Odabere se konstsanta c ... -> Pritom, postoji namenska konstanta c koja sadži vrednost najvećeg dozvoljenog broja elemenata koji list stabla može da sadrži.
+y strana 16:  Oktrja -> oktrija
+y strana 16: Ako h nije ograničeno -> Ukoliko maksimalna dubina stabla ne bi bila ograničena
 
-strana 18: bilo bi dobro i za algoritme prikazane u poglavljima 3.2, 3.3 i 3.4 dati pseudokod algoritma
-strana 18:  Ako se na sve tri ose -> ako se po sve tri ose 
-strana 18:  onda se i zaista u prostoru seče taj par AABB ->  onda se taj par AABB seče i u prostoru
-strana 18: u jednom trenutku vremena -> u jednom vremenskom trenutku
-strana 18:  se ovaj metod ne ističe u odnosu na druge -> ovaj metod ne predstavlja neko značajno poboljšanje
-strana 18:  iskorišćava svojstvo temporalne koherencije -> koristi svojstvo vremenske koherentnosti
-strana 18: potreban inkrementalan posao da bi se ažurirali parovi koji su u koliziji -> moguće inkrementalno ažurirati parove objekata koji su u koliziji
-strana 18: Održavaju se tri sortirana niza -> To se može postići na sledeći način: održavaju se tri sortirana niza
-strana 18:  svaki je sadržan od 2n elemenata ->  svaki od njih sadrži po 2n elemenata
-strana 18: Svaki niz sadrži sve projekcije AABB, po dva elementa za svaku projekciju... -> Svaki niz sadrži po dva elementa za projekciju svih AABB po jednoj osi: jedan element je početak ...
-strana 18: slika 3.2 je malo mutna
-strana 18:  Tačka b_i je početak... -> Tačka b_i označava početak, a e_i kraj projekcije i-tog objekta
-strana 19: e3 -> e_3
-strana 19: b4 -> b_4
-strana 19: e3 se nalazi desno od b4 -> u prvom momentu e_3 se nalazi desno od b_4
-strana 19:  se zapamte -> se pamte
-strana 19:  u ovom slučaju samo par (3, 4). ->  u ovom slučaju to je samo par (3, 4).
-strana 19:  ili da li ima novi par objekata -> odnosno da li je možda neki par objekata koji prethodno nije bio u koliziji sada u koliziji
-strana 19:  Potrebno je ažurirati projekcije kada se objekti pomere -> Prilikom pomeranja objekata potrebno je ažurirati projekcije objekata
-strana 19: ponovo budu -> i dalje ostanu
-strana 19: pošto je odličan -> pošto ovaj algoritam sortiranja pokazuje veoma dobre osobine 
-strana 19: s leva na desno -> sleva nadesno
-strana 19: Postoje dva uslova koji utiču na postojanje kolizija: -> Razmotrimo naredna dva uslova:
-strana 19: gore piše B_i a u uslovima B -- nekako uniformisati
-strana 19: i ako je B početna -> a tačka B je početna
-strana 19:  onda izbaci njihov par -> onda se par ovih objekata izbacuje
-strana 19:  projekcije ne seku na ostalim osama -> projekcije na ostale ose ne seku
-strana 19:  pa se tada ništa neće ni desiti pokušavanjem da se izbaci taj par -> pa tada izbacivanje ovog para iz kolekcije neće imati nikakvog efekta
-strana 19:  i ako je B krajnja -> a tačka B je krajnja
-strana 19:  onda proveri da li se -> onda se vrši provera da li se seku projekcije na ostale ose
-strana 19:   onda dodaj njihov par -> onda se par odgovarajućih objekata dodaje 
-strana 19: Umesto da se vrše AABB upiti svaki put -> Umesto da se AABB upiti vrše svaki put iznova
-strana 19: radi najbolje -> pokazuje najbolje performanse
-strana 19: ali se loše pokazuje -> dok mu je ponašanje lošije
-strana 19: Najviše što utiče na performanse prilikom evaluacije je brzina kretanja objekata. -> Prilikom evaluacije pokazuje se da najveći uticaj na performanse ima brzina kretanja objekata.
-strana 19: U slučaju kada se brzo kreću objekti, onda je potrebno raditi zamenu njihovih pozicija u sortiranom nizu, što vodi jakom usporavanju pri velikim pomerajima svih objekata -> U slučaju kada se objekti brzo kreću, pomeraji objekata su veliki i potrebno je često vršiti zamenu njihovih pozicija u sortiranom nizu, što vodi jakom usporavanju algoritma
-strana 19:  što dovodi do izražavanje kvadratne vremenske složenosti ->  što dovodi do ispoljavanja kvadratne vremenske složenosti 
+y strana 16: kod priče o beskonačnoj podeli prilikom ubacivanja n identičnih objekata, da li je potrebno da postoji neki uslov za n i c da bi se ovo desilo?
+y strana 16: Parovi koji su u koliziji se pronalaze na sledeći način: -> Parovi objekata koji su u koliziji se onda mogu pronaći na sledeći način:
+y strana 16:  pa tek naknadno prođe kroz sve listove i proveri kolizija. ->  pa da se naknadno prođe kroz sve listove i za svaka dva objekta koji pripadaju istom listu proveri da li su u koliziji.
+y strana 17: Nije problem po opisanom postupku ubaciti tačku u stablo, -> Ukoliko razmatramo tačkasti objekat, opisani postupak umetanja radi korektno,
+y strana 17: onda mogu i memorijska i vremenska složenost eksplodirati -> onda i memorijska i vremenska složenost mogu eksplodirati
+y strana 17:  objkat -> objekat
+y strana 17: jenog -> jednog
+y strana 17:  gde je n broj ->  gde je $n$ broj
+y strana 17: značajno menjaju njegovu efikasnost -> utiču značajno na njegovu efikasnost 
+y strana 17: mogu se u realnom vremenu njihovim štelovanjem pronaći dobre vrednosti, -> i dobre vrednosti ovih parametara mogu se odrediti njihovim podešavanjem u realnom vremenu,
+y strana 17: Kada su svi objekti dinamični -> Kada se svi objekti kreću
+y strana 17:  usput se odrede njihove kolizije ->  usput se ispituje postojanje kolizije između njih
+y strana 17: a za dinamične objekte -> a za objekte koji se kreću
+
+n, ali uradicu strana 18: bilo bi dobro i za algoritme prikazane u poglavljima 3.2, 3.3 i 3.4 dati pseudokod algoritma
+y strana 18:  Ako se na sve tri ose -> ako se po sve tri ose 
+y strana 18:  onda se i zaista u prostoru seče taj par AABB ->  onda se taj par AABB seče i u prostoru
+y strana 18: u jednom trenutku vremena -> u jednom vremenskom trenutku
+y strana 18:  se ovaj metod ne ističe u odnosu na druge -> ovaj metod ne predstavlja neko značajno poboljšanje
+y strana 18:  iskorišćava svojstvo temporalne koherencije -> koristi svojstvo vremenske koherentnosti
+y strana 18: potreban inkrementalan posao da bi se ažurirali parovi koji su u koliziji -> moguće inkrementalno ažurirati parove objekata koji su u koliziji
+y strana 18: Održavaju se tri sortirana niza -> To se može postići na sledeći način: održavaju se tri sortirana niza
+y strana 18:  svaki je sadržan od 2n elemenata ->  svaki od njih sadrži po 2n elemenata
+y strana 18: Svaki niz sadrži sve projekcije AABB, po dva elementa za svaku projekciju... -> Svaki niz sadrži po dva elementa za projekciju svih AABB po jednoj osi: jedan element je početak ...
+y n je l to velik problem, mogu da je smanjim npr strana 18: slika 3.2 je malo mutna
+y strana 18:  Tačka b_i je početak... -> Tačka b_i označava početak, a e_i kraj projekcije i-tog objekta
+y strana 19: e3 -> e_3
+y strana 19: b4 -> b_4
+y strana 19: e3 se nalazi desno od b4 -> u prvom momentu e_3 se nalazi desno od b_4
+y strana 19:  se zapamte -> se pamte
+y strana 19:  u ovom slučaju samo par (3, 4). ->  u ovom slučaju to je samo par (3, 4).
+y strana 19:  ili da li ima novi par objekata -> odnosno da li je možda neki par objekata koji prethodno nije bio u koliziji sada u koliziji
+
+promenio sam odpr kao sto ste napisali, samo da vise zvuci da se ne azuriraju nizovi nakon sto se jedan objekat pomeri, 
+pa onda opet kad se drugi pomeri itd, nego se svi ispomeraju pa se nakon toga dosortira.
+y yn strana 19:  Potrebno je ažurirati projekcije kada se objekti pomere -> Prilikom pomeranja objekata potrebno je ažurirati projekcije objekata
+y yn strana 19: ponovo budu -> i dalje ostanu
+y strana 19: pošto je odličan -> pošto ovaj algoritam sortiranja pokazuje veoma dobre osobine 
+y strana 19: s leva na desno -> sleva nadesno
+y n da li je u redu da ostane ovako, posto nisam koristio ovakav oblik pisanja strana 19: Postoje dva uslova koji utiču na postojanje kolizija: -> Razmotrimo naredna dva uslova:
+y strana 19: gore piše B_i a u uslovima B -- nekako uniformisati
+y strana 19: i ako je B početna -> a tačka B je početna
+y strana 19:  onda izbaci njihov par -> onda se par ovih objekata izbacuje
+y strana 19:  projekcije ne seku na ostalim osama -> projekcije na ostale ose ne seku
+y strana 19:  pa se tada ništa neće ni desiti pokušavanjem da se izbaci taj par -> pa tada izbacivanje ovog para iz kolekcije neće imati nikakvog efekta
+y strana 19:  i ako je B krajnja -> a tačka B je krajnja
+y strana 19:  onda proveri da li se -> onda se vrši provera da li se seku projekcije na ostale ose
+y strana 19:   onda dodaj njihov par -> onda se par odgovarajućih objekata dodaje 
+y strana 19: Umesto da se vrše AABB upiti svaki put -> Umesto da se AABB upiti vrše svaki put iznova
+y strana 19: radi najbolje -> pokazuje najbolje performanse
+y strana 19: ali se loše pokazuje -> dok mu je ponašanje lošije
+y strana 19: Najviše što utiče na performanse prilikom evaluacije je brzina kretanja objekata. -> Prilikom evaluacije pokazuje se da najveći uticaj na performanse ima brzina kretanja objekata.
+y strana 19: U slučaju kada se brzo kreću objekti, onda je potrebno raditi zamenu njihovih pozicija u sortiranom nizu, što vodi jakom usporavanju pri velikim pomerajima svih objekata -> U slučaju kada se objekti brzo kreću, pomeraji objekata su veliki i potrebno je često vršiti zamenu njihovih pozicija u sortiranom nizu, što vodi jakom usporavanju algoritma
+y strana 19:  što dovodi do izražavanje kvadratne vremenske složenosti ->  što dovodi do ispoljavanja kvadratne vremenske složenosti 
 
 DO OVDE pre nedelje
 
-strana 20: u nazivu slike napisati da je ovo projekcija na jednu osu
+y strana 20: u nazivu slike napisati da je ovo projekcija na jednu osu
 strana 20: i radi efikasnije od ostalih razmatranih algoritama u tom slučaju
 -> i kraće vreme izvršavanja od ostalih razmatranih algoritama
 strana 20: koristi za renderovanje -> koristi za renderovanje slike

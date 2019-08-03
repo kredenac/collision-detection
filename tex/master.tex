@@ -587,62 +587,63 @@ se provere kolizije vrše samo nad manjim podskupovima svih elemenata.
 \section{Oktri}
 \label{subsec:octree}
 
-Oktri (eng. {\em Octree}) je prostorna struktura podataka koja se koristi za rekurzivno deljenje trodimenzionog
-prostora na oktante. Oktri je stablo kod koga svaki unutrasnji čvor ima tačno osmoro dece, odnosno oktanata. 
-Time unutrašnji čvorovi Oktrija dele prostor na osam podoktanata.
-U listovima se čuvaju objekti koji pripadaju tom oktantu koji taj list predstavlja.
+Oktri (eng. {\em Octree}) je prostorna struktura podataka koja se koristi za rekurzivno deljenje trodimenzionog prostora na oktante.
+Suštinski, oktri je stablo kod koga svaki unutrasnji čvor ima tačno osmoro dece,
+što odgovara podeli prostora koji odgovara tom unutrašnjem čvoru na osam podkocki (oktanata).
+U listovima se čuvaju objekti koji pripadaju oktantu koji taj list predstavlja.
 %Oktri može biti tako implementiran da predstavlja i beskonačan prostor.
-Na slici \ref{fig:oct} je prikazan način particionisanja.
+Na slici \ref{fig:oct} je prikazan način particionisanja trodimenizionog prostora korišćenjem oktrija.
 
 Objekti se ubacuju u stablo počevši od korena idući rekurzivno kroz one oktante kojima objekat pripada,
 sve dok se ne stigne do lista.
-Odabere se konstsanta $c$ koja predstavlja najveći broj elemenata u listu stabla. 
+Pritom, postoji namenska konstanta $c$ koja sadrži vrednost najvećeg dozvoljenog broja elemenata koji list stabla može da sadrži.
 Kada se prekorači taj maksimum $c$, onda list postaje unutrašnji čvor, njegov potprostor se deli 
 na osam podoktanata u koje se prebacuju objekti koje je sadržao.
 Potrebno je izabrati još jednu konstantu $h$ koja predstavlja maksimalnu dubinu stabla Oktrja.
-Ako $h$ nije ograničeno onda u slučaju da se ubacuje $n$ identičnih objekata bi se stablo 
+Ukoliko maksimalna dubina stabla ne bi bila ograničena onda u slučaju da se ubacuje $n$ identičnih objekata (gde je $n > c$) bi se stablo 
 beskonačno rekurzivno delilo pokušavajući da podeli tih $n$ objekata u različite listove 
 tako da svaki ima manje ili jednako $c$ objekata u sebi. 
 Pošto to nije uvek moguće konstanta $h$ zaustavlja takve podele stabla.
 
-Parovi koji su u koliziji se pronalaze na sledeći način:
+Parovi objekata koji su u koliziji se onda mogu pronaći na sledeći način:
 kada se objekat ubaci u list, proveri se da li on ima presek sa objektima koji su već
 ubačeni u taj list i svi parovi koji se seku se prijave.
-Drugi način je da se prvo svi objekti smeste u Oktri, pa tek naknadno prođe kroz sve listove 
-i proveri kolizija. 
+Drugi način je da se prvo svi objekti smeste u oktri, 
+pa da se naknadno prođe kroz sve listove i za svaka dva objekta koji pripadaju istom listu proveri da li su u koliziji.
 Treba primetiti da je složenost provere kolizija kvadratna po broju elemenata u listu.
 To ipak nije problem kada su elementi pretežno uniformno raspoređeni po prostoru, što je često 
 i slučaj jer se uglavnom ne dopušta njihovo trajno presecanje. 
 
-Nije problem po opisanom postupku ubaciti tačku u stablo, ali se postavlja pitanje šta raditi sa većim objektima
-koji pripadaju više oktanata.
+Ukoliko se razmatra tačkasti objekat, opisani postupak umetanja radi korektno,
+ali se postavlja pitanje šta raditi sa većim objektima koji pripadaju više oktanata.
 Jedno rešenje je da se objekat ubaci u svaki oktant kome bar delimično pripada. 
 Bitan problem sa tim rešenjem je ako je u pitanju veliki objekat, onda će on pokriti mnoge oktante, njihove 
-podoktante i tako rekurzivno. Tada veliki broj listova mora da pamti taj objekat, tj. njegovu referencu ili indeks u nekom nizu.
+podoktante i tako rekurzivno. 
+Tada veliki broj listova mora da pamti taj objekat, tj. njegovu referencu ili indeks u nekom nizu.
 To nije velika smetnja kada su svi objekti sličnih veličina, ali ako 
-nisu, onda mogu i memorijska i vremenska složenost eksplodirati. 
+nisu, onda i memorijska i vremenska složenost mogu eksplodirati
 
 Drugo rešenje je da se dopusti i unutrašnjim čvorovima stabla da čuvaju objekte.
-Kada neki objkat seče više od jednog oktanta nekog unutrašnjeg čvora $U$, tada se on ne ubacuje 
+Kada neki objekat seče više od jednog oktanta nekog unutrašnjeg čvora $U$, tada se on ne ubacuje 
 u podoktante čvora $U$, nego se pamti u čvoru $U$. Time se može značajno uštedeti na memoriji i vremenu izvršavanja.
-Međutim, i za tako izmenjen Oktri postoje nezgodne situacije kada se pogoršava vreme izvršavanja.
-Ako svi objekti seku više od jenog podoktanta korenog čvora, onda svi moraju biti sačuvani u njemu. 
+Međutim, i za tako izmenjen oktri postoje nezgodne situacije kada se pogoršava vreme izvršavanja.
+Ako svi objekti seku više od jednog podoktanta korenog čvora, onda svi moraju biti sačuvani u njemu. 
 U tom slučaju se mora proveriti kolizija svih parova od $n$ objekata, što je ekvivalentno osnovnom kvadratnom algoritmu.
 
-Očekivano vreme izvršavanja za izgradnju Oktrija je $O(n \log n)$, gde je n broj objekata.
+Očekivano vreme izvršavanja za izgradnju oktrija je $O(n \log n)$, gde je $n$ broj objekata.
 Očekivano vreme potrebno za pronalazak svih kolizija je $O(n \log n + k)$, gde je $k$ broj objekata koji su u koliziji.
 
-Parametri Oktrija $c$ i $h$ značajno menjaju njegovu efikasnost u praksi. 
+Parametri oktrija $c$ i $h$  utiču značajno na njegovu efikasnost u praksi. 
 Iako broj provera u listu raste kvadratno sa $c$, to nije problem za relativno male vrednosti $c$, i često je bolje 
 imati nešto veći broj elemenata u listu nego da se stablo više particioniše i duže putuje kroz njega.
-Ti parametri su promenljivi u projektu i mogu se u realnom vremenu njihovim štelovanjem pronaći 
-dobre vrednosti, o čemu će biti reči kasnije.
+Ti parametri su promenljivi u projektu i dobre vrednosti ovih parametara mogu se odrediti njihovim podešavanjem u realnom vremenu,
+o čemu će biti reči kasnije.
 
-Kada su svi objekti dinamični onda se u svakom koraku simulacije  gradi novi Oktri u
-koga se ubacuju svi elementi i usput se odrede njihove kolizije. Često je slučaj da je velik 
-broj objekata statički pa je tada dovoljno jednom izgraditi Oktri za njih, a za dinamične objekte u svakom koraku 
+Kada se svi objekti kreću onda se u svakom koraku simulacije  gradi novi oktri u
+koga se ubacuju svi elementi i usput se odrede njihove kolizije.
+Često je slučaj da je velik broj objekata statički pa je tada dovoljno jednom izgraditi oktri za njih, a za objekte koji se kreću u svakom koraku 
 izvršiti detekciju kolizije njihovim ponovnim ubacivanjem u stablo. Time se smanjuje vreme izvršavanja upita 
-kolizije jednog dinamičnog objekta sa $n$ statičkih sa $O(n)$ na očekivanih $O(\log n)$.
+kolizije jednog objekta koji se kreće sa $n$ statičkih sa $O(n)$ na očekivanih $O(\log n)$.
 
 \begin{figure}[h!]
 	\begin{center}
@@ -659,55 +660,59 @@ Briši i odseci (eng. {\em sweep and prune}), skraćeno \textbf{SAP}, je alterna
 zasnovanim na prostornom particionisanju.
 SAP je algoritam široke faze koji projektuje sve AABB
 na bazne ose (u trodimenzionalnom slučaju to je tri skupa projekcija) pa sortira projekcije da bi odredio preseke AABB.
-Ako se na sve tri ose projekcije nekog para AABB seku, onda se i zaista u prostoru seče taj par AABB.
+Ako se po sve tri ose projekcije nekog para AABB seku, onda se taj par AABB seče i u prostoru.
 
-Ako je potrebno naći sve parove koji su u koliziji samo u jednom trenutku vremena onda se ovaj metod ne ističe u odnosu na druge.
-Moć briši i odseci algoritma je u tome što iskorišćava svojstvo vremenske koherentnosti. 
+Ako je potrebno naći sve parove koji su u koliziji samo u jednom vremenskom trenutku onda ovaj metod ne predstavlja neko poboljšanje u odnosu na druge.
+Moć briši i odseci algoritma je u tome što koristi svojstvo vremenske koherentnosti.
 Objekti se ne teleportuju nasumično kroz prostor nego se postepeno kreću. 
-Zbog toga je za svaku iteraciju potreban inkrementalan posao da bi se ažurirali parovi koji su u koliziji.
-Održavaju se tri sortirana niza, svaki je sadržan od $2n$ elemenata, gde je $n$ broj objekata.
-Svaki niz sadrži sve projekcije AABB, po dva elementa za svaku projekciju. 
-Jedan je početak, odnosno teme sa manjom koordinatom, a drugi je kraj projekcije, tj. teme sa većom koordinatom. 
+Zbog toga je za svaku iteraciju moguće inkrementalno ažurirati parove objekata koji su u koliziji.
+To se može postići na sledeći način: održavaju se tri sortirana niza, svaki od njih sadrži $2n$ elemenata, gde je $n$ broj objekata.
+Svaki niz sadrži po dva elementa za projekciju svih AABB po jednoj osi: jedan element je početak 
+, odnosno teme sa manjom koordinatom, a drugi je kraj projekcije, tj. teme sa većom koordinatom. 
 
 Na slici \ref{fig:sap} je prikazana projekcija 4 objekta na jednu osu. 
-Tačka $b_i$ je početak duži projekcije, a $e_i$ je kraj projekcije $i$-tog objekta.
-$e3$ se nalazi desno od $b4$, što posmatranjem projekcije na jednoj osi govori da su njihovi AABB možda u koliziji.
+Tačka $b_i$ označava početak, a $e_i$ kraj projekcije $i$-tog objekta.
+U prvom momentu $e_3$ se nalazi desno od $b_4$, što posmatranjem projekcije na jednoj osi govori da su njihovi AABB možda u koliziji.
 Potrebno je proveriti i ostale (ovde samo još jednu) osu sa projekcijama da bi se utvrdilo da li se stvarno seku.
-Svi parovi objekata koji su u koliziji se zapamte u kolekciji parova kolizija, u ovom slučaju samo par $(3, 4)$.
-U sledećem koraku se proverava da li je neki par koji je bio u koliziji prestao da bude, ili da li ima novi par objekata koji je u koliziji.
-Potrebno je ažurirati projekcije kada se objekti pomere tako da nizovi ponovo budu sortirani. Prilikom sortiranja se u stvari dodaju i uklanjaju kolizije.
+Svi parovi objekata koji su u koliziji se zapamte u kolekciji parova kolizija, u ovom slučaju to je samo par $(3, 4)$.
+U sledećem koraku se proverava da li je neki par koji je bio u koliziji prestao da bude, 
+odnosno da li je možda neki par objekata koji prethodno nije bio u koliziji sada u koliziji.
+Nakon pomeranja objekata potrebno je ažurirati projekcije objekata tako da nizovi i dalje ostanu sortirani.
+Prilikom sortiranja se u stvari dodaju i uklanjaju kolizije.
 
-Za održavanje sortiranosti se koristi sortiranje umetanjem (eng. {\em insertion sort}) pošto je odličan za skoro sortirane nizove.
-Dok se sortira niz posmatraju se elementi koji predstavljaju projekcije s leva (početak niza) na desno i za svaki element $A$ se proverava da li treba da se elementi $B_i$ levo od $A$
+Za održavanje sortiranosti se koristi sortiranje umetanjem (eng. {\em insertion sort}) 
+pošto ovaj algoritam sortiranja pokazuje veoma dobre osobine za skoro sortirane nizove.
+Dok se sortira niz posmatraju se elementi koji predstavljaju projekcije sleva (početak niza) nadesno i za svaki element $A$ se proverava da li treba da se elementi $B_i$ levo od $A$
 pomere za jednu poziciju udesno. Postoje dva uslova koji utiču na postojanje kolizija:
 \begin{itemize}  
-	\item Ako je $A$ krajnja tačka projekcije i ako je $B$ početna onda izbaci njihov par iz kolekcije parova kolizije.
-	Naravno prave kolizije nije moralo ni biti u slučaju da se projekcije ne seku na ostalim osama, 
-	pa se tada ništa neće ni desiti pokušavanjem da se izbaci taj par.
-	\item Ako je $A$ početna tačka projekcije i ako je $B$ krajnja onda proveri da li se seku i na ostalim osama (AABB upit) i ako se seku onda
-	dodaj njihov par u kolekciju parova kolizija.
+	\item Ako je $A$ krajnja tačka projekcije a tačka $B_i$ je početna onda se par ovih objekata izbacuje iz kolekcije parova kolizije.
+	Naravno prave kolizije nije moralo ni biti u slučaju da se projekcije na ostale ose ne seku, 
+	pa tada izbacivanje ovog para iz kolekcije neće imati nikakvog efekta.
+	\item Ako je $A$ početna tačka projekcije a tačka $B_i$ je krajnja onda se vrši provera da li se seku projekcije na ostale ose (AABB upit) i ako se seku
+	onda se par odgovarajućih objekata dodaje.
 
 \end{itemize}  
 
 
 \begin{figure}[h!]
 	\begin{center}
-	\includegraphics[scale=1]{sap.jpg}
+	\includegraphics[scale=0.8]{sap.jpg}
 	\end{center}
-	\caption{Projekcije tela u dva koraka.}
+	\caption{Projekcije tela na jednu osu u dva koraka.}
 	\label{fig:sap}
 \end{figure}
 
-Umesto da se vrše AABB upiti svaki put, moguće je da se čuvaju informacije o presecima 
+Umesto da se AABB upiti vrše svaki put iznova, moguće je da se čuvaju informacije o presecima 
 na svakoj osi. To zahteva $O(n^2)$ memorije ali smanjuje posao prilikom zamena \cite{sap}. 
 
-Ovaj metod radi najbolje kada su objekti uniformno raspoređeni, ali se loše pokazuje kada je
+Ovaj metod pokazuje najbolje performanse kada su objekti uniformno raspoređeni, dok mu je ponašanje lošije kada je
 prisutan klaster većine objekata na nekoj osi, što vodi kvadratnoj složenosti po broju objekata \cite{glavna2}.
 
-Najviše što utiče na performanse prilikom evaluacije je brzina kretanja objekata. 
-U slučaju kada se brzo kreću objekti, onda je potrebno raditi zamenu njihovih pozicija u sortiranom nizu,
-što vodi jakom usporavanju pri velikim pomerajima svih objekata. Tada svaka tačka projekcije u nizovima mora 
-da se poredi sa većim brojem ostalih što dovodi do izražavanje kvadratne vremenske složenosti algoritma sortiranja umetanjem.
+Prilikom evaluacije pokazuje se da najveći uticaj na performanse ima brzina kretanja objekata.
+U slučaju kada se objekti brzo kreću, pomeraji objekata su veliki i potrebno je vršiti brojnije zamene njihovih pozicija u sortiranom nizu,
+što vodi jakom usporavanju algoritma.
+Tada svaka tačka projekcije u nizovima mora 
+da se poredi sa većim brojem ostalih što dovodi do ispoljavanja kvadratne vremenske složenosti algoritma sortiranja umetanjem.
 Ipak, kada se svi objekti polako kreću, onda je mali broj pomeraja u nizu, i vreme izvršavanja algoritma je praktično 
 linearno, što omogućava veći broj pokretnih objekata i radi efikasnije od ostalih razmatranih algoritama u tom slučaju.
 
@@ -858,10 +863,10 @@ Parametri koji se menjaju kroz kontroler komponentu su:
 	objekata i učiniti ga praktično algoritmom kvadratne složenosti u najgorem slučaju.
 	\item Veličina kontejnera u kome se nalaze i kreću svi objekti.
 	Daje još jednu perspektivu kako veličina objekata i odnos te veličine sa celim prostorom, ovde kontejnerom, utiču na performanse.
-	\item Maksimalan broj elemenata u listu Oktrija.
+	\item Maksimalan broj elemenata u listu oktrija.
 	Promena maksimalnog broja elemenata u listu pre nego što se on podeli na podoktante utiče "samo" na konstantan faktor vremenske složenosti.
 	To uopšte nije zanemarljivo u datom kontekstu i povoljnosti koje daje povoljno izabran parametar su vrlo vidne.
-	\item Maksimalna dubina Oktrija. Što veća dubina je uglavnom povoljnija, mada treba biti oprezan ako se može desiti 
+	\item Maksimalna dubina oktrija. Što veća dubina je uglavnom povoljnija, mada treba biti oprezan ako se može desiti 
 	da se velik broj objekata preklapa unutar jednog oktanta, jer se tada samo gubi vreme i troši dodatna memorija. 
 	Pokušavaju se razdvojiti objekti rekurzivnom podelom potprostora, ali pošto se oni presecaju taj put je beznatežan.
 	\item Da li raditi razrešenje kolizije. 
@@ -871,8 +876,8 @@ Parametri koji se menjaju kroz kontroler komponentu su:
 	\item Da li je iscrtavanje uključeno ili isključeno. 
 	S obzirom da je projekat više procesorski nego grafički zahtevan, iscrtavanje uglavnom ne oslabljuje performanse više od 2 do 3 posto.
 	Svakako, kada je na sceni više od 30 000 objekata počinje značajno da ima uticaj, pa je za te slučajeve dodata opcija kako bi merenja bila nepristrasna.
-	\item Koji algoritam detekcije kolizije se koristi. Podržani su: osnovan (trivijalan) algoritam, Oktri sa duplikatima,
-	Oktri bez duplikata i SAP algoritam. Takođe je moguće isključiti detekciju kolizije u celosti da bi se dobila referntna vrednost vremena izvršavanja.
+	\item Koji algoritam detekcije kolizije se koristi. Podržani su: osnovan (trivijalan) algoritam, oktri sa duplikatima,
+	oktri bez duplikata i SAP algoritam. Takođe je moguće isključiti detekciju kolizije u celosti da bi se dobila referntna vrednost vremena izvršavanja.
 
 \end{itemize}  
 
@@ -880,7 +885,7 @@ Kontroler komponenta takođe pruža mogućnost menjanja pravca kretanja objekata
 Tada svi objekti bivaju usmereni prema trenutnoj poziciji posmatrača. 
 Potrebna je takva funkcionalnost pošto ona povećava koncentraciju objekata, 
 pogotovo nakon što se odbiju o ivicu kontejnera. Tada će se većina objekata 
-naći oko centra kontejnera, što dovodi do eksplozije vremena izvršavanja, pogotovo u slučaju Oktrija sa duplikatima.
+naći oko centra kontejnera, što dovodi do eksplozije vremena izvršavanja, pogotovo u slučaju oktrija sa duplikatima.
 
 \subsection{Komponenta za iscrtavanje}
 
@@ -1023,7 +1028,7 @@ Za projekat najznačajnija funkcionalnost dolazi od ove komponente.
 Algoritmi su implementirani u odvojenim klasama, ali imaju isti interfejs.
 Svaka klasa implementira metodu kojoj se prosleđuje vektor objekata za koje treba proveriti da li su u koliziji
 i vraća sve parove objekata koji jesu u koliziji. Takođe svaka implementira metod koji daje relevantne podatke 
-o stanju algoritma specifičnom za njega. Npr. broj elemenata u unutrašnjim čvorovima Oktrija ili broj 
+o stanju algoritma specifičnom za njega. Npr. broj elemenata u unutrašnjim čvorovima oktrija ili broj 
 zamena u SAP algoritmu. Oni se koriste za merenje i za ispisivanje trenutnih informacija prilikom testiranja.
 
 % ==============================================================================
@@ -1107,7 +1112,7 @@ da ih se preseca.
 
 \section{Oktri}
 
-Na slici \ref{fig:oktri1} su prikazane performanse Oktrija sa maksimalnom dubinom od deset nivoa i četri maksimalna elementa u listu pre podele na podoktante.
+Na slici \ref{fig:oktri1} su prikazane performanse oktrija sa maksimalnom dubinom od deset nivoa i četri maksimalna elementa u listu pre podele na podoktante.
 Prati referentnu liniju linearne zavisnosti na početku. 
 I za manji broj objekata je višestruko bolji u odnosu na prethodno prikazani, pada ispod 60fps tek nakon 12 000 objekata, i ispod 30fps nakon 20 000.
 Ipak, na slici \ref{fig:oktri2} se primećuje brže udaljavanje od linearne prave, što je za očekivati pošto algoriam nije linearne vremenske složenosti.
@@ -1117,7 +1122,7 @@ Ipak, na slici \ref{fig:oktri2} se primećuje brže udaljavanje od linearne prav
 	\includegraphics[
 		trim=0 0 0 19,clip,
 		scale=1]{oktri_dt_vs_numobj.pdf}
-	\caption{Zavisnost relativnog dt od broja objekata - Oktri.}
+	\caption{Zavisnost relativnog dt od broja objekata - oktri.}
 	\label{fig:oktri1}
 \end{figure}
 
@@ -1126,16 +1131,16 @@ Ipak, na slici \ref{fig:oktri2} se primećuje brže udaljavanje od linearne prav
 	\includegraphics[
 		trim=0 0 0 19,clip,
 		scale=1]{oktri_dt_vs_numobj_zoomout.pdf}
-	\caption{Zavisnost relativnog dt od broja objekata - Oktri, više objekata.}
+	\caption{Zavisnost relativnog dt od broja objekata - oktri, više objekata.}
 	\label{fig:oktri2}
 \end{figure}
 
 Oktri sa i bez duplikata su često sličnih performansi. Jedan primer kada je razlika ogromna je kada je veliki broj objekata na istom mestu.
 Za potrebe demonstriranja se koristi scenario gde se objekti nasumično kreću i onda svi bivaju povučeni ka jednoj istoj tački.
 Tada se svi nalaze na istom mestu za trenutak, i potom se razilaze.
-Na slici \ref{fig:octreSpike} se vide tri manja plava skoka za Oktri bez duplikata, i dva narandžasta skoka reda veličine za Oktri sa duplikatima.
+Na slici \ref{fig:octreSpike} se vide tri manja plava skoka za oktri bez duplikata, i dva narandžasta skoka reda veličine za oktri sa duplikatima.
 Za ovo merenje je isključeno razrešenje kolizije da bi više objekata bilo u koliziji, što pokazuje interesantno svojstvo da iako je potrebna dodatna obrada za razrešenje kolizije, 
-ona onemogućava grupisanje preseka objekata i time ubrzava izvršavanje Oktrija (i mnogih drugih algoritama detekcije kolizije).
+ona onemogućava grupisanje preseka objekata i time ubrzava izvršavanje oktrija (i mnogih drugih algoritama detekcije kolizije).
 
 
 \begin{figure}[h!]
@@ -1143,30 +1148,30 @@ ona onemogućava grupisanje preseka objekata i time ubrzava izvršavanje Oktrija
 	\includegraphics[
 		trim=0 0 0 19,clip,
 		scale=1]{octreeSpikes.pdf}
-	\caption{Usporenje Oktrija pri klasterovanju objekata.}
+	\caption{Usporenje oktrija pri klasterovanju objekata.}
 	\label{fig:octreSpike}
 \end{figure}
 
 
-Dok se razvijao projekat odabrana je konstanta 4 za maksimalan broj elemenata u listu Oktrija proizvoljno, 
+Dok se razvijao projekat odabrana je konstanta 4 za maksimalan broj elemenata u listu oktrija proizvoljno, 
 vodeći se logikom da je mali broj povoljan zbog izbegavanja kvadratnog broja upoređivanja, a da nije baš jedinica, kada bi se previše listovi delili.
 Na slici \ref{fig:octree_leaf} se zapaža da četvorka nije loš izbor i tada je u proseku 69fps. 
 Jedinica je najgori parametar pošto dovodi do viška rekurzivnog particionisanja prostora, relativan dt opada do koeficijenta 32 i nadalje naste.
 Najbolja vrednost parametra je 32, kada je prosečno 94 što je čak 26.5\% bolje! 
 Ubrzanje od 26.5\% je u praksi impresivno, pogotovo što je postignuto samo promenom jednog koeficijenta.
-Pri merenju je fiskno 10 000 objekata i korišćen je Oktri sa duplikatima.
+Pri merenju je fiskno 10 000 objekata i korišćen je oktri sa duplikatima.
 
 \begin{figure}[h!]
 	\centerfloat
 	\includegraphics[
 		trim=0 0 0 19,clip,
 		scale=1]{octree_leaf.pdf}
-	\caption{Relativan dt u zavisnosti od maksimalnog broja elemenata u listu Oktrija}
+	\caption{Relativan dt u zavisnosti od maksimalnog broja elemenata u listu oktrija}
 	\label{fig:octree_leaf}
 \end{figure}
 
 
-Maksimalna dubina Oktrija je postavljena na 10 tokom razvoja projekta. 
+Maksimalna dubina oktrija je postavljena na 10 tokom razvoja projekta. 
 Njenom promenom se ne postiže mnogo, osim jakog usporenja kad bi se postavila na 1 ili 2, jer se tad skoro svi parovi moraju ispitati.
 Vrednosti 9 do 12 predstavljaju razuman segment za odabir maksimalne dubine, jer omogućavaju dovoljno particionisanje prostora 
 da se izbegne kvadratan broj operacija ispitivanja preseka,
