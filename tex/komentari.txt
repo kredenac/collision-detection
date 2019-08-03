@@ -133,76 +133,76 @@ y strana 9: duplo veći od objekta -> od objekta ili od brzine objekta?
 y strana 9: , što je temporalni anti aliasing firme NVIDIA ->, tehnika koju koristi kompanija NVIDIA da bi umanjila efekat vremenskog aliasinga.
 y strana 9: Napisati i šta je MSAA sa slike 2.4
 
-strana 10: Moguće su različite preciznosti detekcije kolizije. -> Koliziju je moguće utvrđivati sa različitim nivoom preciznosti. Međutim, jasno je da veća preciznost sa sobom iziskuje i veće (vremenske i prostorne) resurse. Stoga se često bira nešto nepreciznija varijanta koja ima kraće vreme izvršavanja i manju potrošnju memorije.
-strana 10: Nekako definisati sta mi podrazmevamo pod preciznošću -- koliko često proveravamo koliziju ili nešto drugo...
-strana 10: provera kolizije dešava -> provera kolizije vrši
-strana 10: onda je moguće -> može se desiti
-strana 10: fenom -> fenomen
-strana 10: tuneliranje napisati bold slovima
-strana 10: prikazan je primer na slici -> ilustrovan je na slici
-strana 10: Da li na slici 2.5 nedostaje donji deo slike?
-strana 10: Tuneliranje se češće dešava -> Tuneliranje se češće javlja
-strana 10: ,ili kod onih -> bez zareza ispred ili
-strana 10:  umesto samo zapremine objekta -> umesto da se proverava samo objekat.
-strana 10:  verodostojnost među grafičkim modelima i objektima ... -> verodostojnost grafičkog modela kojim se predstavlja objekat čiju koliziju ispitujemo.
-strana 10: manjeg broja kvadara -> malog broja kvadara
-strana 10: Na taj način se ... -> Na ovaj način dobija se prostiji ali često dovoljno dobar model
-strana 10: aproskimira -> aproksimira
-strana 10: veritkalnom -> vertikalnom
-strana 10: , uglavnom za proveru kolizije modela čoveka sa ... -> ovo staviti u zagradu
-strana 11: Promeniti naslov poglavlja 2.5 u nesto oblika Konfigurisanje parametara... ili Zavisnost ... od konfiguracije ... ili tako nesto
-strana 11: Simulacija se izvršava u diskretnim koracima i bitno je kolika je vremenska razlika -> S obzirom na to da se simulacija izvršava u diskretnim koracima, bitan parametar predstavlja vremenska razlika
+y strana 10: Moguće su različite preciznosti detekcije kolizije. -> Koliziju je moguće utvrđivati sa različitim nivoom preciznosti. Međutim, jasno je da veća preciznost sa sobom iziskuje i veće (vremenske i prostorne) resurse. Stoga se često bira nešto nepreciznija varijanta koja ima kraće vreme izvršavanja i manju potrošnju memorije.
+y strana 10: Nekako definisati sta mi podrazmevamo pod preciznošću -- koliko često proveravamo koliziju ili nešto drugo...
+y strana 10: provera kolizije dešava -> provera kolizije vrši
+y strana 10: onda je moguće -> može se desiti
+y strana 10: fenom -> fenomen
+y strana 10: tuneliranje napisati bold slovima
+y strana 10: prikazan je primer na slici -> ilustrovan je na slici
+y n strana 10: Da li na slici 2.5 nedostaje donji deo slike?
+y strana 10: Tuneliranje se češće dešava -> Tuneliranje se češće javlja
+y strana 10: ,ili kod onih -> bez zareza ispred ili
+y strana 10:  umesto samo zapremine objekta -> umesto da se proverava samo objekat.
+y y diff strana 10:  verodostojnost među grafičkim modelima i objektima ... -> verodostojnost grafičkog modela kojim se predstavlja objekat čiju koliziju ispitujemo.
+y strana 10: manjeg broja kvadara -> malog broja kvadara
+y strana 10: Na taj način se ... -> Na ovaj način dobija se prostiji ali često dovoljno dobar model
+y strana 10: aproskimira -> aproksimira
+y strana 10: veritkalnom -> vertikalnom
+y strana 10: , uglavnom za proveru kolizije modela čoveka sa ... -> ovo staviti u zagradu
+y yn strana 11: Promeniti naslov poglavlja 2.5 u nesto oblika Konfigurisanje parametara... ili Zavisnost ... od konfiguracije ... ili tako nesto
+y strana 11: Simulacija se izvršava u diskretnim koracima i bitno je kolika je vremenska razlika -> S obzirom na to da se simulacija izvršava u diskretnim koracima, bitan parametar predstavlja vremenska razlika
 
-strana 12: Primer 2.5.1 treba da počne kod pasusa koji počinje sa "Na primer", ali onda treba izbrisati Na primer; alternativno može se označiti sama jednačina a ne ceo primer (slično za 2.5.2)
-strana 12:  da su koraci što bliže ->  da su koraci što bliži
-strana 12:  na određenoj konfiguraciji sistema -> pri određenoj konfiguraciji sistema
-strana 12: Tada bi razlika između dva koraka bila q gde je q > p, a u svakom koraku bi simulacija napredovala za p jedinica unapred. Kako je q > p onda bi simulacija izgledala kao usporeni snimak. -> Ako bi razlika između dva koraka bila q gde je q > p, simulacija bi u svakom koraku napredovala za p jedinica unapred, te bi, kako je q > p, simulacija izgledala kao usporeni snimak.
-strana 12:  Suprotno, -> Nasuprot ovome,
-strana 12:  onda bi na bržim računarima bila ubrzana simulacija ->  onda bi na bržim računarima simulacija bila ubrzana
-strana 12: Rešenje je da se koristi -> Jedno rešenje ovog problema se sastoji u tome da se koristi 
-strana 12:  onda će imati više koraka ->  onda će simulacija imati više koraka,
-strana 12:  ali neće vreme u simulaciji proticati ->  ali vreme u simulaciji neće proticati
-strana 12: u bio inverz od broja slika -> jednako recipročnoj vrednosti broja slika u sekundi
-strana 12: proteklo vreme između dve slike uvek promenljivo -> proteklo vreme između dve slike promenljivo
-strana 12:  dodvanjam promenljivoj x vrednost dt svakog koraka ->  dodavanjam vrednosti dt promenljivoj x u svakom koraku
-strana 12:  u stvari se vrednost x povećava -> vrednost x se povećava
-strana 12: Kada se koristi dt za ažuiriranje svih objekata -> Kada se za ažuriranje svih objekata koristi ova formula, onda se simulacija može lako ubrzati k puta (množenjem vrednosti dt sa k), odnosno usporiti k puta (deljenjem vrednost dt sa k)
-strana 12: nepoželjnih efekta -> neželjenih efekata
-strana 12: uzima gornja granica za dt -> postavlja gornja granica na dt
-strana 12: , što se i želelo izbeći ali je često bolji rezultat nego problem tuneliranja -> To je nešto što svakako nije poželjno, ali predstavlja prihvatljiviju varijantu od toga da dodje do pojave tuneliranja.
-strana 13:  FixedUpdate i Update. -> možda prevesti na fiksna ažuriranja i ažuriranja (opšte vrste ili u užem smislu ili nešto što odgovara smislu...)
-strana 13: pošto se koraci izračunavanja fizike -> pošto se koraci u kojima se primenjuju neka pravila fizike
-strana 13: opreaicje -> operacije
-strana 13:  izmene korisničkog interfejsa ->  izmena korisničkog interfejsa
-strana 13: i fiziku -> i fizička izračunavanja
-strana 13: fps je negde uz broj, a negde je razmaknuto od broja -- uniformisati svuda
-strana 13: nijednog poziva fizike -> ne može da bude poziv fizike, već nekako drugačije formulisati
-strana 13: Naslov 2.6 preimenovati u Metode za razrešavanje kolizije
-strana 13: Prilikom razrešenja kolizije zadatak je  -> Razrešenje kolizije se sastoji u tome
-strana 13: posmatranjem svakog para -> razmatranjem svakog para
-strana 13: tvrda tela -> čvrsta tela
-strana 13:  Prvo se izračuna minimalni vektor translacije -> Najpre je potrebno izračunati minimalni vektor translacije
-strana 13: intenzitata -> intenziteta
-strana 13: vektor u formuli je označen sa m, a nakon toga pise da se sfere transliraju za v/2 i -v/2, a ne zna se sta je v
+yn??? da l sam dobro razumeo strana 12: Primer 2.5.1 treba da počne kod pasusa koji počinje sa "Na primer", ali onda treba izbrisati Na primer; alternativno može se označiti sama jednačina a ne ceo primer (slično za 2.5.2)
+y strana 12:  da su koraci što bliže ->  da su koraci što bliži
+y strana 12:  na određenoj konfiguraciji sistema -> pri određenoj konfiguraciji sistema
+y strana 12: Tada bi razlika između dva koraka bila q gde je q > p, a u svakom koraku bi simulacija napredovala za p jedinica unapred. Kako je q > p onda bi simulacija izgledala kao usporeni snimak. -> Ako bi razlika između dva koraka bila q gde je q > p, simulacija bi u svakom koraku napredovala za p jedinica unapred, te bi, kako je q > p, simulacija izgledala kao usporeni snimak.
+y strana 12:  Suprotno, -> Nasuprot ovome,
+y yw strana 12:  onda bi na bržim računarima bila ubrzana simulacija ->  onda bi na bržim računarima simulacija bila ubrzana
+y strana 12: Rešenje je da se koristi -> Jedno rešenje ovog problema se sastoji u tome da se koristi 
+y strana 12:  onda će imati više koraka ->  onda će simulacija imati više koraka,
+y yw strana 12:  ali neće vreme u simulaciji proticati ->  ali vreme u simulaciji neće proticati
+y strana 12: u bio inverz od broja slika -> jednako recipročnoj vrednosti broja slika u sekundi
+y strana 12: proteklo vreme između dve slike uvek promenljivo -> proteklo vreme između dve slike promenljivo
+y strana 12:  dodvanjam promenljivoj x vrednost dt svakog koraka ->  dodavanjam vrednosti dt promenljivoj x u svakom koraku
+y strana 12:  u stvari se vrednost x povećava -> vrednost x se povećava
+y strana 12: Kada se koristi dt za ažuiriranje svih objekata -> Kada se za ažuriranje svih objekata koristi ova formula, onda se simulacija može lako ubrzati k puta (množenjem vrednosti dt sa k), odnosno usporiti k puta (deljenjem vrednost dt sa k)
+y strana 12: nepoželjnih efekta -> neželjenih efekata
+y strana 12: uzima gornja granica za dt -> postavlja gornja granica na dt
+y strana 12: , što se i želelo izbeći ali je često bolji rezultat nego problem tuneliranja -> To je nešto što svakako nije poželjno, ali predstavlja prihvatljiviju varijantu od toga da dodje do pojave tuneliranja.
+y strana 13:  FixedUpdate i Update. -> možda prevesti na fiksna ažuriranja i ažuriranja (opšte vrste ili u užem smislu ili nešto što odgovara smislu...)
+y strana 13: pošto se koraci izračunavanja fizike -> pošto se koraci u kojima se primenjuju neka pravila fizike
+y strana 13: opreaicje -> operacije
+y strana 13:  izmene korisničkog interfejsa ->  izmena korisničkog interfejsa
+y strana 13: i fiziku -> i fizička izračunavanja
+y strana 13: fps je negde uz broj, a negde je razmaknuto od broja -- uniformisati svuda
+y strana 13: nijednog poziva fizike -> ne može da bude poziv fizike, već nekako drugačije formulisati
+y strana 13: Naslov 2.6 preimenovati u Metode za razrešavanje kolizije
+y strana 13: Prilikom razrešenja kolizije zadatak je  -> Razrešenje kolizije se sastoji u tome
+y strana 13: posmatranjem svakog para -> razmatranjem svakog para
+y strana 13: tvrda tela -> čvrsta tela
+y strana 13:  Prvo se izračuna minimalni vektor translacije -> Najpre je potrebno izračunati minimalni vektor translacije
+y strana 13: intenzitata -> intenziteta
+y strana 13: vektor u formuli je označen sa m, a nakon toga pise da se sfere transliraju za v/2 i -v/2, a ne zna se sta je v
 
-strana 14: pri čemu su m1 i m2 mase sfera -> pri čemu su m1 i m2 redom mase sfera s1 i s2
-strana 14: za nežnije sudare -> za delikatnije sudare
-strana 15: Naslov glave 3 neka bude Algoritmi za detekciju kolizije
-strana 15:  Međutim, taj najgori slučaj se retko dešava u stvarnim primenama, pa postoji... ->  Međutim, taj najgori slučaj se retko dešava u stvarnim primenama. Stoga, bilo bi poželjno da složenost algoritma za detekciju kolizije zavisi od broja parova objekata koji su u koliziji.
-strana 15:  izlazno-zavisni ->  zavisni od izlaza
-strana 15:  tj. vreme izvršavanja ->  tj. njihovo vreme izvršavanja
-strana 15: Tokom razmatranja algoritama podrazumeva se da su svi objekti ograničavajuće kutije koje su paralelne osama, tj. AABB. Broj objekata
+y strana 14: pri čemu su m1 i m2 mase sfera -> pri čemu su m1 i m2 redom mase sfera s1 i s2
+y strana 14: za nežnije sudare -> za delikatnije sudare
+y strana 15: Naslov glave 3 neka bude Algoritmi za detekciju kolizije
+y strana 15:  Međutim, taj najgori slučaj se retko dešava u stvarnim primenama, pa postoji... ->  Međutim, taj najgori slučaj se retko dešava u stvarnim primenama. Stoga, bilo bi poželjno da složenost algoritma za detekciju kolizije zavisi od broja parova objekata koji su u koliziji.
+y strana 15:  izlazno-zavisni ->  zavisni od izlaza
+y strana 15:  tj. vreme izvršavanja ->  tj. njihovo vreme izvršavanja
+y strana 15: Tokom razmatranja algoritama podrazumeva se da su svi objekti ograničavajuće kutije koje su paralelne osama, tj. AABB. Broj objekata
 koji se presecaju će nadalje biti označen kao k. -> Tokom razmatranja algoritama podrazumevaćemo da su svi objekti ograničavajuće kutije koje su paralelne osama, tj. AABB. U daljem tekstu broj objekata koji se presecaju označićemo sa k.
-strana 15:  n AABB tela ->  $n$ AABB tela 
-strana 15: U praksi postoji predstava u kakvim okolnostima treba algoritam detekcije kolizije da bude primenjen, -> U praksi se obično zna u kakvim će okolnostima algoritam detekcije kolizije biti primenjen,
-strana 15: Intuitivno se može doći do trivijalnog algoritma detekcije kolizije. Jednostavno... -> Do trivijalnog algoritma detekcije kolizije nije teško doći: za svaki element se proverava da li postoji presek sa svakim drugim elementom.
-strana 15: kad se kaže kolika je složenost, obavezno napisati šta je $n$, a ponoviti i šta je $k$
-strana 15:  a ni broj parova kolizije -> broj parova koji su u koliziji
-strana 15: Bolji algoritmi rešavaju ovaj problem uglavnom -> Do efikasnijih algoritama može se doći  
+y strana 15:  n AABB tela ->  $n$ AABB tela 
+y strana 15: U praksi postoji predstava u kakvim okolnostima treba algoritam detekcije kolizije da bude primenjen, -> U praksi se obično zna u kakvim će okolnostima algoritam detekcije kolizije biti primenjen,
+y strana 15: Intuitivno se može doći do trivijalnog algoritma detekcije kolizije. Jednostavno... -> Do trivijalnog algoritma detekcije kolizije nije teško doći: za svaki element se proverava da li postoji presek sa svakim drugim elementom.
+y strana 15: kad se kaže kolika je složenost, obavezno napisati šta je $n$, a ponoviti i šta je $k$
+y strana 15:  a ni broj parova kolizije -> broj parova koji su u koliziji
+y strana 15: Bolji algoritmi rešavaju ovaj problem uglavnom -> Do efikasnijih algoritama može se doći  
 
-strana 16: U kodu u delu "u skup Parovi", promenljiva Parovi nije italic
-strana 16: Negde u prvom pasusu poglavlja 3.1. reci da je pseudokod algoritma prikazan tu i tu
-strana 16: Oktri je struktura podataka -> Oktri je prostorna struktura podataka
+y strana 16: U kodu u delu "u skup Parovi", promenljiva Parovi nije italic
+y strana 16: Negde u prvom pasusu poglavlja 3.1. reci da je pseudokod algoritma prikazan tu i tu
+y strana 16: Oktri je struktura podataka -> Oktri je prostorna struktura podataka
 strana 16: Oktri je stablo -> Suštinski, oktri je stablo
 strana 16: odnosno oktanata. Time .... -> što odgovara podeli prostora koji odgovara tom unutrašnjem čvoru na osam podkocki (oktanata).
 strana 16: Ja ne bih Oktri pisala velikim slovom u tekstu

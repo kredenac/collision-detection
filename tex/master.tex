@@ -29,6 +29,7 @@
 \hypersetup{colorlinks,citecolor=green,filecolor=green,linkcolor=blue,urlcolor=blue}
 
 \usepackage{algorithm}
+\floatname{algorithm}{Pseudokod}
 \usepackage[noend]{algpseudocode}
 
 %header
@@ -369,12 +370,17 @@ uzimanjem više uzoraka vrednosti boja u svakom pikselu.
 
 \section{Preciznost i preseci zapremina pokretnih tela}
 
-Moguće su različite preciznosti detekcije kolizije. 
-Uglavnom je razlog za odabir nepreciznije opcije kraće vreme izvršavanja i manja potrošnja memorije.
-Pošto se provera kolizije dešava u diskretnim vremenskim trenucima umesto kontinualno, onda je moguće da 
-je između dva uzastopna trenutka bilo kolizije, iako ni u jednom od njih nema kolizije. 
-Ovaj fenom se naziva tuneliranje (eng. {\em tunneling}) i prikazan je primer na slici \ref{fig:tunnel}. 
+Koliziju je moguće utvrđivati sa različitim nivoom preciznosti. 
+Pod preciznošću se misli da li su otkrivene sve kolizije koje su se desile i 
+da li se objekti koji se iscrtavaju reprezentuju uprošćeno za svrhe kolizije. 
+Jasno je da veća preciznost sa sobom iziskuje veće vremenske i prostorne resurse. 
+Stoga se često bira nešto nepreciznija varijanta koja ima kraće vreme izvršavanja i manju potrošnju memorije.
 
+Pošto se provera kolizije vrši u diskretnim vremenskim trenucima umesto kontinualno, može se desiti da 
+je između dva uzastopna trenutka bilo kolizije, iako ni u jednom od njih nema kolizije. 
+Ovaj fenomen se naziva \textbf{tuneliranje} (eng. {\em tunneling}) i ilustrovan je na slici \ref{fig:tunnel}. 
+
+%https://github.com/Stencyl/stencylpedia/blob/master/chapter-5/ccd.md
 \begin{figure}[h!]
 	\begin{center}
 	\includegraphics[scale=0.55]{tunnel.png}
@@ -383,11 +389,11 @@ Ovaj fenom se naziva tuneliranje (eng. {\em tunneling}) i prikazan je primer na 
 	\label{fig:tunnel}
 \end{figure}
 
-Tuneliranje se češće dešava kod malih objekata, ili kod onih koji se brzo kreću.
+Tuneliranje se češće javlja kod malih objekata ili kod onih koji se brzo kreću.
 U oba slučaja problem je u tome što je put koji objekat pređe između dve provere kolizije velik u odnosu na veličinu objekta. 
 Problem se rešava tako što se ne proverava kolizija za sâm objekat, već za celu zapreminu kroz koju je on prošao 
 od prošlog trenutka provere kolizije pa do trenutnog. Na slici \ref{fig:tunnel_fix} je obojena zapremina 
-koja se dodatno proverava umesto samo zapremine objekta. 
+koja se dodatno proverava umesto da se proverava samo objekat. 
 
 \begin{figure}[h!]
 	\begin{center}
@@ -397,12 +403,13 @@ koja se dodatno proverava umesto samo zapremine objekta.
 	\label{fig:tunnel_fix}
 \end{figure}
 
-Pod preciznošću se može smatrati i verodostojnost među grafičkim modelima i objektima koji predstavljaju njihovu koliziju.
-Na slici \ref{fig:hitbox} je prikazana aproksimacija kompleksnijeg modela čoveka pomoću manjeg broja kvadara.
-Na taj način se može dobiti prostiji, ali dovoljno dobar model za detekciju kolizije koji je značajno 
+Pod preciznošću se može smatrati i koliko je verodostojno predstavljen model za svrhe kolizije u odnosu 
+na model koji se iscrtava.
+Na slici \ref{fig:hitbox} je prikazana aproksimacija kompleksnijeg modela čoveka pomoću malog broja kvadara.
+Na ovaj način dobija se prostiji ali često dovoljno dobar model za detekciju kolizije koji je značajno 
 jeftiniji za upotrebu u realnom vremenu. 
-Nekada se ceo model čoveka aproskimira samo jednom veritkalnom kapsulom, 
-uglavnom za proveru kolizije modela čoveka sa statičnom geometrijom sveta. 
+Nekada se ceo model čoveka aproksimira samo jednom vertikalnom kapsulom
+(uglavnom za proveru kolizije modela čoveka sa statičnom geometrijom sveta). 
 
 \begin{figure}[h!]
 	\begin{center}
@@ -412,79 +419,92 @@ uglavnom za proveru kolizije modela čoveka sa statičnom geometrijom sveta.
 	\label{fig:hitbox}
 \end{figure}
 
-\section{Kako radi na različitim konfiguracijama}
+\section{Izvršavanje na različitom hardveru}
 
-Simulacija se izvršava u diskretnim koracima i bitno je kolika je vremenska razlika između dva koraka.
+S obzirom na to da se simulacija izvršava u diskretnim koracima,
+bitan parametar predstavlja vremenska razlika između dva koraka.
 Prevelika razlika između dva koraka je svakako nepoželjna jer je onda i prevelika razlika između dve slike scene.
 
 Na primer, potrebno je objekat pomerati duž $x$ ose za 10 jedinica svake sekunde. Neka je interval koraka simulacije 
 $p$ jednak $0.01$ sekund, onda je dovoljno da se u svakom koraku vrednost $x$ koordinate tog objekta ažurira na sledeći način:
 
-\begin{primer}
-\label{pr:x}
 
+\begin{equation}
+	\label{eq:prx}
 $$ x:= x + 10 * 0.01 $$
-\end{primer}
+\end{equation}
+% \begin{primer}
+% \label{pr:x}
+% $$ x:= x + 10 * 0.01 $$
+% \end{primer}
 
 Zaista, kako se pri svakom koraku $x$ uveća za 0.1, a ima tačno 100 koraka u sekundi, onda će se $x$ uvećati za 10 svake sekunde.
 
-Poželjno je da su koraci što bliže, međutim ako bi se izabrao fiksan interval koraka $p$, onda se može desiti
-da se na određenoj konfiguraciji sistema program ne izvršava dovoljno brzo. 
-Tada bi razlika između dva koraka bila $q$ gde je $q > p$, a u svakom koraku bi simulacija napredovala za 
-$p$ jedinica unapred. Kako je $q > p$ onda bi simulacija izgledala kao usporeni snimak.
-Suprotno, ako se ne bi stavila donja granica za vreme između dva koraka onda bi na bržim računarima 
-bila ubrzana simulacija.
+Poželjno je da su koraci što bliži, međutim ako bi se izabrao fiksan interval koraka $p$, onda se može desiti
+da se pri određenoj konfiguraciji sistema program ne izvršava dovoljno brzo. 
+Ako bi razlika između dva koraka bila $q$ gde je $q > p$, 
+simulacija bi u svakom koraku napredovala za p jedinica unapred, te bi,
+kako je $q > p$, simulacija izgledala kao usporeni snimak.
+Nasuprot ovome, ako se ne bi stavila donja granica za vreme između dva koraka onda bi na bržim računarima
+simulacija bila ubrzana. 
 
-Rešenje je da se koristi razlika vremena proteklog između dva uzastopna koraka, u oznaci $dt$, (eng. {\em delta time}).
+Jedno rešenje ovog problema se sastoji u tome da se koristi 
+razlika vremena proteklog između dva uzastopna koraka, u oznaci $dt$, (eng. {\em delta time}).
 Korišćenjem $dt$ je moguće izvršavanje simulacije čije vreme teče konzistentno nezavisno od broja izvršenih koraka u 
-jedinici vremena. Ako je harver bolji onda će imati više koraka, odnosno više slika u sekundi, a ako je 
-sporiji onda će biti manje slika u sekundi, ali neće vreme u simulaciji proticati sporije.
-$dt$ bi u idealnom slučaju bio inverz od broja slika u sekundi:
+jedinici vremena. Ako je harver bolji onda će simulacija imati više koraka, odnosno više slika u sekundi, a ako je 
+sporiji onda će biti manje slika u sekundi, ali vreme u simulaciji neće proticati sporije.
+$dt$ bi u idealnom slučaju bilo jednako recipročnoj vrednosti broja slika u sekundi:
+
+
 $$dt = \frac{1}{fps}$$
-U praksi je ipak proteklo vreme između dve slike uvek promenljivo.
-Može se primetiti da dodvanjam promenljivoj $x$ vrednost $dt$ svakog koraka, u stvari se vrednost $x$ povećava 
+U praksi je ipak proteklo vreme između dve slike promenljivo.
+Može se primetiti da dodavanjem vrednosti $dt$ promenljivoj $x$ u svakom koraku, vrednost $x$ se povećava 
 za 1 svake sekunde, jer vreme svih koraka tokom jedne sekunde mora ukupno biti baš 1.
-Umesto ažuriranja kao u primeru \ref{pr:x}, sada se vrednost $x$ ažurira na sledeći način:
-\begin{primer}
-	\label{pr:x2}
-	
+Umesto ažuriranja kao u primeru \ref{eq:prx}, sada se vrednost $x$ ažurira na sledeći način:
+\begin{equation}
+	\label{eq:prx}
 	$$ x:= x + 10 * dt $$
-\end{primer}
+\end{equation}
+% \begin{primer}
+% 	\label{pr:x2}
+% 	$$ x:= x + 10 * dt $$
+% \end{primer}
 
-Kada se koristi $dt$ za ažuiriranje svih objekata onda se lako može simulacija ubrzati množenjem $dt$ 
-sa $k$ za $k$-tostruko ubrzanje, ili deljenjem sa $k$ za $k$-tostruko usporenje. Postavljanjem $dt$ na 0 svi 
-objekti postaju statični. 
-Na vrlo niskim fps igre postaju neprijatne za korišćenje, a čak mogu postati i nestabilne. Dolazi do nepoželjnih efekta 
-poput tuneliranja prikazanog na slici \ref{fig:tunnel}. Tada se često uzima gornja granica za $dt$, pa 
-ako je vreme između dva koraka veće od te gornje granice onda će igra biti u usporenom snimku, što se i želelo izbeći 
-ali je često bolji rezultat nego problem tuneliranja.
+Kada se za ažuriranje svih objekata koristi ova formula, onda se simulacija može lako ubrzati $k$ puta
+(množenjem vrednosti $dt$ sa $k$), odnosno usporiti $k$ puta (deljenjem vrednost $dt$ sa $k$).
+Postavljanjem $dt$ na 0 svi objekti postaju statični. 
+Na vrlo niskim fps igre postaju neprijatne za korišćenje, a čak mogu postati i nestabilne.
+Dolazi do neželjenih efekata poput tuneliranja prikazanog na slici \ref{fig:tunnel}.
+Tada se često postavlja gornja granica na $dt$, pa 
+ako je vreme između dva koraka veće od te gornje granice onda će igra biti u usporenom snimku.
+To je nešto što svakako nije poželjno, ali predstavlja prihvatljiviju varijantu od toga da dodje do pojave tuneliranja.
 
-Pogon igara Unity deli sva ažuriranja na dve vrste: FixedUpdate i Update. 
-FixedUpdate se koristi za promene sila nad objektima pošto se koraci izračunavanja fizike izvode u fiksnim intervalima, 
-dok se Update koristi za operaicje koje je potrebno izvršiti pre svakog iscrtavanja slike. 
-Na primer, izmene korisničkog interfejsa igre spada pod Update, a primena sile ili obrtnog momenta spada pod FixedUpdate.
-Unity izvršava FixedUpdate i fiziku 50 puta u sekundi, nezavisno od broja slika u sekundi \cite{unity}.
-To znači da ako se igra izvršava na 25fps onda će otprilike biti dva poziva FixedUpdate po svakoj slici,
-a ako se izvršava na 100 fps tada između nekih slika neće biti nijednog poziva fizike i FixedUpdate.
+Pogon igara Unity deli sva ažuriranja na fiksna i opšta ažuriranja. 
+Fiksna ažuriranja se koriste za promene sila nad objektima 
+pošto se koraci u kojima se primenjuju neka pravila fizike izvode u fiksnim intervalima, 
+dok se opšta ažuriranja koriste za operacije koje je potrebno izvršiti pre svakog iscrtavanja slike. 
+Na primer, izmena korisničkog interfejsa igre spada pod opšta ažuriranja, a primena sile ili obrtnog momenta spada pod fiksna ažuriranja.
+Unity izvršava fiksno ažuriranje i fizička izračunavanja 50 puta u sekundi, nezavisno od broja slika u sekundi \cite{unity}.
+To znači da ako se igra izvršava na 25fps onda će otprilike biti dva poziva fiksnog ažuriranja na svaku iscrtanu sliku,
+a ako se izvršava na 100fps tada između nekih slika neće biti nijednog fizičkog izračunavanja ni fiksnog ažuriranja.
 
-\section{Razrešenje kolizije}
+\section{Metode za razrešavanje kolizije}
 \label{sec:razresenje}
 
-Prilikom razrešenja kolizije zadatak je da se pomere objekti tako da se više ne seku i
-da se postave njihovi novi vektori brzina i ubrzanja nakon kolizije.
+Razrešenje kolizije se sastoji od
+pomeranja objekata tako da se više ne seku i postavljanja novih vektora brzina i sila koje deluju na objekte.
 Nakon što algoritam detekcije kolizije odredi sve parove koji su u koliziji, 
-posmatranjem svakog para se radi razrešenje kolizije svih objekata.
+razmatranjem svakog para se radi razrešenje kolizije svih objekata.
 Postoje dva glavna načina za razrešenje kolizija \cite{Moore}.
 Jedan način je da se ubaci kruta opruga između dva objekta u koliziji.
 Sila opruge se primenjuje jednako u suprotnom smeru na ta dva objekta.
 Smer sile je takav da što pre razdvoji objekte. Metod sa oprugama nije težak 
-za implementaciju, dobar je i za tvrda tela i za fleksibilna, ali je problem što je 
-računski zahtevan. Što je kruća opruga potrebni su kraći vremenski koraci za fina 
-numerička izračunavanja.
+za implementaciju, dobar je i za čvrsta i za fleksibilna tela, ali je problem što je računski zahtevan. 
+Što je kruća opruga potrebni su kraći vremenski koraci za fina numerička izračunavanja.
 
 Drugi način je da se analitički izračunaju nova svojstva objekata u jednom koraku.
-Prvo se izračuna minimalni vektor translacije. Npr. za dve sfere $s_1$ i $s_2$ to je vektor $\vec{m}$
-određen centrima $c_1, c_2$ dve sfere čiji je intenzitet jednak razlici intenzitata zbira poluprečnika
+Najpre je potrebno izračunati minimalni vektor translacije. Npr. za dve sfere $s_1$ i $s_2$ to je vektor $\vec{m}$
+određen centrima $c_1, c_2$ dve sfere čiji je intenzitet jednak razlici intenziteta zbira poluprečnika
 $r_1, r_2$ dve sfere i intenziteta udaljenost centara, odnosno:
 \begin{equation}
 	\label{eq:razresenje2}
@@ -492,7 +512,7 @@ $r_1, r_2$ dve sfere i intenziteta udaljenost centara, odnosno:
 	(r_1 + r_2 - \| {c_1 - c_2} \| ) 
 \end{equation}
 
-Potom se jedna sfera translira za $ \frac{ \vec{v} }{ 2 }$, a druga za $ -\frac{ \vec{v} }{ 2 }$.
+Potom se jedna sfera translira za $ \frac{ \vec{m} }{ 2 }$, a druga za $ -\frac{ \vec{m} }{ 2 }$.
 Sada sfere više nisu u koliziji, ali je potrebno da se promene njihovi vektori brzina nakon sudara.
 Kada se koristi elastična kolizija onda se nove brzine računaju prema formulama:
 
@@ -507,41 +527,42 @@ Kada se koristi elastična kolizija onda se nove brzine računaju prema formulam
 \end{equation}
 
 
-pri čemu su $m_1$ i $m_2$ mase sfera.
+pri čemu su $m_1$ i $m_2$ redom mase sfera $s1$ i $s2$.
 Analitičko izračuavanje je glavni metod koji se koristi u pogonima igara.
 On je pogodniji za jake sudare, pošto je dovoljno jednom izračunati sve promene.
-Ipak, za nežnije kolizije poput tela koje je polegnuto na drugo, bolje je koristiti opruge.
+Ipak, za delikatnije sudare poput tela koje je polegnuto na drugo, bolje je koristiti opruge.
 
 % ==============================================================================
-\chapter{Odabrani algoritmi}
+\chapter{Algoritmi za detekciju kolizije}
 \label{sec:algoritmi}
 % ==============================================================================
 
 Rezultat izvršavanja algoritma detekcije kolizije je skup svih parova koji su u koliziji.
 U najgorem slučaju (na primer kada su svi objekti kocke na istoj poziciji) se svaki objekat
-seče sa svim ostalim i tada ima $ {n\choose 2}  $ preseka, gde je $n$ broj objekata. Međutim, taj najgori slučaj se retko dešava
-u stvarnim primenama, pa postoji mnoštvo algoritama detekcije kolizije čija složenost zavisi i od broja
-parova koji su u koliziji. Za takve algoritme kažemo da su izlazno-zavisni, tj.
-vreme izvršavanja zavisi i od veličine izlaza. Tokom razmatranja algoritama podrazumeva se da su svi
-objekti ograničavajuće kutije koje su paralelne osama, tj. AABB.
-Broj objekata koji se presecaju će nadalje biti označen kao $k$. 
+seče sa svim ostalim i tada ima $ {n\choose 2}  $ preseka, gde je $n$ broj objekata. 
 
-Pokazano je da optimalan algoritam koji pronalazi preseke n AABB tela u 3D prostoru ima složenost 
+Međutim, taj najgori slučaj se retko dešava u stvarnim primenama. 
+Stoga, bilo bi poželjno da složenost algoritma za detekciju kolizije zavisi od broja parova objekata koji su u koliziji.
+Za takve algoritme kažemo da su zavisni od izlaza, tj. njihovo vreme izvršavanja zavisi i od veličine izlaza. 
+Tokom razmatranja algoritama će se podrazumevati da su svi objekti ograničavajuće kutije koje su paralelne osama,
+tj. AABB. U daljem tekstu broj objekata koji se presecaju označen je sa $k$.
+
+Pokazano je da optimalan algoritam koji pronalazi preseke $n$ AABB tela ima složenost 
 $O(n \log^2 n + k)$ \cite{glavna1}. 
-U praksi postoji predstava u kakvim okolnostima treba algoritam detekcije kolizije da bude primenjen, pa 
+U praksi se obično zna u kakvim će okolnostima algoritam detekcije kolizije biti primenjen, pa 
 se na osnovu toga vrši odabir postojećih ili konstruišu novi algoritmi.
 
 \section{Osnovni algoritam}
 \label{subsec:triv}
 
-Intuitivno se može doći do trivijalnog algoritma detekcije kolizije. 
-Jednostavno se svaki za element proveri da li ima presek sa svim ostalim elementima.
-Algoritam je ispravan i njegova vremenska složenost je $\Theta (n^2) $, dok je prostorna složenost
-$O(n^2)$, odnosno $\Theta(k)$, pošto svaki par objekata koji je u koliziji treba sačuvati.
-Na složenost vremena izvršavanja ne utiču veličina objekata, njihova brzina, a ni broj parova kolizije.
-Glavna mana ovakvog algoritma je kvadratna vremenska složenost čak i kada nema nijedne kolizije.
+Do trivijalnog algoritma detekcije kolizije nije teško doći: za svaki element se proverava da li postoji presek sa svakim drugim elementom.
+Algoritam je ispravan i njegova vremenska složenost je $\Theta (n^2) $ (gde je $n$ broj objekata), dok je prostorna složenost
+$O(n^2)$, odnosno $\Theta(k)$ (gde je k broj parova objekata koji se presecaju), pošto svaki par objekata koji je u koliziji treba sačuvati.
+Na složenost vremena izvršavanja ne utiču veličina objekata, njihova brzina, ni broj parova koji su u koliziji.
 
-Bolji algoritmi rešavaju ovaj problem uglavnom particionisanjem prostora na manje potprostore, tako da
+Pseudokod algoritma je prikazan na \ref{alg:triv}.
+Glavna mana ovakvog algoritma je kvadratna vremenska složenost čak i kada nema nijedne kolizije.
+Do efikasnijih algoritama može se doći particionisanjem prostora na manje potprostore, tako da
 se provere kolizije vrše samo nad manjim podskupovima svih elemenata.
 
 \begin{algorithm}
@@ -554,7 +575,7 @@ se provere kolizije vrše samo nad manjim podskupovima svih elemenata.
 			\For{j:=i+1 to n}
 
 			\If{i-ti i j-ti objekti imaju presek}
-				\State dodaj (i, j) u skup Parovi
+				\State dodaj (i, j) u skup $Parovi$
 			\EndIf		
 		\EndFor
 		\EndFor
@@ -566,7 +587,7 @@ se provere kolizije vrše samo nad manjim podskupovima svih elemenata.
 \section{Oktri}
 \label{subsec:octree}
 
-Oktri (eng. {\em Octree}) je struktura podataka koja se koristi za rekurzivno deljenje trodimenzionog
+Oktri (eng. {\em Octree}) je prostorna struktura podataka koja se koristi za rekurzivno deljenje trodimenzionog
 prostora na oktante. Oktri je stablo kod koga svaki unutrasnji čvor ima tačno osmoro dece, odnosno oktanata. 
 Time unutrašnji čvorovi Oktrija dele prostor na osam podoktanata.
 U listovima se čuvaju objekti koji pripadaju tom oktantu koji taj list predstavlja.
