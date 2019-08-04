@@ -63,7 +63,7 @@
 \apstr{%
  Rezime.
 }
-
+ 
 % Ključne reči na srpskom jeziku (u odabranom pismu)
 \kljucnereci{detekcija kolizije, računarska grafika, vremenska koherentnost, algoritmi}
 
@@ -83,7 +83,11 @@
 \apstrakt
 % Sadržaj teze
 % \pagenumbering{arabic}
-\tableofcontents*
+
+\begingroup
+\vspace*{-5\baselineskip}
+\tableofcontents
+\endgroup
 
 \mainmatter
 
@@ -1049,6 +1053,10 @@ i vraća sve parove objekata koji jesu u koliziji. Takođe svaka implementira me
 o stanju algoritma specifičnom za njega. Npr. broj elemenata u unutrašnjim čvorovima oktrija ili broj 
 zamena u SAP algoritmu. Oni se koriste za merenje i za ispisivanje trenutnih informacija prilikom testiranja.
 
+\section{Vizuelizacija}
+
+Todo.
+
 % ==============================================================================
 \chapter{Evaluacija}
 \label{sec:evaluacija}
@@ -1081,18 +1089,17 @@ za pravljenje grafika.
 
 \section{Opšti zaključci}
 
-Za početak, potrebno je ustanoviti koliki uticaj ima postupak iscrtavanja na vreme izvršavanja.
-U slučaju da iscrtavanje troši veći ili približan deo vremena u odnosu na detekciju kolizije, onda 
-bi bilo nepravilno meriti ih zajedno. Zato je obezbežen način da se isključi iscrtavanje ako bi se to dešavalo.
+Za početak, potrebno je ustanoviti  koliki uticaj na vreme izvršavanja ima postupak iscrtavanja.
+U slučaju da iscrtavanje troši veći ili sličan udeo vremena  u odnosu na detekciju kolizije bilo bi nepravilno meriti ih zajedno.
+U programu je svakako omogućeno da se isključi iscrtavanje.
 
-
-Na slici \ref{fig:drawVsNoDraw} i sledećim graficima su date referentne vrednosti:
+Na svim narednim graficima (osim \ref{fig:dtSapCrawl} ) prikazane su sledeće referentne vrednosti:
 \begin{itemize}  
-	\item Prava koja predstavlja linearnu zavisnost $y$ od $x$ prikazana isprekidanom zelenom bojom.
-	Prava je sa koeficijentom pravca jednakim $y_0/x_0$.
-	\item Ciljna vrednost od 60 slika po sekundi prikazana žutom bojom.
+	\item Prava koja predstavlja linearnu zavisnost $y$ od $x$ (prikazana isprekidanom zelenom bojom).
+	Koeficijent prave je jednak odnosu najmanje y i najmanje x vrednosti, tj. $y_0/x_0$.
+	\item Ciljna vrednost od 60 slika po sekundi (prikazana žutom bojom).
 	60 slika po sekundi je traženi minimum za računare.
-	\item Ciljna vrednost od 30 slika po sekundi prikazana crvenom bojom.
+	\item Ciljna vrednost od 30 slika po sekundi (prikazana crvenom bojom).
 	30 slika po sekundi je traženi minimum za igre na konzolama.
 \end{itemize}  
 
@@ -1101,7 +1108,7 @@ Na slici \ref{fig:drawVsNoDraw} i sledećim graficima su date referentne vrednos
 	\includegraphics[
 		trim= 0 0 0 19, clip,
 		scale=1]{idleDrawVsNoDraw.pdf}
-	\caption{Relativan dt u zavisnosti od broja objekata - isključena detekcija kolizije.}
+	\caption{Relativan dt u zavisnosti od broja objekata u slučaju kada je isključena detekcija kolizije.}
 	\label{fig:drawVsNoDraw}
 \end{figure}
 
@@ -1109,17 +1116,17 @@ Na slici \ref{fig:drawVsNoDraw} prikazan je grafik zavisnosti relativnog dt u od
 Detekcija kolizije je isključena, tako da na vreme utiče samo kretanje objekata i iscrtavanje.
 Kada je iscrtavanje uključeno onda vreme izvršavanja raste linearno (sa koeficijentom manjim od 1).
 Na oko 24 000 objekata relativan dt prelazi 1, a na 50 000 objekata dt prelazi 2. 
-Sa druge strane, kada je crtanje isključeno vreme izvršavanja je mnogo manje. Svakako raste linearno 
-sa brojem objekata, ali sa konstantom koja je preko red veličine manja od iscrtavanja. 
-Čak i kada ima preko 180 000 objekata program se izvršava sa malim relativnim dt, 
+Sa druge strane, kada je crtanje isključeno vreme izvršavanja je mnogo manje. 
+Ono i dalje raste linearno sa brojem objekata, ali je konstanta uz linearni član za red veličine manja nego kada je iscrtavanje uključeno.
+Čak i kada je broj objekata veći od 180 000 program se izvršava sa malim relativnim dt, 
 što znači da je to vreme zanemarljivo u odnosu na vreme potrebno za detekciju kolizije.
 
 Na slici \ref{fig:basic} prikazana je zavisnost relativnog dt od broja objekata kada se koristi 
-trivijalan algoritam kolizije. Na grafiku se naravno vidi nagli rast, što je i očekivano pošto 
+trivijalan algoritam za detekciju kolizije. Na grafiku se uočava nagli rast, što je i očekivano pošto 
 je algoritam kvadratne vremenske složenosti. Čak pre 2000 objekata relativan dt postaje veći od 1, 
 a na 2500 veći od 2. Takvo rešenje je neupotrebljivo za veći broj objekata. Jedina "prednost" je što 
-je složenost vremena izvršavanja ista koliko god da se brzo objekti kreću, koje god da su veličine i koliko god 
-da ih se preseca.
+je vreme izvršavanja isto koliko god se brzo objekti kretali, koje god da su veličine i koliko god 
+da ih se međusobno preseca.
 
 \begin{figure}[h!]
 	\centerfloat
@@ -1132,10 +1139,14 @@ da ih se preseca.
 
 \section{Oktri}
 
-Na slici \ref{fig:oktri1} su prikazane performanse oktrija sa maksimalnom dubinom od deset nivoa i četri maksimalna elementa u listu pre podele na podoktante.
-Prati referentnu liniju linearne zavisnosti na početku. 
-I za manji broj objekata je višestruko bolji u odnosu na prethodno prikazani, pada ispod 60fps tek nakon 12 000 objekata, i ispod 30fps nakon 20 000.
-Ipak, na slici \ref{fig:oktri2} se primećuje brže udaljavanje od linearne prave, što je za očekivati pošto algoriam nije linearne vremenske složenosti.
+Na slici \ref{fig:oktri1} su prikazane performanse oktrija sa maksimalnom dubinom od deset nivoa i sa maksimalnom vrednošću od četiri elementa u listu.
+Može se primetiti da on za manji broj objekata prati referentnu liniju linearne zavisnosti.
+Za manji broj objekata on je višestruko bolji od prehtodno prikazanog (trivijalnog) algoritma.
+Broj slika u sekundi pri korišćenju oktrija pada ispod 60fps tek nakon 12 000 objekata, a ispod 30fps nakon 20 000 objekata.
+I za manji broj objekata je višestruko bolji u odnosu na prethodno prikazani, pada 
+Ipak, na slici \ref{fig:oktri2} prikazano je ponašanje istog algoritma za veće vrednosti broja objekata. 
+Može se uočiti brže udaljavanje od referentne prave linearne zavisnosti,
+pošto algoriam nije linearne vremenske složenosti.
 
 \begin{figure}[h!]
 	\centerfloat
@@ -1151,15 +1162,18 @@ Ipak, na slici \ref{fig:oktri2} se primećuje brže udaljavanje od linearne prav
 	\includegraphics[
 		trim=0 0 0 19,clip,
 		scale=1]{oktri_dt_vs_numobj_zoomout.pdf}
-	\caption{Zavisnost relativnog dt od broja objekata - oktri, više objekata.}
+	\caption{Zavisnost relativnog dt od broja objekata za veći broj objekata - oktri.}
 	\label{fig:oktri2}
 \end{figure}
 
-Oktri sa i bez duplikata su često sličnih performansi. Jedan primer kada je razlika ogromna je kada je veliki broj objekata na istom mestu.
-Za potrebe demonstriranja se koristi scenario gde se objekti nasumično kreću i onda svi bivaju povučeni ka jednoj istoj tački.
+Grafici \label{fig:oktri1} i \label{fig:oktri2} se odnose na oktri sa duplikatima.
+Oktri sa i bez duplikata su često sličnih performansi.
+Međutim, postoje situacije kada to nije tako. 
+Jedna od njih je kada se veliki broj objekata nalazi na istom mestu.
+Za potrebe demonstriranja ove pojave se koristi scenario gde se objekti nasumično kreću i onda svi bivaju povučeni ka jednoj istoj tački.
 Tada se svi nalaze na istom mestu za trenutak, i potom se razilaze.
-Na slici \ref{fig:octreSpike} se vide tri manja plava skoka za oktri bez duplikata, i dva narandžasta skoka reda veličine za oktri sa duplikatima.
-Za ovo merenje je isključeno razrešenje kolizije da bi više objekata bilo u koliziji, što pokazuje interesantno svojstvo da iako je potrebna dodatna obrada za razrešenje kolizije, 
+Ovaj efekat prikazan je na slici \ref{fig:octreSpike} i mogu se uočiti tri manja plava skoka za oktri bez duplikata, i dva narandžasta skoka reda veličine za oktri sa duplikatima.
+Za potrebe ovog merenja je isključeno razrešenje kolizije da bi više objekata bilo u koliziji, što pokazuje interesantno svojstvo da iako je za razrešavanje kolizija potrebna dodatna obrada, 
 ona onemogućava grupisanje preseka objekata i time ubrzava izvršavanje oktrija (i mnogih drugih algoritama detekcije kolizije).
 
 
@@ -1173,13 +1187,15 @@ ona onemogućava grupisanje preseka objekata i time ubrzava izvršavanje oktrija
 \end{figure}
 
 
-Dok se razvijao projekat odabrana je konstanta 4 za maksimalan broj elemenata u listu oktrija proizvoljno, 
-vodeći se logikom da je mali broj povoljan zbog izbegavanja kvadratnog broja upoređivanja, a da nije baš jedinica, kada bi se previše listovi delili.
-Na slici \ref{fig:octree_leaf} se zapaža da četvorka nije loš izbor i tada je u proseku 69fps. 
-Jedinica je najgori parametar pošto dovodi do viška rekurzivnog particionisanja prostora, relativan dt opada do koeficijenta 32 i nadalje naste.
-Najbolja vrednost parametra je 32, kada je prosečno 94 što je čak 26.5\% bolje! 
-Ubrzanje od 26.5\% je u praksi impresivno, pogotovo što je postignuto samo promenom jednog koeficijenta.
-Pri merenju je fiskno 10 000 objekata i korišćen je oktri sa duplikatima.
+Tokom razvoja projekta kao vrednost maksimalnog dozvoljenog broja elemenata u listu bila je odabrana konstanta 4. 
+Ova vrednost je izabrana vodeći se logikom da je manja vrednost pogodna zbog izbegavanja kvadratnog broja upoređivanja, 
+a da nije dobro ni da je sasvim mala, jer bi se listovi previše često delili. 
+Na slici \ref{fig:octree_leaf} se zapaža da ovako odabrana vrednost nije loš izbor i tada je broj slika u sekundi 69 (0.89 relativan $dt$). 
+Ispostavlja se da 1 predstavlja najlošiju vrednost za ovaj parametar pošto dovodi do viška rekurzivnog particionisanja prostora.
+Pokazuje se da sa porastom vrednosti maksimalnog broja elemenata u listu relativan dt opada sve do vrednosti 32, od koje počinje da raste.
+Najbolje performanse algoritam postiže za vrednost 32, kada je broj slika u sekundi 94 što je čak 36.2\% bolje (u odnosu na prethodnih 69)! 
+Ubrzanje od 36.2\% je u praksi veoma značajno, pogotovo što je postignuto samo promenom jednog koeficijenta.
+U svim ovim merenjima broj objekata je fiksan i iznosi 10 000 objekata i korišćen je oktri sa duplikatima.
 
 \begin{figure}[h!]
 	\centerfloat
@@ -1192,15 +1208,15 @@ Pri merenju je fiskno 10 000 objekata i korišćen je oktri sa duplikatima.
 
 
 Maksimalna dubina oktrija je postavljena na 10 tokom razvoja projekta. 
-Njenom promenom se ne postiže mnogo, osim jakog usporenja kad bi se postavila na 1 ili 2, jer se tad skoro svi parovi moraju ispitati.
-Vrednosti 9 do 12 predstavljaju razuman segment za odabir maksimalne dubine, jer omogućavaju dovoljno particionisanje prostora 
+Njenom promenom se ne postiže mnogo, osim jakog usporenja kad bi se postavila na 1 ili 2, jer se tad skoro svi parovi objekata moraju ispitati.
+Vrednosti 9 do 12 predstavljaju segment pogodnih vrednosti za odabir maksimalne dubine, jer omogućavaju dovoljno particionisanje prostora 
 da se izbegne kvadratan broj operacija ispitivanja preseka,
-a u slučaju da se više objekata preklapa će zaustaviti rano rekurzivne podele koje pokušavaju da ih podele u više oktanata.
+a u slučaju da se više objekata preklapa izvršiće rano zaustavljanje rekurzivnih podela koje pokušavaju da ih razmeste u više oktanata.
 
 \section{SAP}
 
 
-SAP se ponaša dopustivo do 11 000 objekata, što se vidi na slici \ref{fig:sap1}.
+Algoritam SAP pokazuje dobro ponašanje dok je broj objekata ispod 11 000 (slika \ref{fig:sap1}).
 
 \begin{figure}[h!]
 	\centerfloat
@@ -1211,15 +1227,16 @@ SAP se ponaša dopustivo do 11 000 objekata, što se vidi na slici \ref{fig:sap1
 	\label{fig:sap1}
 \end{figure}
 
-Preko 11 000 objekata počinje da se manifestuje njegova glavna razlika u odnosu na ostale algoritme.
-Za veći broj objekata potrebno je više vremena da se obradi detekcija kolizije, što produžava vreme između dva ažuriranja pozicija.
+Kada je broj objekata veći od 11 000 počinje da se manifestuje njegova glavna razlika u odnosu na ostale algoritme.
+Naime, za veći broj objekata potrebno je više vremena da se obradi detekcija kolizije, što produžava vreme između dva ažuriranja pozicija.
 Što je vreme između dva ažuriranja pozicija veće, to je i više vremena proteklo u simulaciji, samim tim će i objekti biti udaljeniji od svojih prethodnih pozicija 
 nego što bi bio slučaj sa kraćim vremenom između dva koraka. Veći pomeraj objekata znači da je niz koji se održava sortiranim u SAP algoritmu daleko od toga da bude 
-sortiran, pa je potrebno dodatno zamena elemenata u nizu dok on ponovo postane sortiran. 
-To opet povećava vreme izvršavanja između dva koraka, što vodi većoj udaljenosti objekta od prošle pozicije, i tako u krug.
+sortiran, pa je potrebno izvesti dodatne zamene elemenata u nizu dok on ponovo postane sortiran. 
+Time se iznova povećava vreme izvršavanja između dva koraka, što vodi većoj udaljenosti objekta od prošle pozicije, i tako u krug.
 
-Taj princip je prikazan na slici \ref{fig:dtSapCrawl}, gde je fiskno 12 800 objekata na sceni, a vreme izvršavanja eksplodira, čak ispod jednog iscrtavanja u sekundi.
-Vidi se direktna veza broja zamena i relativnog dt pošto se zbog kvadratnog broja zamena katastrofalno uspori algoritam.
+Ovaj fenomen je prikazan na slici \ref{fig:dtSapCrawl}, gde je ilustrovan slučaj kada je fiksiran broj od 12 800 objekata na sceni,
+a vreme izvršavanja eksplodira, čak ispod jednog iscrtavanja u sekundi.
+Vidi se direktna veza broja zamena i relativnog $dt$ jer broj zamena kvadratne složenosti čini algoritam veoma sporim.
 
 \begin{figure}[h!]
 	\centerfloat
@@ -1230,28 +1247,28 @@ Vidi se direktna veza broja zamena i relativnog dt pošto se zbog kvadratnog bro
 	\label{fig:dtSapCrawl}
 \end{figure}
 
-Osim što brzina kretanja može katastrofalno da utiče na performanse SAP algoritma, tako i smanjivanje brzine utiče povoljno na njegovo vreme izvršavanja.
+Kao što povećanje brzine kretanja može imati jako negativne posledice na performanse SAP algoritma, tako i smanjivanje brzine utiče povoljno na njegovo vreme izvršavanja.
 Upoređivanje vremena za tri različite brzine objekata je dato na slici \ref{fig:sap3speeds}. 
-Prvi je meren pri podrazumevanoj brzini, drugi pri duplo manjoj i treći pri četri puta manjoj brzini.
-Što se sporije objekti kreću to je tačka kada počinje povratna sprega da uzima maha više odložena.
-U svakom slučaju će se to desiti nakon nekog broja elemenata, tako da u zavisnosti od situacije SAP algoritam može biti loš ili idealan.
+Prvo merenje je izvršeno pri podrazumevanoj brzini, drugo pri duplo manjoj i treće pri četri puta manjoj brzini.
+Što se sporije objekti kreću to je tačka kada povratna sprega počinje da uzima maha više odložena.
+Međutim, izvesno je da će se to u nekom trenutku desiti, tako da u zavisnosti od situacije SAP algoritam može biti loš ili idealan.
 
 \begin{figure}[h!]
 	\centerfloat
 	\includegraphics[
 		trim=0 0 0 19,clip,
 		scale=1]{sap3speeds.pdf}
-	\caption{Upoređivanje rasta relativnog dt u zavisnosti od objekta pri njihovim različitim brzinama - SAP.}
+	\caption{Upoređivanje rasta relativnog dt u zavisnosti od broja objekta pri njihovim različitim brzinama - SAP.}
 	\label{fig:sap3speeds}
 \end{figure}
 
-U do sada razmatranim slučajevima svi prelaze granicu od dva relativna dt pre 20 000 objekata.
+Svi do sada razmatrani algoritmi detekcije kolizije pre 20 000 objekata prelaze granicu od dva relativna $dt$.
 Na slici \ref{fig:sap_great} je prikazana situacija kada je SAP algoritam ubedljivo najbolji.
 Prilikom merenja je isključeno iscrtavanje pošto ono traje duže od samog algoritma kolizije u ovakvom slučaju,
-što se može videti na \ref{fig:drawVsNoDraw}, jer na oko 50 000 objekata relativan dt prelazi 2.
-Ovde je išestruko je bolji SAP od ostalih, dostižući 60fps tek na 75 000, a 30fps na 92 000 objekata.
-Pritom ostaje ispod referentne linearne prave, sve do kraja kada se približava broju objekata koji vodi 
-do akumuliranja usporavanja, što je oko 100 000.
+što se može videti na \ref{fig:drawVsNoDraw}, jer za oko 50 000 objekata relativan dt prelazi 2.
+Ovde je SAP višestruko bolji od ostalih, dostižući 60fps tek na 75 000, a 30fps na 92 000 objekata.
+Pritom ostaje ispod referentne prave koja označava linearnu zavisnost, sve do momenta kada se približava broju objekata koji dovodi 
+do akumuliranja usporavanja, koji iznosi oko 100 000.
 
 
 \begin{figure}[h!]
@@ -1259,7 +1276,7 @@ do akumuliranja usporavanja, što je oko 100 000.
 	\includegraphics[
 		trim=0 0 0 19,clip,
 		scale=1]{sap_great.pdf}
-	\caption{Relativan dt u zavisnosti od objekta kada se sporo kreću - SAP.}
+	\caption{Relativan dt u zavisnosti od broja objekta kada se objekti sporo kreću - SAP.}
 	\label{fig:sap_great}
 \end{figure}
 

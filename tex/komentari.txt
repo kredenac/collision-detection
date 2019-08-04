@@ -415,81 +415,83 @@ y strana 32: Matična -> Matična ploča
 y strana 32: Pritom se pazi  -> Pritom se vodilo računa
 y strana 32: za manipulisanje podacima -> za obradu podataka
 
-strana 33: Naslov poglavlja 5.1 izmeniti u Opšti zaključci
-strana 33:  koliki uticaj ima postupak iscrtavanja na vreme izvršavanja ->  koliki uticaj na vreme izvršavanja ima postupak iscrtavanja
-strana 33:  veći ili približan deo vremena -> veći ili sličan udeo vremena 
-strana 33: onda bi bilo nepravilno meriti iz zajedno -> bilo bi nepravilno meriti ih zajedno
-strana 33: Zato je obezbežen način da se isključi iscrtavanje ako bi se to dešavalo. -> U programu je svakako omogućeno da se isključi iscrtavanje.
-strana 33: i sledećim graficima -> napisati koji su grafici u pitanju ili ako je tačno reći "na svim narednim graficima"
-strana 33: u naslovu slike 5.1: isključena detekcija kolizije -> u slučaju kada je isključena detekcija kolizije
-strana 33: mozda vrednost po x osi staviti u formatu 8*10^4, ovako veliki broj nula kvari sliku
-strana 33: y0 /x0 -> šta su x0 i y0?
-strana 33:  su date referentne vrednosti -> prikazane su naredne referentne vrednosti
-strana 33: sva tri puta deo rečenice "prikazana zelenom/žutom/crvenom bojom" bih stavila u zagradu
-Mozda zutu boju zameniti nekom vidljivijom?
-strana 34:  Svakako raste linearno sa brojem objekata, ali sa konstantom koja je ... -> Ono i dalje raste linearno sa brojem objekata, ali je konstanta uz linearni član za red veličine manja nego kada je iscrtavanje uključeno.
-strana 34: Čak i kada ima pre 180000 objekata -> Čak i kada je broj objekata veći od 180000
+y strana 33: Naslov poglavlja 5.1 izmeniti u Opšti zaključci
+y but why strana 33:  koliki uticaj ima postupak iscrtavanja na vreme izvršavanja ->  koliki uticaj na vreme izvršavanja ima postupak iscrtavanja
+y strana 33:  veći ili približan deo vremena -> veći ili sličan udeo vremena 
+y strana 33: onda bi bilo nepravilno meriti iz zajedno -> bilo bi nepravilno meriti ih zajedno
+y strana 33: Zato je obezbežen način da se isključi iscrtavanje ako bi se to dešavalo. -> U programu je svakako omogućeno da se isključi iscrtavanje.
+nnny strana 33: i sledećim graficima -> napisati koji su grafici u pitanju ili ako je tačno reći "na svim narednim graficima"
+ strana 33: u naslovu slike 5.1: isključena detekcija kolizije -> u slučaju kada je isključena detekcija kolizije
+yn todo strana 33: mozda vrednost po x osi staviti u formatu 8*10^4, ovako veliki broj nula kvari sliku
+ strana 33: y0 /x0 -> šta su x0 i y0?
+y strana 33:  su date referentne vrednosti -> prikazane su naredne referentne vrednosti
+y strana 33: sva tri puta deo rečenice "prikazana zelenom/žutom/crvenom bojom" bih stavila u zagradu
+nnn namerno sam stavio da se slabo vide, nije u njima poenta ali je dobro da su tu radi poredjenja, Mozda zutu boju zameniti nekom vidljivijom?
+y strana 34:  Svakako raste linearno sa brojem objekata, ali sa konstantom koja je ... -> Ono i dalje raste linearno sa brojem objekata, ali je konstanta uz linearni član za red veličine manja nego kada je iscrtavanje uključeno.
+y strana 34: Čak i kada ima pre 180000 objekata -> Čak i kada je broj objekata veći od 180000
+todo zameni Slika 5.1 crtanje i bez crtanja
+y strana 34: trivijalan algoritam kolizije -> trivijalan algoritam za detekciju kolizije
+y strana 34: se naravno vidi -> se uočava
+y strana 34: složenost vremena izvršavanja ista -> vreme izvršavanja isto 
+y strana 34: koliko god da se brzo objekti kreću -> koliko god se brzo objekti kretali
+y strana 34: ih se preseca -> ih se međusobno preseca
+todo strana 34: da li oznaku "uzorak" na slici nekako bolje imenovati?
+y strana 34:  četri maksimalna elementa u listu pre podele na podoktante. -> sa maksimalnom vrednošću od četiri elementa u listu.
+y strana 34: Prati referentnu... -> Može se primetiti da on za manji broj objekata prati referentnu liniju linearne zavisnosti.
 
-strana 34: trivijalan algoritam kolizije -> trivijalan algoritam za detekciju kolizije
-strana 34: se naravno vidi -> se uočava
-strana 34: složenost vremena izvršavanja ista -> vreme izvršavanja isto 
-strana 34: koliko god da se brzo objekti kreću -> koliko god se brzo objekti kretali
-strana 34: ih se preseca -> ih se međusobno preseca
-strana 34: da li oznaku "uzorak" na slici nekako bolje imenovati?
-strana 34:  četri maksimalna elementa u listu pre podele na podoktante. -> sa maksimalnom vrednošću od četiri elementa u listu.
-strana 34: Prati referentnu... -> Može se primetiti da on za manji broj objekata prati referentnu liniju linearne zavisnosti.
-strana 35: I za manji broj ... -> Za manji broj objekata on je višestruko puta bolji od prehtodno prikazanog (trivijalnog) algoritma
-strana 35: pada ispod 60fps -> Šta pada? Preformulisati rečenicu
-strana 35: Ipak, na slici 5.4 se primećuje  -> Na slici 5.4 prikazano je ponašanje istog algoritma za veće vrednosti broja objekata. Može se uočiti brže udaljavanje od referentne prave linearne zavisnosti
-strana 35: algoriam -> algoritam
-možda u nazivima svih slika koje se odnose na oktri, umesto oktri napisati - algoritam baziran na oktrima?
-U naslovu slike 5.4 umesto - Oktri ,više objekata napisati za veći broj objekata - oktri
-strana 35: Oktri sa i bez duplikata su često sličnih performansi. -> Negde napisati na koju od ove dve varijante se odnose prethodni grafici
-strana 35: Jedan primer kada je razlika ogromna... -> Međutim, postoje situacije kada to nije tako. Jedna od njih je kada se veliki broj objekata nalazi na istom mestu
-strana 35: Za potrebe demonstriranja -> Za potrebe demonstriranja ove pojave
-strana 35: Na slici 5.5 se vide -> Ovaj efekat prikazan je na slici 5.5 i mogu se uočiti 
-strana 35:  Za ovo merenje -> Za potrebe ovog merenja
-strana 35: iako je potrebna dodatna obrada za razrešenje kolizije -> iako je za razrešavanje kolizija potrebna dodatna obrada
-strana 35: Dok se razvijao projekat odabrana je konstanta 4 za maksimalan broj elemenata u listu Oktrija proizvoljno, vodeći se logikom da je mali broj povoljan zbog izbegavanja kvadratnog broja upoređivanja, a da nije baš jedinica, kada bi se previše listovi delili. -> Tokom razvoja projekta kao vrednost maksimalnog dozvoljenog broja elemenata u listu bila je odabrana konstanta 4. Ova vrednost je izabrana vodeći se logikom da je manja vrednost pogodna zbog izbegavanja kvadratnog broja upoređivanja, a da nije dobro ni da je sasvim mala, jer bi se listovi previše često delili. 
-strana 35: da četvorka -> da ovako odabrana vrednost
-strana 35: i tada je u proseku... -> šta je u proseku? preformulisati ovaj deo rečenice
+y strana 35: I za manji broj ... -> Za manji broj objekata on je višestruko puta bolji od prehtodno prikazanog (trivijalnog) algoritma
+y strana 35: pada ispod 60fps -> Šta pada? Preformulisati rečenicu
+y strana 35: Ipak, na slici 5.4 se primećuje  -> Na slici 5.4 prikazano je ponašanje istog algoritma za veće vrednosti broja objekata. Može se uočiti brže udaljavanje od referentne prave linearne zavisnosti
+y strana 35: algoriam -> algoritam
+nnn sto? znam da je struktura, ali ona dolazi sa svojim operacijama, tkd mislim da je u redu. možda u nazivima svih slika koje se odnose na oktri, umesto oktri napisati - algoritam baziran na oktrima?
+y U naslovu slike 5.4 umesto - Oktri ,više objekata napisati za veći broj objekata - oktri
+y strana 35: Oktri sa i bez duplikata su često sličnih performansi. -> Negde napisati na koju od ove dve varijante se odnose prethodni grafici
+y strana 35: Jedan primer kada je razlika ogromna... -> Međutim, postoje situacije kada to nije tako. Jedna od njih je kada se veliki broj objekata nalazi na istom mestu
+y strana 35: Za potrebe demonstriranja -> Za potrebe demonstriranja ove pojave
+y strana 35: Na slici 5.5 se vide -> Ovaj efekat prikazan je na slici 5.5 i mogu se uočiti 
+y strana 35:  Za ovo merenje -> Za potrebe ovog merenja
+y y but why strana 35: iako je potrebna dodatna obrada za razrešenje kolizije -> iako je za razrešavanje kolizija potrebna dodatna obrada
+y strana 35: Dok se razvijao projekat odabrana je konstanta 4 za maksimalan broj elemenata u listu Oktrija proizvoljno, vodeći se logikom da je mali broj povoljan zbog izbegavanja kvadratnog broja upoređivanja, a da nije baš jedinica, kada bi se previše listovi delili. 
+y -> Tokom razvoja projekta kao vrednost maksimalnog dozvoljenog broja elemenata u listu bila je odabrana konstanta 4. Ova vrednost je izabrana vodeći se logikom da je manja vrednost pogodna zbog izbegavanja kvadratnog broja upoređivanja, a da nije dobro ni da je sasvim mala, jer bi se listovi previše često delili. 
+y strana 35: da četvorka -> da ovako odabrana vrednost
+y strana 35: i tada je u proseku... -> šta je u proseku? preformulisati ovaj deo rečenice
+y strana 36, naslov slike 5.5:  objektata ->  objekata
 
-strana 36, naslov slike 5.5:  objektata ->  objekata
-strana 37: Jedinica je najgori parametar -> Pokazuje se da 1 predstavlja najlošiju vrednost za ovaj parametar
-strana 37: particionisanja prostora, -> particionisanja prostora.
-strana 37:  relativan dt opada do koeficijenta 32 i nadalje naste -> Pokazuje se da sa porastom vrednosti maksimalnog broja elemenata u listu relativan dt opada sve do vrednosti 32, od koje počinje da raste.
-strana 37: Najbolja vrednost parametra je 32 -> Najbolje performanse algoritam postiže za vrednost 32 
-strana 37:  kada je prosečno 94 -> šta je prosečno 94?
-strana 37: je u praksi impresivno -> je u praksi veoma značajno
-strana 37: Pri merenju je fiskno 10 000 objekata -> U svim ovim merenjima broj objekata je fiksan i iznosi 10 000 objekata
-strana 37:  tad skoro svi parovi ->  tad skoro svi parovi objekata
-strana 37: predstavljaju razuman segment -> predstavljaju segment pogodnih vrednosti
-strana 37:  će zaustaviti rano rekurzivne podele ->  izvršiće rano zaustavljanje rekurzivnih podela
-strana 37: SAP se ponaša -> Algoritam SAP pokazuje dobro ponašanje dok je broj objekata ispod 11 000 (slika 5.7)
-strana 37: Preko 11 000 objekata -> Kada je broj objekata veći od 11 000
-strana 37: Za veći broj objekata -> Naime, za veći broj objekata 
+y strana 37: Jedinica je najgori parametar -> Pokazuje se da 1 predstavlja najlošiju vrednost za ovaj parametar
+y strana 37: particionisanja prostora, -> particionisanja prostora.
+y strana 37:  relativan dt opada do koeficijenta 32 i nadalje naste -> Pokazuje se da sa porastom vrednosti maksimalnog broja elemenata u listu relativan dt opada sve do vrednosti 32, od koje počinje da raste.
+y strana 37: Najbolja vrednost parametra je 32 -> Najbolje performanse algoritam postiže za vrednost 32 
+y strana 37:  kada je prosečno 94 -> šta je prosečno 94?
+y strana 37: je u praksi impresivno -> je u praksi veoma značajno
+y strana 37: Pri merenju je fiskno 10 000 objekata -> U svim ovim merenjima broj objekata je fiksan i iznosi 10 000 objekata
+y strana 37:  tad skoro svi parovi ->  tad skoro svi parovi objekata
+y strana 37: predstavljaju razuman segment -> predstavljaju segment pogodnih vrednosti
+y strana 37:  će zaustaviti rano rekurzivne podele ->  izvršiće rano zaustavljanje rekurzivnih podela
+y strana 37: SAP se ponaša -> Algoritam SAP pokazuje dobro ponašanje dok je broj objekata ispod 11 000 (slika 5.7)
+y strana 37: Preko 11 000 objekata -> Kada je broj objekata veći od 11 000
+y strana 37: Za veći broj objekata -> Naime, za veći broj objekata 
 
-strana 38:  potrebno dodatno zamena elemenata  ->  potrebno izvesti dodatne zamene elemenata 
-strana 38: To opet povećava -> Time se iznova povećava
-strana 38: Taj princip -> Ovaj fenomen
-strana 38:  gde je fiskno 12 800 objekata na sceni, -> gde je ilustrovan slučaj kada je fiksiran broj od 12 800 objekata na sceni
-strana 38:  pošto se zbog kvadratnog broja zamena katastrofalno uspori algoritam -> jer broj zamena kvadratne složenosti čini algoritam veoma sporim
-strana 38: Osim što brzina kretanja može katastrofalno -> da li se ovde misli na povećanje brzine kretanja? Reč katastrofalno malo ublažiti 
-strana 38: Prvi je meren -> Prvo merenje je izvršeno
-strana 38: drugi -> drugo
-strana 38: treći pri četri -> treće pri četiri
-strana 38:  počinje povratna sprega -> povratna sprega počinje
-strana 38:  U svakom slučaju će se to desiti nakon nekog broja elemenata -> Međutim, izvesno je da će se to u nekom trenutku desiti
-strana 39: U do sada razmatranim slučajevima svi prelaze granicu -> na šta se odnosi svi? preformulisati rečenicu
-strana 39: jer na oko -> jer za oko
-strana 39:  Ovde je išestruko je bolji SAP od ostalih, ->  Ovde je SAP višestruko bolji od ostalih algoritama,
-strana 39: linearne prave -> prava je uvek linearna :) ovo preformulisati
-strana 39:  sve do kraja -> sve do momenta
-strana 39: koji vodi -> koji dovodi
-strana 39:  što je oko 100 000 -> koji iznosi oko 100 000
-strana 40: Naziv slika 5.9 i 5.10: u zavisnosti od objekta ->  u zavisnosti od broja objekata
-strana 40: Naziv slike 5.10: kada se sporo kreću -> kada se objekti sporo kreću
-strana 40: Nedostaje evaluacija za metod celija i portala -- ako neće biti dodato u rad napisati zašto
-strana 40: Bilo bi dobro na kraju nekako uporediti sve algoritme međusobno, tipa ako je ovakva situacija onda je najbolji ovaj algoritam, ako važi ovaj ili ovaj uslov onda drugi i slično
-- Dodati i poglavlje/potpoglavlje o vizuelizaciji u kome bi se dalo par snapshot-ova aplikacije
+y strana 38:  potrebno dodatno zamena elemenata  ->  potrebno izvesti dodatne zamene elemenata 
+y strana 38: To opet povećava -> Time se iznova povećava
+y strana 38: Taj princip -> Ovaj fenomen
+y strana 38:  gde je fiskno 12 800 objekata na sceni, -> gde je ilustrovan slučaj kada je fiksiran broj od 12 800 objekata na sceni
+y strana 38:  pošto se zbog kvadratnog broja zamena katastrofalno uspori algoritam -> jer broj zamena kvadratne složenosti čini algoritam veoma sporim
+y strana 38: Osim što brzina kretanja može katastrofalno -> da li se ovde misli na povećanje brzine kretanja? Reč katastrofalno malo ublažiti 
+y strana 38: Prvi je meren -> Prvo merenje je izvršeno
+y strana 38: drugi -> drugo
+y strana 38: treći pri četri -> treće pri četiri
+y strana 38:  počinje povratna sprega -> povratna sprega počinje
+y strana 38:  U svakom slučaju će se to desiti nakon nekog broja elemenata -> Međutim, izvesno je da će se to u nekom trenutku desiti
+y strana 39: U do sada razmatranim slučajevima svi prelaze granicu -> na šta se odnosi svi? preformulisati rečenicu
+y strana 39: jer na oko -> jer za oko
+y strana 39:  Ovde je išestruko je bolji SAP od ostalih, ->  Ovde je SAP višestruko bolji od ostalih algoritama,
+y strana 39: linearne prave -> prava je uvek linearna :) ovo preformulisati
+y strana 39:  sve do kraja -> sve do momenta
+y strana 39: koji vodi -> koji dovodi
+y strana 39:  što je oko 100 000 -> koji iznosi oko 100 000
+y strana 40: Naziv slika 5.9 i 5.10: u zavisnosti od objekta ->  u zavisnosti od broja objekata
+y strana 40: Naziv slike 5.10: kada se sporo kreću -> kada se objekti sporo kreću
+ny strana 40: Nedostaje evaluacija za metod celija i portala -- ako neće biti dodato u rad napisati zašto
+todo strana 40: Bilo bi dobro na kraju nekako uporediti sve algoritme međusobno, tipa ako je ovakva situacija onda je najbolji ovaj algoritam, ako važi ovaj ili ovaj uslov onda drugi i slično
+todo - Dodati i poglavlje/potpoglavlje o vizuelizaciji u kome bi se dalo par snapshot-ova aplikacije
 
