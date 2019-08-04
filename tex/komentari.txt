@@ -270,150 +270,150 @@ y strana 19:  što dovodi do izražavanje kvadratne vremenske složenosti ->  š
 DO OVDE pre nedelje
 
 y strana 20: u nazivu slike napisati da je ovo projekcija na jednu osu
-strana 20: i radi efikasnije od ostalih razmatranih algoritama u tom slučaju
--> i kraće vreme izvršavanja od ostalih razmatranih algoritama
-strana 20: koristi za renderovanje -> koristi za renderovanje slike
-strana 20:  Takva organizacija je na primer graf scene. ->  Jedan primer takve organizacije predstavlja graf scene.
-strana 20:  Orgaizaciona -> Organizaciona
-strana 20:  pogodna za primenu i na detekciju kolizije -> nije bas jasno za sta je pogodna (za kakvu primenu?)
-strana 20: metod ćelija i portala bold kada se prvi put javi u tekstu
-strana 20:  za renderovanje sistema ->  za potrebe renderovanja sistema
-strana 20: Za njih je -> Za ove sisteme je
-strana 20: u zarubljenuoj -> u zarubljenoj
-strana 20: umesto nevidljiva reći da nije vidljiva
-strana 20:  u običajenom -> obrisati reč običajenom
-strana 21:  počinje prvo od one ćelije ->  počinje od one ćelije
-strana 21: početna ćelija renderovana, poziva se -> početna ćelija obrađena, proces renderovanje se poziva
-strana 21:  Radi se presek -> Pravi se presek
-strana 21: Negde u tekstu referisati na sliku 3.3 i na sliku 3.4
-strana 21:  može da koristi -> može da se iskoristi i za
-strana 21.  ćeliji gde im se nalazi centar. ->  ćeliji u kojoj im se nalazi centar.
-strana 21:  radi presek tog objekta ->  pravi presek tog objekta 
-strana 21:  radi detekcija kolizije -> vrši detekcija kolizije
-strana 21: za objekat X -> za svaki objekat X
-strana 21:  kvadratan broj operacija -> kvadratni broj operacija; napisati i u odnosu na šta se računa
-strana 21:  Uglavnom se koristi algoritam... -> Za konstrukciju ćelija i portala uglavnom se koristi algoritam binarnog particionisanja prostora (eng. ....)
-strana 21:  se najbolje ponaša -> daje najbolje rezultate 
-strana 21: ima dovoljno veći broj ćelija -> veći od čega? pojasniti rečenicu
-strana 21:  ćeliji ima mali broj -> ćeliji bude mali broj
+y strana 20: i radi efikasnije od ostalih razmatranih algoritama u tom slučaju
+y -> i kraće vreme izvršavanja od ostalih razmatranih algoritama
+y strana 20: koristi za renderovanje -> koristi za renderovanje slike
+y strana 20:  Takva organizacija je na primer graf scene. ->  Jedan primer takve organizacije predstavlja graf scene.
+y strana 20:  Orgaizaciona -> Organizaciona
+yn? strana 20:  pogodna za primenu i na detekciju kolizije -> nije bas jasno za sta je pogodna (za kakvu primenu?)
+y strana 20: metod ćelija i portala bold kada se prvi put javi u tekstu
+y strana 20:  za renderovanje sistema ->  za potrebe renderovanja sistema
+y strana 20: Za njih je -> Za ove sisteme je
+y strana 20: u zarubljenuoj -> u zarubljenoj
+y strana 20: umesto nevidljiva reći da nije vidljiva
+y strana 20:  u običajenom -> obrisati reč običajenom
+y strana 21:  počinje prvo od one ćelije ->  počinje od one ćelije
+y strana 21: početna ćelija renderovana, poziva se -> početna ćelija obrađena, proces renderovanje se poziva
+y strana 21:  Radi se presek -> Pravi se presek
+y strana 21: Negde u tekstu referisati na sliku 3.3 i na sliku 3.4
+y strana 21:  može da koristi -> može da se iskoristi i za
+y strana 21.  ćeliji gde im se nalazi centar. ->  ćeliji u kojoj im se nalazi centar.
+y strana 21:  radi presek tog objekta ->  pravi presek tog objekta 
+y strana 21:  radi detekcija kolizije -> vrši detekcija kolizije
+y strana 21: za objekat X -> za svaki objekat X
+y strana 21:  kvadratan broj operacija -> kvadratni broj operacija; napisati i u odnosu na šta se računa
+y strana 21:  Uglavnom se koristi algoritam... -> Za konstrukciju ćelija i portala uglavnom se koristi algoritam binarnog particionisanja prostora (eng. ....)
+y strana 21:  se najbolje ponaša -> daje najbolje rezultate 
+y strana 21: ima dovoljno veći broj ćelija -> veći od čega? pojasniti rečenicu
+y strana 21:  ćeliji ima mali broj -> ćeliji bude mali broj
 
-strana 22: kvadratan broj provera -> kvadratni broj provera
-strana 22: neće naduvati -> preformulisati ovaj izraz
-strana 22: za detekciju kolizije -> za problem detekcije kolizije
-strana 22: opis slike 3.4:  Objekti B i C se moraju proveriti da li imaju presek... ->  Objekti B i C pripadaju istoj ćeliji, pa se moraju međusobno testirati na presek, dok za objekat A nije potrebno izvršiti testiranje ni sa jednim drugim objektom
-strana 23: Važno pitanje na početku ovog projekta je u kom okruženju ima najviše smisla da se implementira -> Jedno od prvih pitanja koje je bilo postavljeno na početku rada na ovoj temi odnosilo se na to u kom okruženju ima najviše smisla implementirati navedene algoritme
-strana 23: Unity i Unreal su oba pogoni igara -> I Unity i Unreal su pogoni igara
-strana 23:  krenuo ravoj igre ->  započeo razvoj igre 
-strana 23: ) , preko programskog jezika C++ -> ), putem programskog jezika C++
-strana 23:  Unity omogućava implementiranje pomoću programskog jezika C# ->  Unity omogućava implementacije putem programskog jezika C# 
-strana 23:  Ipak, u slučaju programa čije performanse su od kritičnog značaja ->  Međutim, u slučaju programa čije su performanse od kritičnog značaja
-strana 23: zbog svega što pogoni igara pružaju i njihove masivnosti -> zbog raznih funkcionalnosti koje pogoni igara pružaju i zbog njihove masivnosti
-strana 23:  pomoćnih funkcija funkcija ->  pomoćnih funkcija
-strana 23: , a od ostalih je većina -> osalih čega, šta? precizirati rečenicu
-strana 23: u izolaziji -> u izolaciji 
+y strana 22: kvadratan broj provera -> kvadratni broj provera
+y strana 22: neće naduvati -> preformulisati ovaj izraz
+y strana 22: za detekciju kolizije -> za problem detekcije kolizije
+y strana 22: opis slike 3.4:  Objekti B i C se moraju proveriti da li imaju presek... ->  Objekti B i C pripadaju istoj ćeliji, pa se moraju međusobno testirati na presek, dok za objekat A nije potrebno izvršiti testiranje ni sa jednim drugim objektom
+yn strana 23: Važno pitanje na početku ovog projekta je u kom okruženju ima najviše smisla da se implementira -> Jedno od prvih pitanja koje je bilo postavljeno na početku rada na ovoj temi odnosilo se na to u kom okruženju ima najviše smisla implementirati navedene algoritme
+y strana 23: Unity i Unreal su oba pogoni igara -> I Unity i Unreal su pogoni igara
+y strana 23:  krenuo ravoj igre ->  započeo razvoj igre 
+y strana 23: ) , preko programskog jezika C++ -> ), putem programskog jezika C++
+y strana 23:  Unity omogućava implementiranje pomoću programskog jezika C# ->  Unity omogućava implementacije putem programskog jezika C# 
+y but why strana 23:  Ipak, u slučaju programa čije performanse su od kritičnog značaja ->  Međutim, u slučaju programa čije su performanse od kritičnog značaja
+y strana 23: zbog svega što pogoni igara pružaju i njihove masivnosti -> zbog raznih funkcionalnosti koje pogoni igara pružaju i zbog njihove masivnosti
+y strana 23:  pomoćnih funkcija funkcija ->  pomoćnih funkcija
+y strana 23: , a od ostalih je većina -> osalih čega, šta? precizirati rečenicu
+y strana 23: u izolaziji -> u izolaciji 
 
-strana 24:  poznatija pod nazivom ->  poznatijoj pod nazivom
-strana 24: dodati da će u nastavku teksta biti reči o svakoj od pomenutih komponenti pojedinačno
-strana 25: u nazivu slike 4.1 dodati čega je ovo arhitektura
-strana 25: ovde se javlja oktri bez duplikata i oktri sa duplikatom, a nigde ranije nije objašnjeno kakve su razlike između ova dva tipa oktrija -- nisu uvedeni ovi pojmovi
-strana 25: U jednoj rečenici reći šta je uloga kontroler komponente, pa onda nabrajati parametre
-strana 25:  Na prvi pogled liči da ne bi mnogo uticalo na perofmanse, -> Na prvi pogled deluje da vrednost ovog parametra ne utiče previše na performanse
+y strana 24:  poznatija pod nazivom ->  poznatijoj pod nazivom
+y strana 24: dodati da će u nastavku teksta biti reči o svakoj od pomenutih komponenti pojedinačno
+y strana 25: u nazivu slike 4.1 dodati čega je ovo arhitektura
+y strana 25: ovde se javlja oktri bez duplikata i oktri sa duplikatom, a nigde ranije nije objašnjeno kakve su razlike između ova dva tipa oktrija -- nisu uvedeni ovi pojmovi
+y strana 25: U jednoj rečenici reći šta je uloga kontroler komponente, pa onda nabrajati parametre
+y strana 25:  Na prvi pogled liči da ne bi mnogo uticalo na perofmanse, -> Na prvi pogled deluje da vrednost ovog parametra ne utiče previše na performanse
 
-strana 26:  Ovaj faktor ne utiče na mnoge algoritme, ->  Ovaj faktor ne utiče na sve algoritme,
-strana 26:  učiniti ga praktično -> učiniti ga
-strana 26:  Daje još jednu perspektivu ... -> Ko daje? Rečenica nije potpuna
-strana 26:  odnos te veličine -> odnos veličine objekata
-strana 26:  povoljnosti koje daje povoljno izabran parametar su vrlo vidne. ->  pogodnosti koje daje povoljno izabran parametar su osetne.
-strana 26:  Što veća dubina je uglavnom povoljnija, -> Veća dubina oktrija je uglavnom povoljnija jer .... obrazložiti...
-strana 26. mada treba biti oprezan... -> Međutim, treba biti oprezan
-strana 26: Pokušavaju se razdvojiti -> U tom scenariju pokušavaju se razdvojiti
-strana 26: taj put je beznatežan -> taj pokušaj je beznadežan
-strana 26:  deluje na performanse detekcije kolizije ->  deluje na detekciju kolizije u narednim koracima u programu
-strana 26: Praktično uvek -> Pokazuje se da praktično uvek
-strana 26:  oslabljuje performanse -> kvari performanse 
-strana 26:  Koji algoritam detekcije kolizije se koristi. ->  Algoritam detekcije kolizije koji se koristi.
-strana 26: osnovan (trivijalan) -> osnovni (trivijalni)
-strana 26: referntna -> referentna 
-strana 27: Potrebna je takva funkcionalnost -> Ova funkcionalnost je potrebna
-strana 27:  Boje objekata zavise -> Boja objekta zavisi
-strana 27: U trenutku pisanja -> U trenutku pisanja ove master teze
-strana 27: odnosno ne kao zamena -> dakle ne kao zamena nego kao dopuna
-strana 27:  Opisuje boju površi -> U ovom modelu boja površi se opisuje kao
-strana 27: ambijantne -> ambijentalne
-strana 27:  [14] treba da ide pre tačke
-strana 27:  a moguće je da posmatrač postavi ->  a posmatrač može da postavi 
-strana 27:  Komponenta se brine i o -> Ova komponenta se brine i o 
+y strana 26:  Ovaj faktor ne utiče na mnoge algoritme, ->  Ovaj faktor ne utiče na sve algoritme,
+y strana 26:  učiniti ga praktično -> učiniti ga
+y strana 26:  Daje još jednu perspektivu ... -> Ko daje? Rečenica nije potpuna
+y strana 26:  odnos te veličine -> odnos veličine objekata
+y strana 26:  povoljnosti koje daje povoljno izabran parametar su vrlo vidne. ->  pogodnosti koje daje povoljno izabran parametar su osetne.
+y strana 26:  Što veća dubina je uglavnom povoljnija, -> Veća dubina oktrija je uglavnom povoljnija jer .... obrazložiti...
+y strana 26. mada treba biti oprezan... -> Međutim, treba biti oprezan
+y strana 26: Pokušavaju se razdvojiti -> U tom scenariju pokušavaju se razdvojiti
+y strana 26: taj put je beznatežan -> taj pokušaj je beznadežan
+y strana 26:  deluje na performanse detekcije kolizije ->  deluje na detekciju kolizije u narednim koracima u programu
+y strana 26: Praktično uvek -> Pokazuje se da praktično uvek
+y strana 26:  oslabljuje performanse -> kvari performanse 
+y strana 26:  Koji algoritam detekcije kolizije se koristi. ->  Algoritam detekcije kolizije koji se koristi.
+y strana 26: osnovan (trivijalan) -> osnovni (trivijalni)
+y strana 26: referntna -> referentna 
+y strana 27: Potrebna je takva funkcionalnost -> Ova funkcionalnost je potrebna
+y strana 27:  Boje objekata zavise -> Boja objekta zavisi
+y strana 27: U trenutku pisanja -> U trenutku pisanja ove master teze
+y strana 27: odnosno ne kao zamena -> dakle ne kao zamena nego kao dopuna
+y strana 27:  Opisuje boju površi -> U ovom modelu boja površi se opisuje kao
+y strana 27: ambijantne -> ambijentalne
+y strana 27:  [14] treba da ide pre tačke
+y strana 27:  a moguće je da posmatrač postavi ->  a posmatrač može da postavi 
+y strana 27:  Komponenta se brine i o -> Ova komponenta se brine i o 
 
-strana 28: mozda h_{rot} i v_{rot} umesto hrot i vrot?
+yn promenih da bude rot_h strana 28: mozda h_{rot} i v_{rot} umesto hrot i vrot?
 strana 28: Gde je vrot ugao -> \noindent gde je vrot ugao 
-strana 28:  Napomena da je u OpenGL-u ->  Napomenimo da je u OpenGL-u 
-strana 28:  Definiše tajmer -> Ona definiše i tajmer
-strana 28:  Stara se o računanju vremena -> Ona se, takođe, stara o računanju vremena između
-strana 28: Svaki objekat sadrži trojku brojeva -> Svakom objektu pridružena je  uređena trojka brojeva
-strana 28: poziciju za svaku koordinatu prostora.-> poziciju u trodimenzionom prostoru
-strana 28:  Za održavanje pravca ->  Za održavanje pravca kretanja
-strana 28:  onda se mora čuvati -> onda se uz pomenute podatke mora čuvati
-strana 28:  prilikom upravljanja posmatrača -> reč "upravljanja" preformulisati
-strana 28:  momentum -> momenat
-strana 28: posvetiti pažnju kako se posmatrač kreće -> pažljivo razmotriti kako posmatrč treba da se kreće
-strana 28: Prva ideja bi bila -> Naivno razmišljanje bi nas dovelo na ideju
-strana 28: ili da se menja z -> odnosno da se menja
-strana 28:  trenutnu njegovo usmerenje ->  njegovo trenutno usmerenje
-strana 28:  Usmerenje je dato formulom 4.1. -> (dato formulom 4.1)
-strana 29: objasniti ukratko zašto vektor kretanja unapred ima ove koordinate
-strana 29: , tada je vektor -> ; tada je vektor
-strana 29: Pritom se normira vektor -> Pritom se vektor normira
-strana 29:  pošto su tada v1 i v2 mali ->  pošto su tada vrednosti v1 i v2 male.
-strana 29:  se računa kao: -> se računa po formuli:
-strana 29: Sada su zamenjene vrednosti ... -> Vrednosti prve i treće koordinate vektora su zamenjene iz razloga što kada se
-strana 29: za promenu znaka v_2 .. -> za promenu znaka uz v_2 se ogleda u orijentaciji z ose...
-strana 29: potrebno je reflektovati dimenziju vektor brzine .... -> ovu konstrukciju ne razumem, preformulisati
-strana 29:  delom zaći ->  delom izaći
-strana 29: oni pomere -> oni pomeraju
-strana 29: nije normalna -> nije upravna
+ny strana 28:  Napomena da je u OpenGL-u ->  Napomenimo da je u OpenGL-u 
+y strana 28:  Definiše tajmer -> Ona definiše i tajmer
+y strana 28:  Stara se o računanju vremena -> Ona se, takođe, stara o računanju vremena između
+y strana 28: Svaki objekat sadrži trojku brojeva -> Svakom objektu pridružena je  uređena trojka brojeva
+y strana 28: poziciju za svaku koordinatu prostora.-> poziciju u trodimenzionom prostoru
+y strana 28:  Za održavanje pravca ->  Za održavanje pravca kretanja
+y strana 28:  onda se mora čuvati -> onda se uz pomenute podatke mora čuvati
+y strana 28:  prilikom upravljanja posmatrača -> reč "upravljanja" preformulisati
+y strana 28:  momentum -> momenat
+y strana 28: posvetiti pažnju kako se posmatrač kreće -> pažljivo razmotriti kako posmatrč treba da se kreće
+y strana 28: Prva ideja bi bila -> Naivno razmišljanje bi nas dovelo na ideju
+y strana 28: ili da se menja z -> odnosno da se menja
+y strana 28:  trenutnu njegovo usmerenje ->  njegovo trenutno usmerenje
+y strana 28:  Usmerenje je dato formulom 4.1. -> (dato formulom 4.1)
+y strana 29: objasniti ukratko zašto vektor kretanja unapred ima ove koordinate
+y strana 29: , tada je vektor -> ; tada je vektor
+y strana 29: Pritom se normira vektor -> Pritom se vektor normira
+y strana 29:  pošto su tada v1 i v2 mali ->  pošto su tada vrednosti v1 i v2 male.
+y strana 29:  se računa kao: -> se računa po formuli:
+y strana 29: Sada su zamenjene vrednosti ... -> Vrednosti prve i treće koordinate vektora su zamenjene iz razloga što kada se
+y strana 29: za promenu znaka v_2 .. -> za promenu znaka uz v_2 se ogleda u orijentaciji z ose...
+y strana 29: potrebno je reflektovati dimenziju vektor brzine .... -> ovu konstrukciju ne razumem, preformulisati
+y strana 29:  delom zaći ->  delom izaći
+y strana 29: oni pomere -> oni pomeraju
+y strana 29: nije normalna -> nije upravna
 
-strana 30:  Isti princip je obezbeđen za kretanje ->  Isti princip važi i za kretanje
-strana 30:  primenjuje razrešenje kolizije prema formulama 2.2 i 2.1. -> primenjuje algoritam za razrešenje kolizije prema formulama (2.2) i (2.1)
-Generalno nije loše oznake jednačina stavljati u zagrade
-strana 30: Služi za prikupljanje podataka -> Ova komponenta služi za prikupljanje podataka
-strana 30: data u 5 -> opisana u poglavlju 5
-strana 30: broja objekta, dodatnih podataka -> broja objekata i dodatnih podataka
-strana 30: Ne zapisuje se direktno u izlaznu -> Sakupljeni podaci se ne zapisuju direktno u izlaznu
-strana 30: već se čuva -> već se čuvaju
-strana 30: pa se napravi datoteka u koju se zapišu rezultati tek kad je gotovo merenje. -> i tek kada je gotovo celokupno merenje, vrši se ispis u odgovarajuću datoteku. 
-strana 30: Definiše funkcije -> Komponenta za rukovanje ulazima korisnika definiše funkcije
-strana 30: povratnog poziva (eng. callback function)
-strana 30: Potrebne su funkcije za -> Od funkcija biće potrebne funkcija za
-strana 30:  Za poslednju stavku se mora ručno implementirati ->  Za poslednju navedenu akciju se za svako dugme sa tastature mora ručno implementirati pamćenje stanja prisutnosti
-strana 30: pozove ta akcija -> pozove odgovarajuća akcija
-strana 30:  Ako je pak slučaj akcije poput -> Ako je pak u pitanju akcija poput
-strana 30: Osljanjalo -> Oslanjalo
-strana 30: Tada bi kretanje „seckalo” -> To bi dovelo do efekta "seckanja" prilikom kretanja
-strana 30: Ili obrnuto, mogla bi se desiti -> Takođe, mogla bi se desiti 
-strana 30: Ispravno rešenje je da se -> Ispravno rešenje bilo bi da se 
-strana 30: a onda da se reakcija na to desi -> a da se na ovaj događaj reaguje 
-strana 31:  Što se tiče miša -> Što se tiče događaja miša
-strana 31: Prva je za akcije -> Prva se odnosi na događaj
-strana 31: druga je za pomeraj miša -> druga na pomeraj miša
-strana 31:  i treća je za pomeraj -> dok se treća tiče događaja pomeranja miša 
-strana 31: veličinu svakog pomeraja -> vrednost svakog pomeraja
-strana 31:  potrebno je da se on nakon svakog pomeraja vrati u centar prozora -> potrebno ga je nakon svakog pomeraja vratiti u centar prozora
-strana 31: Kursor miša je takođe sakriven -> Kursor miša se podrazumevano ne prikazuje na ekranu,
-strana 31: Za projekat najznačajnija funkcionalnost dolazi od ove komponente.  -> S obzirom na tematiku ovog rada, nama je najznačajnija i najinteresantnija funkcionalnost koju pruža ova komponenta.
+y strana 30:  Isti princip je obezbeđen za kretanje ->  Isti princip važi i za kretanje
+y strana 30:  primenjuje razrešenje kolizije prema formulama 2.2 i 2.1. -> primenjuje algoritam za razrešenje kolizije prema formulama (2.2) i (2.1)
+y Generalno nije loše oznake jednačina stavljati u zagrade
+y strana 30: Služi za prikupljanje podataka -> Ova komponenta služi za prikupljanje podataka
+y strana 30: data u 5 -> opisana u poglavlju 5
+y strana 30: broja objekta, dodatnih podataka -> broja objekata i dodatnih podataka
+y strana 30: Ne zapisuje se direktno u izlaznu -> Sakupljeni podaci se ne zapisuju direktno u izlaznu
+y strana 30: već se čuva -> već se čuvaju
+y strana 30: pa se napravi datoteka u koju se zapišu rezultati tek kad je gotovo merenje. -> i tek kada je gotovo celokupno merenje, vrši se ispis u odgovarajuću datoteku. 
+y strana 30: Definiše funkcije -> Komponenta za rukovanje ulazima korisnika definiše funkcije
+y strana 30: povratnog poziva (eng. callback function)
+y strana 30: Potrebne su funkcije za -> Od funkcija biće potrebne funkcija za
+y strana 30:  Za poslednju stavku se mora ručno implementirati ->  Za poslednju navedenu akciju se za svako dugme sa tastature mora ručno implementirati pamćenje stanja prisutnosti
+y strana 30: pozove ta akcija -> pozove odgovarajuća akcija
+y strana 30:  Ako je pak slučaj akcije poput -> Ako je pak u pitanju akcija poput
+y strana 30: Osljanjalo -> Oslanjalo
+y strana 30: Tada bi kretanje „seckalo” -> To bi dovelo do efekta "seckanja" prilikom kretanja
+y strana 30: Ili obrnuto, mogla bi se desiti -> Takođe, mogla bi se desiti 
+y strana 30: Ispravno rešenje je da se -> Ispravno rešenje bilo bi da se 
+y strana 30: a onda da se reakcija na to desi -> a da se na ovaj događaj reaguje 
+y strana 31:  Što se tiče miša -> Što se tiče događaja miša
+y strana 31: Prva je za akcije -> Prva se odnosi na događaj
+y strana 31: druga je za pomeraj miša -> druga na pomeraj miša
+y strana 31:  i treća je za pomeraj -> dok se treća tiče događaja pomeranja miša 
+y strana 31: veličinu svakog pomeraja -> vrednost svakog pomeraja
+y strana 31:  potrebno je da se on nakon svakog pomeraja vrati u centar prozora -> potrebno ga je nakon svakog pomeraja vratiti u centar prozora
+y strana 31: Kursor miša je takođe sakriven -> Kursor miša se podrazumevano ne prikazuje na ekranu,
+y strana 31: Za projekat najznačajnija funkcionalnost dolazi od ove komponente.  -> S obzirom na tematiku ovog rada, nama je najznačajnija i najinteresantnija funkcionalnost koju pruža ova komponenta.
 
-strana 31: Algoritmi su implementirani -> Algoritmi za detekciju kolizije su implementirani
-strana 32: će biti -> biće
-strana 32: dobile vrednost dt koje predstavljaju -> da li ima vise ovakvih vrednosti ili jedna? srediti recenicu u skladu sa time
-strana 32 koristi se komponenta 4.2 -> šta je komponenta 4.2?
-strana 32: preciznog trenutnog vremena -> precizne vrednosti trenutnog vremena
-strana 32: pod "relativan dt" podrazumeva -> pod terminom "relativan dt" podrazumeva vrednost
-strana 32: deljenjebrojem -> deljenje brojem
-strana 32: 1/60 je 0.16667, a sto je ovde 16.6667, tj zasto se mnozi ova vrednost sa 100?
-strana 32: Grafička -> Grafička karta
-strana 32: RAM -> RAM memorija
-strana 32: Matična -> Matična ploča
-strana 32: Pritom se pazi  -> Pritom se vodilo računa
-strana 32: za manipulisanje podacima -> za obradu podataka
+y strana 31: Algoritmi su implementirani -> Algoritmi za detekciju kolizije su implementirani
+y strana 32: će biti -> biće
+y strana 32: dobile vrednost dt koje predstavljaju -> da li ima vise ovakvih vrednosti ili jedna? srediti recenicu u skladu sa time
+y strana 32 koristi se komponenta 4.2 -> šta je komponenta 4.2?
+y strana 32: preciznog trenutnog vremena -> precizne vrednosti trenutnog vremena
+y strana 32: pod "relativan dt" podrazumeva -> pod terminom "relativan dt" podrazumeva vrednost
+y strana 32: deljenjebrojem -> deljenje brojem
+yn zato što su to milisekunde strana 32: 1/60 je 0.16667, a sto je ovde 16.6667, tj zasto se mnozi ova vrednost sa 100?
+y strana 32: Grafička -> Grafička karta
+y strana 32: RAM -> RAM memorija
+y strana 32: Matična -> Matična ploča
+y strana 32: Pritom se pazi  -> Pritom se vodilo računa
+y strana 32: za manipulisanje podacima -> za obradu podataka
 
 strana 33: Naslov poglavlja 5.1 izmeniti u Opšti zaključci
 strana 33:  koliki uticaj ima postupak iscrtavanja na vreme izvršavanja ->  koliki uticaj na vreme izvršavanja ima postupak iscrtavanja

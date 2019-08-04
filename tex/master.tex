@@ -259,7 +259,7 @@ lopte ili kvadra može se primeniti teorema o razdvajajućim osama da bi se vide
 
 Međutim, nije dovoljno razmatrati samo projekcije na koordinatne ose, 
 jer na primeru sa slike \ref{fig:2dfalse} vidi se da se krug i rotiran pravougaonik ne presecaju, iako se njihove projekcije 
-na koordinantne ose seku. Za konveksne objekte je moguće naći neku drugu pravu koja ih razdvaja ili odrediti postojanje preseka 
+na koordinatne ose seku. Za konveksne objekte je moguće naći neku drugu pravu koja ih razdvaja ili odrediti postojanje preseka 
 na neki drugi način, ali se to ostavlja za usku fazu.
 
 % https://en.wikipedia.org/wiki/User:Oleg_Alexandrov/Pictures
@@ -587,7 +587,7 @@ se provere kolizije vrše samo nad manjim podskupovima svih elemenata.
 \section{Oktri}
 \label{subsec:octree}
 
-Oktri (eng. {\em Octree}) je prostorna struktura podataka koja se koristi za rekurzivno deljenje trodimenzionog prostora na oktante.
+\textbf{Oktri} (eng. {\em Octree}) je prostorna struktura podataka koja se koristi za rekurzivno deljenje trodimenzionog prostora na oktante.
 Suštinski, oktri je stablo kod koga svaki unutrasnji čvor ima tačno osmoro dece,
 što odgovara podeli prostora koji odgovara tom unutrašnjem čvoru na osam podkocki (oktanata).
 U listovima se čuvaju objekti koji pripadaju oktantu koji taj list predstavlja.
@@ -616,16 +616,18 @@ i slučaj jer se uglavnom ne dopušta njihovo trajno presecanje.
 
 Ukoliko se razmatra tačkasti objekat, opisani postupak umetanja radi korektno,
 ali se postavlja pitanje šta raditi sa većim objektima koji pripadaju više oktanata.
-Jedno rešenje je da se objekat ubaci u svaki oktant kome bar delimično pripada. 
+Jedno rešenje je da se objekat ubaci u svaki oktant kome bar delimično pripada.
 Bitan problem sa tim rešenjem je ako je u pitanju veliki objekat, onda će on pokriti mnoge oktante, njihove 
 podoktante i tako rekurzivno. 
 Tada veliki broj listova mora da pamti taj objekat, tj. njegovu referencu ili indeks u nekom nizu.
 To nije velika smetnja kada su svi objekti sličnih veličina, ali ako 
-nisu, onda i memorijska i vremenska složenost mogu eksplodirati
+nisu, onda i memorijska i vremenska složenost mogu eksplodirati.
+Ovakav oktri će se u daljem tekstu nazivati oktri sa duplikatima.
 
 Drugo rešenje je da se dopusti i unutrašnjim čvorovima stabla da čuvaju objekte.
 Kada neki objekat seče više od jednog oktanta nekog unutrašnjeg čvora $U$, tada se on ne ubacuje 
 u podoktante čvora $U$, nego se pamti u čvoru $U$. Time se može značajno uštedeti na memoriji i vremenu izvršavanja.
+U daljem tekstu će se ovakav oktri nazivati oktri bez duplikata.
 Međutim, i za tako izmenjen oktri postoje nezgodne situacije kada se pogoršava vreme izvršavanja.
 Ako svi objekti seku više od jednog podoktanta korenog čvora, onda svi moraju biti sačuvani u njemu. 
 U tom slučaju se mora proveriti kolizija svih parova od $n$ objekata, što je ekvivalentno osnovnom kvadratnom algoritmu.
@@ -656,7 +658,7 @@ kolizije jednog objekta koji se kreće sa $n$ statičkih sa $O(n)$ na očekivani
 \section{Briši i odseci}
 \label{subsec:sap}
 
-Briši i odseci (eng. {\em sweep and prune}), skraćeno \textbf{SAP}, je alternativa tehnikama detekcije kolizije 
+\textbf{Briši i odseci} (eng. {\em sweep and prune}), skraćeno \textbf{SAP}, je alternativa tehnikama detekcije kolizije 
 zasnovanim na prostornom particionisanju.
 SAP je algoritam široke faze koji projektuje sve AABB
 na bazne ose (u trodimenzionalnom slučaju to je tri skupa projekcija) pa sortira projekcije da bi odredio preseke AABB.
@@ -714,107 +716,113 @@ U slučaju kada se objekti brzo kreću, pomeraji objekata su veliki i potrebno j
 Tada svaka tačka projekcije u nizovima mora 
 da se poredi sa većim brojem ostalih što dovodi do ispoljavanja kvadratne vremenske složenosti algoritma sortiranja umetanjem.
 Ipak, kada se svi objekti polako kreću, onda je mali broj pomeraja u nizu, i vreme izvršavanja algoritma je praktično 
-linearno, što omogućava veći broj pokretnih objekata i radi efikasnije od ostalih razmatranih algoritama u tom slučaju.
+linearno, što omogućava veći broj pokretnih objekata i kraće vreme izvršavanja od ostalih razmatranih algoritama.
 
 \section{Ćelije i portali}
 \label{subsec:cells}
 
-Postojanje dodatnog modela particionisanja prostora samo za detekciju kolizije nije uvek neophodno.
-Postojeća hijerarhijska organizacija koja se koristi za renderovanje je nekad dovoljna.
-Takva organizacija je na primer graf scene. Orgaizaciona struktura koja je vrlo pogodna
-za primenu i na detekciju kolizije je metod ćelija i portala.
+Pravljenje dodatnog modela particionisanja prostora samo za detekciju kolizije nije uvek neophodno.
+Postojeća hijerarhijska organizacija koja se koristi za renderovanje slika je nekad dovoljna.
+Jedan primer takve organizacije predstavlja graf scene.
+\textbf{Metod ćelija i portala}  je organizaciona struktura koja se koristi za renderovanje slika
+i može se istovremeno koristiti kao struktura prostornog particionisanja koja se koristi za detekcije kolizije.
 
-Ova metoda je razvijena za renderovanje sistema arhitekturalnog prolaska. 
-Za njih je karakteristično okruženje koje se sastoji od velikog broja prostorija, tako da je 
-većina objekata koji se nalaze u zarubljenuoj četvorostranoj piramidi pogleda (eng. {\em frustum})
-nevidljivo u svakom trenutku, pošto je skoro sva vidljiva geometrija unutar trenutne sobe
-u kojoj se posmatrač nalazi.
+Ova metoda je razvijena za potrebe renderovanja sistema arhitekturalnog prolaska. 
+Za ove sisteme je karakteristično okruženje koje se sastoji od velikog broja prostorija, tako da u svakom trenutku
+većina objekata koji se nalaze u zarubljenoj četvorostranoj piramidi pogleda (eng. {\em frustum})
+nije vidljivo, pošto je skoro sva vidljiva geometrija unutar trenutne sobe u kojoj se posmatrač nalazi.
 Metoda ćelija i portala deli svet u regije, odnosno ćelije, i delove koji ih spajaju, odnosno portale.
-Dakle u običajenom slučaju zgrada, sobe odgovaraju ćelijama, a vrata odgovaraju portalima. 
+Dakle u slučaju zgrada, sobe odgovaraju ćelijama, a vrata odgovaraju portalima. 
 
-Renderovanje scene koja je podeljena u ćelije i portale počinje prvo od one ćelije u 
-kojoj se nalazi posmatrač. Nakon što je početna ćelija renderovana, poziva se rekurzivno
-za susedne ćelije čiji su portali vidljivi posmatraču. Radi se presek novih portala
-sa pogledom trenutnog portala čime se sužava vidljivost scene. Rekurzija se zaustavlja 
-kada je presek novog portala sa trenutnim prazan, ili kada su posećene sve dostupne susedne ćelije \cite{glavnaKnjiga}.
+Renderovanje scene koja je podeljena u ćelije i portale počinje od one ćelije u kojoj se nalazi posmatrač. 
+Nakon što je početna ćelija obrađena, proces renderovanje se poziva rekurzivno
+za susedne ćelije čiji su portali vidljivi posmatraču. 
+Pravi se presek novih portala sa pogledom trenutnog portala čime se sužava vidljivost scene.
+Rekurzija se zaustavlja kada je presek novog portala sa trenutnim prazan, ili kada su posećene sve dostupne susedne ćelije \cite{glavnaKnjiga}.
+Primer renderovanja stana predstavljenog preko ćelija i portala je dat na slici \ref{fig:cellsRooms}.
 
 \begin{figure}[h!]
 	\begin{center}
 	\includegraphics[scale=1]{cellsRooms.jpg}
 	\end{center}
-	\caption{Osenčen region predstavlja ono što posmatrač vidi. 
+	\caption{
+	Osenčen region predstavlja ono što posmatrač vidi. 
 	Potrebno je da se renderuju samo tri od šest ćelija. }
 	\label{fig:cellsRooms}
 \end{figure}
 
-Ista struktura ćelija i portala može da koristi za brzu detekciju kolizije. 
-Objekti su pridruženi ćeliji gde im se nalazi centar. Kada se objekti kreću vrši 
-se provera da li je objekat napustio svoju ćeliju. Ako jeste, onda se radi presek tog objekta
+Ista struktura ćelija i portala može da se iskoristi i za brzu detekciju kolizije. 
+Objekti su pridruženi ćeliji u kojoj im se nalazi centar. Kada se objekti kreću vrši 
+se provera da li je objekat napustio svoju ćeliju. Ako jeste, onda se pravi presek tog objekta
 sa susednim ćelijama da bi se saznalo gde je otišao. 
 
-Kada se radi detekcija kolizije između pokretnih objekata, za objekat X 
+Kada se vrši detekcija kolizije između pokretnih objekata, za svaki objekat X 
 potrebno je samo proveriti objekte koji su dodeljeni istoj ćeliji kao i X, i u slučaju
 da X preseca neki portal, uraditi i proveru sa objektima koji su u ćeliji sa druge strane tog portala \cite{cells}.
-Traženje preseka objekata u okviru jedne ćelije zahteva kvadratan broj operacija.
-Uglavnom se koristi algoritam binarnog particionisanja prostora, BSP, da bi se konstruisale
-ćelije i portali.
+Primer detekcije kolizije pokretnih objekata dat je na slici \ref{fig:cellsObj}.
+Traženje preseka objekata u okviru jedne ćelije zahteva kvadratni broj operacija u odnosu na broj objekata u toj ćeliji.
+Za konstrukciju ćelija i portala uglavnom se koristi algoritam 
+\textbf{binarnog particionisanja prostora} (eng. {\em binary space partitioning}).
 
 \begin{figure}[h!]
 	\begin{center}
 	\includegraphics[scale=1]{cellsObj.jpg}
 	\end{center}
-	\caption{ Objekti B i C se moraju proveriti da li imaju presek, dok objekat A ne mora da se proveri ni sa jednim objektom. }
+	\caption{ Objekti B i C redom u potpunosti i delimično pripadaju istoj ćeliji, pa se moraju međusobno testirati na presek,
+	 dok za objekat A nije potrebno izvršiti testiranje ni sa jednim drugim objektom. }
 	\label{fig:cellsObj}
 \end{figure}
 
-Ova metoda se najbolje ponaša kada svaka ćelija ima isti broj objekata i kada ima dovoljno 
-veći broj ćelija sa što manjim portalima.
-Tada se velik broj objekata može podeliti u ćelije tako da u svakoj ćeliji ima mali broj objekata,
-pa se kvadratan broj provera u okviru jedne ćelije neće naduvati.
-Metoda se ne koristi u modernim igarama, ali je odlična u scenarijima za
-koje je zamišljena, i daje nov način razmatranja konstrukcije rešenja za detekciju kolizije.
+Ova metoda daje najbolje rezultate kada svaka ćelija ima približno isti broj objekata, kada je 
+broj ćelija proporcionalan broju objekata i što su portali manji to će se brže zaustaviti rekurzija.
+Tada se velik broj objekata može podeliti u ćelije tako da u svakoj ćeliji bude mali broj objekata,
+pa kvadratni broj provera u okviru jedne ćelije neće doći do izražaja.
+Ova metoda se ne koristi u modernim igarama i zato nije evaluirana u poglavlju \ref{sec:evaluacija},
+ali je predstavljena zbog toga što je odlična u scenarijima za
+koje je zamišljena i daje nov način razmatranja konstrukcije rešenja za problem detekcije kolizije.
 
 % ==============================================================================
 \chapter{Implementacija}
 \label{sec:implementacija}
 % ==============================================================================
 
-Važno pitanje na početku ovog projekta je u kom okruženju ima najviše smisla da se implementira.
+Jedno od prvih pitanja koje je bilo postavljeno na početku rada na ovoj temi odnosilo se na to 
+u kom okruženju ima najviše smisla implementirati algoritme detekcije kolizije.
 Tri glavna kandidata su OpenGL, Juniti (eng. {\em Unity}) i Anril Endžin 4 (eng. {\em Unreal Engine}).
 
-Unity i Unreal su oba pogoni igara, pa samim tim imaju sve što je neophodno da 
-bi se krenuo ravoj igre ili neke druge aplikacije.
+I Unity i Unreal su pogoni igara, pa samim tim imaju sve što je neophodno da 
+bi se započeo ravoj igre ili neke druge aplikacije.
 Unreal pruža mogućnost implementiranja preko shema (eng. {\em blueprints})
-, preko programskog jezika C++ ili njihovom mešavinom.
-Unity omogućava implementiranje pomoću programskog jezika C\# ili unityscript,
+, putem programskog jezika C++ ili njihovom mešavinom.
+Unity omogućava implementiranje putem programskog jezika C\# ili unityscript,
 koji ima sintaksu nalik JavaSkriptu. Unityscript polako izlazi iz upotrebe, i 
 sva nova dokumentacija podrazumeva korišćenje jezika C\#.
 Jezik C\# u odnosu na C++ često omogućava kraće vreme implementacije nekog rešenja,
 međutim postoji cena toga - nešto sporije vreme izvršavanja.
 To "nešto" je uglavnom moguće ignorisati, prateći citat Donalda Knuta 
 "Prevremena optimizacija je koren svog zla u programiranju".
-Ipak, u slučaju programa čije performanse su od kritičnog značaja, npr. kao što je 
+Ipak, u slučaju programa čije su performanse od kritičnog značaja, npr. kao što je 
 slučaj sa operativnim sistemima i pogonima igara, to usporenje se ne može tolerisati.
 %https://en.wikipedia.org/wiki/List_of_game_engines - kako referenca za ovo
 Zato su danas praktično svi pogoni 3D igara implementirani u jeziku C++.
 
-Upravo zbog svega što pogoni igara pružaju i njihove masivnosti nisu izabrani
+Upravo zbog raznih funkcionalnosti koje pogoni igara pružaju i zbog njihove masivnosti nisu izabrani
 za osnovu implementacije ovog projekta. Oni već imaju integrisanu fiziku, detekciju 
 i razrešenje kolizije. Tako bi uobičajeni kanali implementacije u njima 
 bili previše indirektni za funkcionalnost koja čini srž celog sistema.
 Zbog navedenih razloga je projekat napravljen korišćenjem OpenGL pomoćne 
-biblioteke FriGLUT (eng. {\em FreeGLUT}) koja ima skroman skup pomoćnih funkcija
-funkcija, a od ostalih je većina usmerena na grafiku i vrlo su niskog nivoa.
+biblioteke FriGLUT (eng. {\em FreeGLUT}) koja ima skroman skup pomoćnih
+funkcija od kojih je većina usmerena na grafiku i vrlo su niskog nivoa.
 
-Ovaj projekat ne implementira algoritme detekcije kolizije u izolaziji pošto 
-se oni ni neće koristiti bez ostalih komponenti kao što su iscrtavanje, 
-upravljanje ulazima korisnika, razrešenje kolizije, ažuriranje pozicije i brzine objekata.
+Ovaj projekat ne implementira algoritme detekcije kolizije u izolaciji pošto 
+se oni ni neće koristiti bez ostalih komponenti kao što su iscrtavanje, ažuriranje pozicije i brzine objekata.
+upravljanje ulazima korisnika i razrešenje kolizije.
 
 \section{FriGLUT}
 
 FriGLUT je alternativa otvorenog koda za GLUT (eng. {\em OpenGL Utility Toolkit}). 
 GLUT je prvobitno napisan da bi se podržali primeri programa u knjizi "OpenGL:
-vodič za programiranje", poznatija pod nazivom "Crvena Knjiga" (eng. {\em "the Red Book" }).
+vodič za programiranje", poznatijoj pod nazivom "Crvena Knjiga" (eng. {\em "the Red Book" }).
 GLUT se ne razvija od 1998. godine, pa je još 1999. započet FriGLUT projekat koji 
 se razvija do danas. 
 \cite{freeglut}
@@ -840,11 +848,13 @@ Glavne komponente programa su:
 	\item Komponenta za ažuriranje brzine i pozicije objekata
 \end{itemize}
 
+U nastavku teksta će biti više reči o svakoj od pomenutih komponenti pojedinačno.
+
 \begin{figure}[h!]
 	\centerfloat
 % https://online.visual-paradigm.com/w/jllvezfo/diagrams.jsp#diagramlist:open&mode=Local
 	\includegraphics[trim=150 50 100 50,clip,scale=0.6]{architecture.pdf}
-	\caption{Arhitektura.}
+	\caption{Arhitektura implementiranog projekta.}
 	\label{fig:archi}
 \end{figure}
 
@@ -852,67 +862,69 @@ Na slici \ref{fig:archi} je prikazana arhitektura programa sa navedenim komponen
 
 \subsection{Kontroler komponenta}
 
+Uloga kontroler komponente je upravljanje parametrima programa i rukovanje njihovih izmenama.
 Parametri koji se menjaju kroz kontroler komponentu su: 
 \begin{itemize}  
 	\item Broj objekata koji su podložni koliziji. 
 	Ovo je parametar koji svakako najviše utiče na ponašanje algoritama.
 	\item Veličina objekata. 
-	Na prvi pogled liči da ne bi mnogo uticalo na perofmanse, međutim veliki objekti u malom prostoru mogu katastrofalno usporiti izvršavanje.
+	Na prvi pogled deluje da vrednost ovog parametra ne utiče previše na performanse, međutim veliki objekti u malom prostoru mogu katastrofalno usporiti izvršavanje.
 	\item Brzina kretanja objekata.
-	Ovaj faktor ne utiče na mnoge algoritme, ali je u slučaju SAP algoritma najbitniji. Može promeniti odlično ponašanje SAP algoritma u slučaju sporog kretanja 
-	objekata i učiniti ga praktično algoritmom kvadratne složenosti u najgorem slučaju.
+	Ovaj faktor ne utiče na sve algoritme, ali je u slučaju SAP algoritma najbitniji. Može promeniti odlično ponašanje SAP algoritma u slučaju sporog kretanja 
+	objekata i učiniti ga algoritmom kvadratne složenosti u najgorem slučaju.
 	\item Veličina kontejnera u kome se nalaze i kreću svi objekti.
-	Daje još jednu perspektivu kako veličina objekata i odnos te veličine sa celim prostorom, ovde kontejnerom, utiču na performanse.
+	Ovaj parametar daje još jednu perspektivu kako odnos veličine objekata sa celim prostorom, ovde kontejnerom, utiču na performanse.
 	\item Maksimalan broj elemenata u listu oktrija.
 	Promena maksimalnog broja elemenata u listu pre nego što se on podeli na podoktante utiče "samo" na konstantan faktor vremenske složenosti.
-	To uopšte nije zanemarljivo u datom kontekstu i povoljnosti koje daje povoljno izabran parametar su vrlo vidne.
-	\item Maksimalna dubina oktrija. Što veća dubina je uglavnom povoljnija, mada treba biti oprezan ako se može desiti 
+	To uopšte nije zanemarljivo u datom kontekstu i pogodnosti koje daje povoljno izabran parametar su osetne.
+	\item Maksimalna dubina oktrija. Veća dubina oktrija je uglavnom povoljnija jer omogućava da se u listovima oktrija nalazi mali broj objekata.
+	Međutim, treba biti oprezan ako se može desiti 
 	da se velik broj objekata preklapa unutar jednog oktanta, jer se tada samo gubi vreme i troši dodatna memorija. 
-	Pokušavaju se razdvojiti objekti rekurzivnom podelom potprostora, ali pošto se oni presecaju taj put je beznatežan.
+	U tom scenariju pokušavaju se razdvojiti objekti rekurzivnom podelom potprostora, ali pošto se oni presecaju taj put je beznadežan.
 	\item Da li raditi razrešenje kolizije. 
 	Razrešenje kolizije je odvojen problem od detekcije kolizije, a pošto se uglavnom koriste oba, onda je dobro videti 
-	kako razrešenje kolizije deluje na performanse detekcije kolizije. Praktično uvek deluje povoljno, pošto onemogućava da se mnogo 
+	kako razrešenje kolizije deluje na detekciju kolizije u narednim koracima u programu. Pokazuje se da praktično uvek deluje povoljno, pošto onemogućava da se mnogo 
 	objekata međusobno preseca, pa time smanjuje verovatnoću da se stvori veliki klaster objekata koji bi usporio izvršavanje.
 	\item Da li je iscrtavanje uključeno ili isključeno. 
-	S obzirom da je projekat više procesorski nego grafički zahtevan, iscrtavanje uglavnom ne oslabljuje performanse više od 2 do 3 posto.
+	S obzirom da je projekat više procesorski nego grafički zahtevan, iscrtavanje uglavnom ne kvari performanse više od 2 do 3 posto.
 	Svakako, kada je na sceni više od 30 000 objekata počinje značajno da ima uticaj, pa je za te slučajeve dodata opcija kako bi merenja bila nepristrasna.
-	\item Koji algoritam detekcije kolizije se koristi. Podržani su: osnovan (trivijalan) algoritam, oktri sa duplikatima,
-	oktri bez duplikata i SAP algoritam. Takođe je moguće isključiti detekciju kolizije u celosti da bi se dobila referntna vrednost vremena izvršavanja.
+	\item Algoritam detekcije kolizije koji se koristi. Podržani su: osnovni (trivijalni) algoritam, oktri sa duplikatima,
+	oktri bez duplikata i SAP algoritam. Takođe je moguće isključiti detekciju kolizije u celosti da bi se dobila referentna vrednost vremena izvršavanja.
 
 \end{itemize}  
 
 Kontroler komponenta takođe pruža mogućnost menjanja pravca kretanja objekata. 
 Tada svi objekti bivaju usmereni prema trenutnoj poziciji posmatrača. 
-Potrebna je takva funkcionalnost pošto ona povećava koncentraciju objekata, 
+Ova funkcionalnost je potrebna pošto ona povećava koncentraciju objekata, 
 pogotovo nakon što se odbiju o ivicu kontejnera. Tada će se većina objekata 
 naći oko centra kontejnera, što dovodi do eksplozije vremena izvršavanja, pogotovo u slučaju oktrija sa duplikatima.
 
 \subsection{Komponenta za iscrtavanje}
 
 Sve što se želi prikazati mora se iskazati preko GL funkcija. 
-Boje objekata zavise od osvetljenja i materijala ili teksture koja mu je dodeljena.
+Boja objekata zavisi od osvetljenja i materijala ili teksture koja mu je dodeljena.
 
 Ljudska percepcija boje objekta je zapravo spektar elektromagnetnog zračenja koji se odbija o taj objekat i pada na retinu oka.
 U pravom svetu se zraci svetlosti odbijaju od više objekata pre nego što stignu do oka. 
 Simulacija takvog ponašanja se naziva praćenje svetlosti (eng. {\em raytracing}).  
 Praćenje svetlosti je računarski zahtevno, pa do skoro nije bilo moguće izvršavati ga u realnom vremenu, već samo na farmi servera koji renderuju neku scenu.
 2018. godine je firma NVIDIA pustila u prodaju novu seriju grafičkih karti koje hardverski implementiraju praćenje svetlosti. 
-U trenutku pisanja se ova tehnologija koristi kao hibrid, odnosno ne kao zamena nego dopuna postojećih metoda.
+U trenutku pisanja ove master teze se ova tehnologija koristi kao hibrid, dakle ne kao zamena nego dopuna postojećih metoda.
 
 Uobičajeno je da se materijali objekata opisuju pomoću Fongovog modela senčenja. 
 Fongov model je empirijski model osvetljenja. Razvio ga je Bui Tuong Fong i objavio ga u svojoj doktorskoj tezi 1975. godine.
-Opisuje boju površi kao kombinaciju difuzne refleksije, tj. odbijanja svetlosti sa grubih površi, 
-spekularne refleksije, tj. refleksija sa sjajnih površi, i ambijantne refleksije, koja predstavlja manju količinu svetlosti 
-koja je raspršena kroz celu scenu.
-\cite{Phong} OpenGL nudi Fongov model pa se on koristi za opisivanje materijala svih objekata.
+U ovom modelu boja površi se opisuje kao kombinaciju difuzne refleksije, tj. odbijanja svetlosti sa grubih površi, 
+spekularne refleksije, tj. refleksija sa sjajnih površi, i ambijentalne refleksije, koja predstavlja manju količinu svetlosti 
+koja je raspršena kroz celu scenu \cite{Phong}.
+OpenGL nudi Fongov model pa se on koristi za opisivanje materijala svih objekata.
 Todo slika možda.
-Uključeno je jedno globalno svetlo, a moguće je da posmatrač postavi jos najviše osam svetala na 
+Uključeno je jedno globalno svetlo, a posmatrač može da postavi jos najviše osam svetala na 
 proizvoljne statične blokove na mapi. 
 Slabljenje svetlosti se izražava preko tri faktora: konstantnog, linearnog i kvadratnog.
 Konstantan faktor jednako oslabljuje svetlost svuda, dok linearni i kvadratni faktori oslabljuju svetlost
 linearno, odnosno kvadratno, sa rastojanjem od izvora svetlosti.
 
-Komponenta se brine i o iscrtavanju teksta, što zahteva nešto više gl poziva nego što bi se očekivalo.
+Ova komponenta se brine i o iscrtavanju teksta, što zahteva nešto više gl poziva nego što bi se očekivalo.
 
 Postavljanje kamere zavisi od pozicije posmatrača i njegovog usmerenja pogleda levo-desno i gore-dole.
 Kamera se usmerava od pozicije posmatrača ka pravcu u kome gleda.
@@ -921,51 +933,52 @@ Vektor pravca gledanja se dobija prema formuli:
 \begin{equation}
 \label{eq:camera}
 \begin{split}
-x = cos(hrot) \cdot cos(vrot) \\
-y = sin(vrot) \\
-z = cos(hrot) \cdot  cos(vrot)	
+x = cos(rot_h) \cdot cos(rot_v) \\
+y = sin(rot_v) \\
+z = cos(rot_h) \cdot  cos(rot_v)	
 \end{split}
 \end{equation}
 
 
-Gde je $vrot$ ugao između $xz$ ravni i pravca gledanja, dok je $hrot$ ugao rotacije oko $y$ ose.
-Napomena da je u OpenGL-u $y$ osa vertikalna, $x$ horizontalna, a $z$ predstavlja dubinu.
+\noindent Gde je $rot_v$ ugao između $xz$ ravni i pravca gledanja, dok je $rot_h$ ugao rotacije oko $y$ ose.
+U OpenGL koordinatnom sistemu je $y$ osa vertikalna, $x$ horizontalna, a $z$ predstavlja dubinu.
 
 \subsection{Centralna komponenta}
 
 Centralna komponenta inicijalizuje GLUT funkcije povratnog poziva, postavlja GL parametre, i pokreće sistem.
-Definiše tajmer koji će periodično pozivati ažuriranje sistema i zakazati njegovo ponovno iscrtavanje. 
-Stara se o računanju vremena dva uzastopna koraka izvršavanja, redosledu pozivanja ažuriranja stanja,
+Ona definiše i tajmer koji će periodično pozivati ažuriranje sistema i zakazati njegovo ponovno iscrtavanje. 
+Ona se takođe stara o računanju vremena između dva uzastopna koraka izvršavanja, redosledu pozivanja ažuriranja stanja,
 detekcije kolizije, razrešavanja kolizije i iscrtavanja.
 
 \subsection{Komponenta za ažuriranje brzine i pozicije objekata}
 % ona radi i razresavanje kolizije
 
-Svaki objekat sadrži trojku brojeva u pokretnom zarezu koja označava njegovu poziciju za svaku koordinatu prostora.
-Za održavanje pravca je potrebna još jedna trojka koja predstavlja vektor brzine kretanja.
+Svakom objektu pridružena je  uređena trojka brojeva u pokretnom zarezu koja označava njegovu poziciju u trodimenzionom prostoru.
+Za održavanje pravca kretanja je potrebna još jedna trojka koja predstavlja vektor brzine kretanja.
 Ako se pritom želi da objekat postepeno ubrzava kada se primeni sila na njega, ili da postepeno usporava 
-kada prestane delovanje sile, onda se mora čuvati još jedna trojka brojeva, koja predstavlja ciljnu brzinu.
-Postepeno ubrzavanje se koristi prilikom upravljanja posmatrača. 
+kada prestane delovanje sile, onda se uz pomenute podatke mora čuvati još jedna trojka brojeva, koja predstavlja ciljnu brzinu.
+Postepeno ubrzavanje se koristi pri kretanju posmatrača. 
 Kada se pritisne dugme na tastaturi za pomeranje posmatrača, očekivano ponašanje je da neće istog trenutka 
 početi da se kreće maksimalnom brzinom, već postepeno da ubrzava.
-Isto, kada se pusti dugme, "sila" koja je delovala na posmatrača je nestala, ali je on imao momentum pa će
+Isto, kada se pusti dugme, "sila" koja je delovala na posmatrača je nestala, ali je on imao momenat pa će
 nastaviti malo napred.
 
-Potrebno je posvetiti pažnju kako se posmatrač kreće na komandu da ide napred-nazad ili levo-desno.
-Prva ideja bi bila da se za kretanje levo-desno poveća ili smanji vrednost pozicije $x$ koordinate posmatrača,
-ili da se menja $z$ koordinata posmatrača kada treba da se kreće napred-nazad.
+Potrebno je pažljivo razmotriti kako posmatrač treba da se kreće na komandu da ide napred-nazad ili levo-desno.
+Naivno razmišljanje bi navelo na ideju da se za kretanje levo-desno poveća ili smanji vrednost pozicije $x$ koordinate posmatrača,
+odnosno da se menja $z$ koordinata posmatrača kada treba da se kreće napred-nazad.
 To ipak nije dobro rešenje pošto kada neko želi da se pomeri ne razmišlja preko strana sveta na koju će stranu, 
-već relativno u odnosu na trenutnu njegovo usmerenje. Usmerenje je dato formulom \ref{eq:camera}.
-Neka je dat trodimenzioni vektor $v$ koji predstavlja usmerenje pogleda, tada je vektor 
+već relativno u odnosu na njegovo trenutno usmerenje (dato formulom \ref{eq:camera}).
+Neka je dat trodimenzioni jedinični vektor $v$ koji predstavlja usmerenje pogleda; tada je vektor 
 kretanja unapred jednak: 
-$$ v_{napred} = \frac{(v_1, 0, v_2)^T}{\|(v_1, 0, v_2)^T\|} $$
-Pritom se normira vektor kako se ne bi sporije kretalo u slučaju gledanja gore ili dole, 
-pošto su tada $v_1$ i $v_2$ mali.
-Slično, vektor kretanja u stranu se računa kao:
-$$ v_{bok} = \frac{(-v_2, 0, v_1)^T}{\|(-v_2, 0, v_1)^T\|} $$
+$$ v_{napred} = \frac{(v_x, 0, v_z)^T}{\|(v_x, 0, v_z)^T\|} $$
+Vektor kretanja unapred ima nulu za vrednost $y$ koordinate pošto usmerenje pogleda gore-dole ne utiče na pravac kretanja.
+Pritom se vektor normira kako se ne bi sporije kretalo u slučaju gledanja gore ili dole, 
+pošto su tada vrednosti $v_x$ i $v_z$ male.
+Slično, vektor kretanja u stranu se računa po formuli:
+$$ v_{bok} = \frac{(-v_z, 0, v_x)^T}{\|(-v_z, 0, v_x)^T\|} $$
 
-Sada su zamenjene vrednosti prvog i trećeg elementa vektora zato što kada se gleda pravo u smeru $x$ ose, 
-onda je bočno kretanje duž $z$ ose. Razlog za promenu znaka $v_2$ je jednostavno zbog orijentacije $z$ ose u odnosu na $xz$ ravan.
+Vrednosti prve i treće koordinate vektora su zamenjene iz razloga što kada se gleda pravo u smeru $x$ ose, 
+onda je bočno kretanje duž $z$ ose. Razlog za promenu znaka uz $v_z$ se ogleda u orijentaciji $z$ ose u odnosu na $xz$ ravan.
 Koordinatni sistem koji se koristi je prikazan na slici \ref{fig:coord}.
 
 \begin{figure}[h!]
@@ -976,56 +989,61 @@ Koordinatni sistem koji se koristi je prikazan na slici \ref{fig:coord}.
 \end{figure}
 
 Kontejner koji sadrži objekte koji se sudaraju se stara o njihovom pravilnom odbijanju o ivice ograničavajućeg prostora.
-Svakako, potrebno je reflektovati dimenziju vektor brzine koja odgovara osi duž koje se objekat sudara sa ivicom kontejnera.
-Objekti će nekada delom zaći van kontejnera, pa se tada oni pomere u unutrašnjost tako da jedna njihova strana bude uz stranu kontejnera.
+Kada se objekat sudari sa ivicom kontejnera onda je potrebno reflektovati onu koordinatu vektora
+brzine objekta koja odgovara osi duž koje su se sudarili.
+Objekti će nekada delom izaći van kontejnera, pa se tada oni pomeraju u unutrašnjost tako da jedna njihova strana bude uz stranu kontejnera.
 
-Kada se na primer na kuglu koja stoji uz zid primeni sila koja nije normalna na stranu zida, onda kugla neće ostati nepokretna,
-već se kretati paralelno uz stranu zida. Isti princip je obezbeđen za kretanje posmatrača uz zid jer je 
+Kada se na primer na kuglu koja stoji uz zid primeni sila koja nije upravna na stranu zida, onda kugla neće ostati nepokretna,
+već se kretati paralelno uz stranu zida. Isti princip važi i za kretanje posmatrača uz zid jer je 
 takvo ponašanje standardno za sve video igre.
 
-Detekcija kolizije kao rezultat daje parove svih objekata u koliziji. Na te parove se primenjuje 
-razrešenje kolizije prema formulama \ref{eq:razresenje} i \ref{eq:razresenje2}.
+Detekcija kolizije kao rezultat daje parove svih objekata u koliziji. 
+Na te parove se primenjuje algoritam za razrešenje kolizije prema formulama (\ref{eq:razresenje}) i (\ref{eq:razresenje2}).
 
 \subsection{Komponenta za merenje performansi}
 \label{sec:perf}
 
-Služi za prikupljanje podataka kako bi se uradila evaluacija data u \ref{sec:evaluacija}.
+Ova komponenta služi za prikupljanje podataka kako bi se uradila evaluacija data u poglavlju \ref{sec:evaluacija}.
 Jedna instanca merenja predstavlja jedan korak izvršavanja i sastoji se od 
-vremena izvršavanja koraka, veličine objekta, broja objekta, dodatnih podataka u zavisnosti od toga 
-koji algoritam detekcije kolizije se koristi. Ne zapisuje se direktno u izlaznu datoteku, pošto bi 
-to usporavalo izvršavanje, već se čuva u vektoru, pa se napravi datoteka u koju se zapišu rezultati 
-tek kad je gotovo merenje.
+vremena izvršavanja koraka, veličine objekta, broja objekta i dodatnih podataka u zavisnosti od toga 
+koji algoritam detekcije kolizije se koristi. 
+Sakupljeni podaci se ne zapisuju direktno u izlaznu datoteku, pošto bi 
+to usporavalo izvršavanje, već se čuvaju u vektoru, 
+i tek kada je gotovo celokupno merenje, vrši se ispis u odgovarajuću datoteku.
 
 \subsection{Komponenta za rukovanje ulazima korisnika}
 
-Definiše funkcije povratnog poziva koje će FreeGLUT pozivati.
-Potrebne su funkcije za akciju pritiska dugmeta tastature, puštanje dugmeta, kao i 
-radnja koja se vrši dok je dugme pritisnuto. Za poslednju stavku se mora ručno implementirati 
-za svako dugme pamćenje stanja pritisnutosti. Ako se želi akcija na pritisak specijalnih dugmeta  
+Komponenta za rukovanje ulazima korisnika definiše funkcije povratnog poziva (eng. {\em callback function}) koje će FreeGLUT pozivati.
+Od funkcija biće potrebne funkcija za akciju pritiska dugmeta tastature, puštanje dugmeta, kao i 
+radnja koja se vrši dok je dugme pritisnuto. 
+Za poslednju navedenu akciju se za svako dugme sa tastature mora ručno implementirati pamćenje stanja pritisnutosti.
+Ako se želi akcija na pritisak specijalnih dugmeta  
 poput F1, F5, strelice i slično, onda se zahteva definisanje odvojenih funkcija za njih.
 
-Što se tiče reakcija na pritisnuto dugme, prva ideja je da se direktno pozove ta akcija. 
+Što se tiče reakcija na pritisnuto dugme, prva ideja je da se direktno pozove odgovarajuća akcija. 
 To je u redu ako je ta akcija na primer izlazak iz programa, promena izabranog algoritma, ili neka druga jedinična akcija.
-Ako je pak slučaj akcije poput kretanja napred, onda bi takvo ponašanje imalo neprijatan efekat. 
-Osljanjalo bi se na učestale ponovljene signale da je dugme pritisnuto, koji u praksi uopšte nisu periodični.
-Tada bi kretanje "seckalo", i njegova brzina bi zavisila od mogućnosti glavne petlje događaja da signal pritiska dugmeta često i ravnomerno poziva.
-Ili obrnuto, mogla bi se desiti dva uzastopna signala pritiska dugmeta za napred između dva iscrtavanja scene. 
+Ako je pak u pitanju akcija poput kretanja napred, onda bi takvo ponašanje imalo neprijatan efekat. 
+Oslanjalo bi se na učestale ponovljene signale da je dugme pritisnuto, koji u praksi uopšte nisu periodični.
+To bi dovelo do efekta "seckanja" prilikom kretanja i njegova brzina bi zavisila od mogućnosti glavne petlje događaja da signal pritiska dugmeta često i ravnomerno poziva.
+Takođe, mogla bi se desiti  dva uzastopna signala pritiska dugmeta za napred između dva iscrtavanja scene. 
 Da li bi tada trebalo da se napravi duplo veći pomeraj? Odgovor je ne, ali bi to bio efekat ovakve implementacije.
 
-Ispravno rešenje je da se zapamti da je dugme pritisnuto, a onda da se reakcija na to desi tek zajedno sa ostalim ažuriranjima 
+Ispravno rešenje bilo bi da se zapamti da je dugme pritisnuto,  a da se na ovaj događaj reaguje  tek zajedno sa ostalim ažuriranjima 
 stanja i pozicija, što se dešava periodičnim pozivima komponente koja je za to zadužena. Tako je reakcija nezavisna od učestalosti 
 slanja ponovnih signala da je dugme pritisnuto, štaviše, oni su sada nepotrebni. 
 
-Što se tiče miša, postoje tri funkcije koje je potrebno implementirati. Prva je za akcije pritiska 
-dugmeta miša, druga je za pomeraj miša, i treća je za pomeraj miša dok je neko dugme na njemu pritisnuto.
-Potrebno je pratiti veličinu svakog pomeraja miša i na osnovu toga izračunati novu horizontalnu i vertikalnu rotaciju 
-kamere, odnosno posmatračevog usmerenja. Kako kursor miša ne bi napustio prozor programa, potrebno je da se on nakon svakog pomeraja 
-vrati u centar prozora. Kursor miša je takođe sakriven, a dodata je opcija da se prikaže i da dobije nazad slobodu da napusti prozor.
+Što se tiče događaja miša, postoje tri funkcije koje je potrebno implementirati. Prva se odnosi na događaj pritiska 
+dugmeta miša, druga na pomeraj miša, dok se treća tiče događaja pomeranja miša dok je neko dugme na njemu pritisnuto.
+Potrebno je pratiti vrednost svakog pomeraja miša i na osnovu toga izračunati novu horizontalnu i vertikalnu rotaciju 
+kamere, odnosno posmatračevog usmerenja.
+Kako kursor miša ne bi napustio prozor programa, 
+potrebno ga je nakon svakog pomeraja vratiti u centar prozora.
+Kursor miša se podrazumevano ne prikazuje na ekranu, a dodata je opcija da se prikaže i da dobije nazad slobodu da napusti prozor.
 
 \subsection{Komponenta za detekciju kolizije}
 
-Za projekat najznačajnija funkcionalnost dolazi od ove komponente. 
-Algoritmi su implementirani u odvojenim klasama, ali imaju isti interfejs.
+S obzirom na tematiku ovog rada, najznačajnija i najinteresantnija je funkcionalnost koju pruža ova komponenta.
+Algoritmi za detekciju kolizije su implementirani u odvojenim klasama, ali imaju isti interfejs.
 Svaka klasa implementira metodu kojoj se prosleđuje vektor objekata za koje treba proveriti da li su u koliziji
 i vraća sve parove objekata koji jesu u koliziji. Takođe svaka implementira metod koji daje relevantne podatke 
 o stanju algoritma specifičnom za njega. Npr. broj elemenata u unutrašnjim čvorovima oktrija ili broj 
@@ -1036,30 +1054,32 @@ zamena u SAP algoritmu. Oni se koriste za merenje i za ispisivanje trenutnih inf
 \label{sec:evaluacija}
 % ==============================================================================
 
-U ovom poglavlju će biti izloženi rezultati merenja vremena izvršavanja koraka simulacije.
-Da bi se dobile vrednost $dt$ koje predstavljaju proteklo vreme između dva uzastopna ažuriranja scene
-koristi se komponenta \ref{sec:perf}, a za dobijanje preciznog trenutnog vremena se koristi funkcija iz GLUT biblioteke.
-U daljem tekstu se pod "relativan $dt$" podrazumeva:
-$$ \frac{ dt }{16.667} $$
+U ovom poglavlju biće izloženi rezultati merenja vremena izvršavanja koraka simulacije.
+Da bi se dobile sve vrednosti $dt$ koje predstavljaju proteklo vreme između dva uzastopna ažuriranja scene
+koristi se komponenta za merenje performansi opisana u delu \ref{sec:perf}, a za dobijanje precizne vrednosti trenutnog vremena se koristi funkcija iz GLUT biblioteke.
+U daljem tekstu se pod terminom "relativan $dt$" podrazumeva vrednost:
+$$ \frac{ dt }{16.67} $$
 
-Razlog za deljenjebrojem 16.667 je taj što je poželjan minimalan broj iscrtavanja u sekundi 60, 
-što je $1/60$ u terminima proteklog vremena $dt$.
+Razlog za deljenje brojem 16.67 je taj što je poželjan minimalan broj iscrtavanja u sekundi 60, 
+što je $1/60$ sekunde, odnosno 16.67 milisekundi u terminima proteklog vremena $dt$.
+Tako relativan $dt$ predstavlja umnoške od 16.67 milisekundi i lakša je interpretacija
+(npr. mere 33.33 i 8.33 milisekundi redom postaju 2 i 0.5 relativnog $dt$).
 
 Sva merenja su izvršena na računaru sa sledećom konfiguracijom:
 \begin{itemize}  
 	\item Procesor - Intel Core i5-6600K 
-	\item Grafička - NVIDIA GeForce GTX 1060 WINDFORCE OC 6G
-	\item RAM - Kingston HyperX FURY 8GB 2133MHz DDR4 
-	\item Matična - ASUS Z170-A
+	\item Grafička karta - NVIDIA GeForce GTX 1060 WINDFORCE OC 6G
+	\item RAM memorija - Kingston HyperX FURY 8GB 2133MHz DDR4 
+	\item Matična ploča - ASUS Z170-A
 \end{itemize}  
-Pritom se pazi da nisu pokrenuti drugi programi koji bi uticali na rezultate.
+Pritom se vodilo računa da nisu pokrenuti drugi programi koji bi uticali na rezultate.
 Procesorski takt je postavljen na 4.4 GHz.
 
 Za preprocesiranje i prikaz podataka korišćen je programski jezik \textbf{Python},
-biblioteka \textbf{pandas} za manipulisanje podacima i biblioteka \textbf{matplotlib}
+biblioteka \textbf{pandas} za obradu podataka i biblioteka \textbf{matplotlib}
 za pravljenje grafika.
 
-\section{Opšte}
+\section{Opšti zaključci}
 
 Za početak, potrebno je ustanoviti koliki uticaj ima postupak iscrtavanja na vreme izvršavanja.
 U slučaju da iscrtavanje troši veći ili približan deo vremena u odnosu na detekciju kolizije, onda 
