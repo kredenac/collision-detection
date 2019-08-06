@@ -104,7 +104,7 @@ Međutim, današnji virtuelni svetovi sadrže hiljade pokretnih tela i stotine m
 zato je potrebno koristiti napredne strukture podataka i razviti efikasne algoritme. 
 Nedovoljno efikasan algoritam za otkrivanje kolizije može predstavljati usko grlo sistema.
 
-Objekat čiji se presek razmatra može biti jednostavan kao što je recimo kocka, a može biti izgrađen i od desetine hiljada poligona.
+Objekat čiji se presek razmatra može biti jednostavan kao što je npr. kocka, a može biti izgrađen i od desetine hiljada poligona.
 Stoga nije praktično da se 
 za sve poligone svih objekata proverava da li postoji presek sa nekim poligonom nekog drugog objekta.
 Umesto toga, složeni objekti se zamenjuju kvadrima koji su opisani oko njih.
@@ -121,14 +121,11 @@ Za interaktivne svetove je neophodno otkrivanje kolizija u realnom vremenu.
 Potreba izvršavanja u realnom vremenu nosi sa sobom nove probleme za čije rešavanje se koriste posebni mehanizmi 
 i uglavnom dolazi do nagodbe preciznosti i efikasnosti.
 
-% todo pregled rada
-
 U prvom poglavlju rada biće data motivacija. 
-Pregled relevantnih pojmova i fenomena će biti prikazanu u drugom poglavlju uz fokus na konzistentne korake izvršavanja.
-Odabrani algoritmi široke faze će biti predstavljeni u trećoj glavi. 
+Pregled relevantnih pojmova i fenomena biće prikazanu u drugom poglavlju uz fokus na konzistentne korake izvršavanja.
+Algoritmi široke faze biće predstavljeni u trećoj glavi. 
 Implementacija projekta biće opisana u četvrtoj, 
-a evaluacija performansi i demonstracija nekih principa će se razmatrati u petoj glavi.
-
+a evaluacija performansi i demonstracija nekih principa biće razmotreno u petoj glavi.
 
 \section{Motivacija}
 \label{sec:naslov1}
@@ -195,7 +192,7 @@ Zato treba uzeti u obzir sve relevantne činjenice koje utiču na performanse im
 
 Celokupan zadatak detekcije kolizije se deli na dve etape: \textbf{ široku fazu } i \textbf{usku fazu}. 
 U prvoj, širokoj, fazi
-odbacuje se (često) većina kandidata od svih mogućih parova objekata za koje ispitujemo da li postoji presek.
+odbacuje se (često) većina kandidata od svih mogućih parova objekata za koje se ispituje da li postoji presek.
 Zadatak uske faze je da se za parove objekata dobijenih u širokoj fazi utvrdi da li oni zaista imaju presek.
 Cilj je razviti što efikasniji algoritam prve faze (u funkciji broja objekata) za odbacivanje ovakvih parova objekata.
 Iako postoje takvi slučajevi, u mnogim primenama nisu svi objekti prosta geometrijska tela poput kocki, kvadara ili lopti.
@@ -921,7 +918,9 @@ U ovom modelu boja površi se opisuje kao kombinaciju difuzne refleksije, tj. od
 spekularne refleksije, tj. refleksija sa sjajnih površi, i ambijentalne refleksije, koja predstavlja manju količinu svetlosti 
 koja je raspršena kroz celu scenu \cite{Phong}.
 OpenGL nudi Fongov model pa se on koristi za opisivanje materijala svih objekata.
-Todo slika možda.
+
+% slika možda.
+
 Uključeno je jedno globalno svetlo, a posmatrač može da postavi jos najviše osam svetala na 
 proizvoljne statične blokove na mapi. 
 Slabljenje svetlosti se izražava preko tri faktora: konstantnog, linearnog i kvadratnog.
@@ -1055,7 +1054,26 @@ zamena u SAP algoritmu. Oni se koriste za merenje i za ispisivanje trenutnih inf
 
 \section{Vizuelizacija}
 
-Todo.
+\begin{figure}[h!]
+	\centerfloat
+	\includegraphics[scale=0.3]{ssdefault.png}
+	\caption{todo.}
+	\label{fig:ssdefault}
+\end{figure}
+
+\begin{figure}[h!]
+	\centerfloat
+	\includegraphics[scale=0.3]{ssinfo.png}
+	\caption{todo.}
+	\label{fig:ssinfo}
+\end{figure}
+
+\begin{figure}[h!]
+	\centerfloat
+	\includegraphics[scale=0.3]{ssyank.png}
+	\caption{todo.}
+	\label{fig:ssyank}
+\end{figure}
 
 % ==============================================================================
 \chapter{Evaluacija}
@@ -1193,7 +1211,7 @@ a da nije dobro ni da je sasvim mala, jer bi se listovi previše često delili.
 Na slici \ref{fig:octree_leaf} se zapaža da ovako odabrana vrednost nije loš izbor i tada je broj slika u sekundi 69 (0.89 relativan $dt$). 
 Ispostavlja se da 1 predstavlja najlošiju vrednost za ovaj parametar pošto dovodi do viška rekurzivnog particionisanja prostora.
 Pokazuje se da sa porastom vrednosti maksimalnog broja elemenata u listu relativan dt opada sve do vrednosti 32, od koje počinje da raste.
-Najbolje performanse algoritam postiže za vrednost 32, kada je broj slika u sekundi 94 što je čak 36.2\% bolje (u odnosu na prethodnih 69)! 
+Najbolje performanse algoritam postiže za vrednost 32, kada je broj slika u sekundi 94 što je čak 36.2\% bolje (u odnosu na prethodnih 69fps)! 
 Ubrzanje od 36.2\% je u praksi veoma značajno, pogotovo što je postignuto samo promenom jednog koeficijenta.
 U svim ovim merenjima broj objekata je fiksan i iznosi 10 000 objekata i korišćen je oktri sa duplikatima.
 
@@ -1280,6 +1298,12 @@ do akumuliranja usporavanja, koji iznosi oko 100 000.
 	\label{fig:sap_great}
 \end{figure}
 
+\section{Odabir algoritma detekcije kolizije}
+
+Na osnovu prethodnih grafika prikazanih u ovoj glavi se može primetiti da za drukčije
+pozicije, brzine, veličine i brojeve objekata različiti algoritmi detekcije kolizije bivaju najefikasniji.
+
+todo...
 
 % ==============================================================================
 \chapter{Zaključak}
