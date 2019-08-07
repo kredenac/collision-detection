@@ -570,8 +570,9 @@ se provere kolizije vrše samo nad manjim podskupovima svih elemenata.
 	\caption{Osnovni algoritam detekcije kolizije}
     \label{alg:triv}
 	\begin{algorithmic}[1]
-		\Procedure{osnovnaDetekcijaKolizije}{$objekti$}%\Comment{elements je niz svih objekata}
+		\Procedure{OsnovnaDetekcijaKolizije}{objekti}%\Comment{elements je niz svih objekata}
 		\State $Parovi := \{ \}$
+		\State n := broj(objekti)
 		\For{i:=0 to n-1}
 			\For{j:=i+1 to n}
 
@@ -615,6 +616,58 @@ Treba primetiti da je složenost provere kolizija kvadratna po broju elemenata u
 To ipak nije problem kada su elementi pretežno uniformno raspoređeni po prostoru, što je često 
 i slučaj jer se uglavnom ne dopušta njihovo trajno presecanje. 
 
+\begin{algorithm}
+	\caption{Oktri detekcija kolizije (sa duplikatima)}
+    \label{alg:octree}
+	\begin{algorithmic}[1]
+		\Procedure{OktriNađiKolizije}{objekti}%\Comment{elements je niz svih objekata}
+		\State $Parovi := \{ \}$
+		\For{obj in objekti}
+			\State DodajUČvor(obj, korenOktri, $Parovi$)
+		\EndFor
+		\State \textbf{return} $Parovi$
+		\EndProcedure
+
+		\Procedure{DodajUČvor}{objekti, čvor, $Parovi$}
+		\If{čvor nije list}
+			\State DodajNaniže(obj, čvor, $Parovi$)
+			\State \textbf{return}
+		\EndIf		
+
+		\For{element in elementi}
+			\If{obj i element imaju presek}
+				\State dodaj par (obj, element) u kolekciju $Parovi$
+			\EndIf		
+		\EndFor
+
+		\State dodaj obj u čvor.elementi
+
+		\If{čvor na maksimalnoj dubini ili broj(čvor.elementi) <= maksimum}
+			\State \textbf{return}
+		\EndIf	
+
+		\State podeli čvor na podoktante
+
+		\For{element in čvor.elementi}
+			\State DodajNaniže(element, čvor, $Parovi$)
+		\EndFor
+
+		\State obriši vektor čvor.elementi
+
+		\EndProcedure
+
+		\Procedure{DodajNaniže}{obj, čvor, $Parovi$}
+		\State $Parovi := \{ \}$
+		\For{podoktant in čvor}
+			\If{podoktant i obj imaju presek}
+				\State DodajUČvor(obj, podoktant, $Parovi$)
+			\EndIf	
+		\EndFor
+		\State \textbf{return} $Parovi$
+		\EndProcedure
+    \end{algorithmic}
+\end{algorithm}
+
 Ukoliko se razmatra tačkasti objekat, opisani postupak umetanja radi korektno,
 ali se postavlja pitanje šta raditi sa većim objektima koji pripadaju više oktanata.
 Jedno rešenje je da se objekat ubaci u svaki oktant kome bar delimično pripada.
@@ -623,7 +676,8 @@ podoktante i tako rekurzivno.
 Tada veliki broj listova mora da pamti taj objekat, tj. njegovu referencu ili indeks u nekom nizu.
 To nije velika smetnja kada su svi objekti sličnih veličina, ali ako 
 nisu, onda i memorijska i vremenska složenost mogu eksplodirati.
-Ovakav oktri će se u daljem tekstu nazivati oktri sa duplikatima.
+Ovakav oktri će se u daljem tekstu nazivati oktri sa duplikatima. 
+Pseudokod oktrija sa duplikatima je dat na \ref{alg:octree}.
 
 Drugo rešenje je da se dopusti i unutrašnjim čvorovima stabla da čuvaju objekte.
 Kada neki objekat seče više od jednog oktanta nekog unutrašnjeg čvora $U$, tada se on ne ubacuje 
@@ -696,6 +750,9 @@ pomere za jednu poziciju udesno. Postoje dva uslova koji utiču na postojanje ko
 
 \end{itemize}  
 
+Za inicijalizaciju kolizija može se koristiti isti postupak koji se koristi za održavanje sortiranosti niza.
+Međutim, to znači da je potrebno sortirati prvobitni niz (koji nije blizu sortiranosti) algoritmom sortiranja umetanjem.
+Umesto toga je bolje prvi korak kolizije uraditi nekim drugim algoritmom detekcije kolizije, na primer pomoću oktrija.
 
 \begin{figure}[h!]
 	\begin{center}
@@ -707,6 +764,27 @@ pomere za jednu poziciju udesno. Postoje dva uslova koji utiču na postojanje ko
 
 Umesto da se AABB upiti vrše svaki put iznova, moguće je da se čuvaju informacije o presecima 
 na svakoj osi. To zahteva $O(n^2)$ memorije ali smanjuje posao prilikom zamena \cite{sap}. 
+
+
+\begin{algorithm}
+	\caption{Briši i odseci algoritam detekcije kolizije todo}
+    \label{alg:triv}
+	\begin{algorithmic}[1]
+		\Procedure{OsnovnaDetekcijaKolizije}{objekti}%\Comment{elements je niz svih objekata}
+		\State $Parovi := \{ \}$
+		\State n := broj(objekti)
+		\For{i:=0 to n-1}
+			\For{j:=i+1 to n}
+
+			\If{i-ti i j-ti objekti imaju presek}
+				\State dodaj (i, j) u skup $Parovi$
+			\EndIf		
+		\EndFor
+		\EndFor
+		\State \textbf{return} $Parovi$
+		\EndProcedure
+    \end{algorithmic}
+\end{algorithm}
 
 Ovaj metod pokazuje najbolje performanse kada su objekti uniformno raspoređeni, dok mu je ponašanje lošije kada je
 prisutan klaster većine objekata na nekoj osi, što vodi kvadratnoj složenosti po broju objekata \cite{glavna2}.
@@ -873,7 +951,8 @@ Parametri koji se menjaju kroz kontroler komponentu su:
 	\item Brzina kretanja objekata.
 	Ovaj faktor ne utiče na sve algoritme, ali je u slučaju SAP algoritma najbitniji. Može promeniti odlično ponašanje SAP algoritma u slučaju sporog kretanja 
 	objekata i učiniti ga algoritmom kvadratne složenosti u najgorem slučaju.
-	\item Veličina kontejnera u kome se nalaze i kreću svi objekti.
+	\item Veličina kontejnera u kome se nalaze i kreću svi objekti. Kontejner je ovde eksplicitno predstavljen, mada bi se inače mogao podrazumevati kao kvadar 
+	koji u potpunosti sadrži svet čije se kolizije simuliraju.
 	Ovaj parametar daje još jednu perspektivu kako odnos veličine objekata sa celim prostorom, ovde kontejnerom, utiču na performanse.
 	\item Maksimalan broj elemenata u listu oktrija.
 	Promena maksimalnog broja elemenata u listu pre nego što se on podeli na podoktante utiče "samo" na konstantan faktor vremenske složenosti.
@@ -898,7 +977,7 @@ Kontroler komponenta takođe pruža mogućnost menjanja pravca kretanja objekata
 Tada svi objekti bivaju usmereni prema trenutnoj poziciji posmatrača. 
 Ova funkcionalnost je potrebna pošto ona povećava koncentraciju objekata, 
 pogotovo nakon što se odbiju o ivicu kontejnera. Tada će se većina objekata 
-naći oko centra kontejnera, što dovodi do eksplozije vremena izvršavanja, pogotovo u slučaju oktrija sa duplikatima.
+naći oko centra kontejnera (kao na slici \ref{fig:ssyank}), što dovodi do eksplozije vremena izvršavanja, pogotovo u slučaju oktrija sa duplikatima.
 
 \subsection{Komponenta za iscrtavanje}
 
@@ -1054,24 +1133,40 @@ zamena u SAP algoritmu. Oni se koriste za merenje i za ispisivanje trenutnih inf
 
 \section{Vizuelizacija}
 
+U ovoj sekciji biće predstavljen izgled programa. 
+Program je namenjen da se koristi interaktivno. 
+Korisnik može da se kreće, pomera kameru (usmerenje pogleda), menja parametre koji utiču na detekciju kolizije,
+zapaža rezultate posmatranjem objekata na sceni, posmatranjem prikazanih vrednosti ili vršenjem merenja.
+
+Na slici \ref{fig:ssdefault} prikazano je podrazumevano stanje kada se program pokrene.
+U donjem levom uglu su ispisane relevantne informacije, od kojih su najbitnije broj objekata 
+i broj slika u sekundi. Takođe je prikazan algoritam koji se koristi, parametri specifični za njega, kao 
+i veličina objekta, brzina kretanja (kada nije izabrana podrazumevana vrednost), da li je razrešavanje kolizije uključeno i
+broj objekata koji su u koliziji.
+
 \begin{figure}[h!]
 	\centerfloat
 	\includegraphics[scale=0.3]{ssdefault.png}
-	\caption{todo.}
+	\caption{Snimak ekrana - podrazumevano stanje programa.}
 	\label{fig:ssdefault}
 \end{figure}
+
+\noindent Desnim klikom miša su prikazane sve kontrole sa leve strane, kao na slici \ref{fig:ssinfo}.
 
 \begin{figure}[h!]
 	\centerfloat
 	\includegraphics[scale=0.3]{ssinfo.png}
-	\caption{todo.}
+	\caption{Snimak ekrana - prikazane kontrole.}
 	\label{fig:ssinfo}
 \end{figure}
 
+\noindent Na slici \ref{fig:ssyank} je prikazana grupa objekata u centru kontejnera i takav slučaj biće 
+razmatran u evaluaciji (glava \ref{sec:evaluacija}).
+
 \begin{figure}[h!]
 	\centerfloat
-	\includegraphics[scale=0.3]{ssyank.png}
-	\caption{todo.}
+	\includegraphics[scale=0.3]{ssyank.jpg}
+	\caption{Snimak ekrana - klaster objekata u centru.}
 	\label{fig:ssyank}
 \end{figure}
 
@@ -1184,10 +1279,21 @@ pošto algoriam nije linearne vremenske složenosti.
 	\label{fig:oktri2}
 \end{figure}
 
-Grafici \label{fig:oktri1} i \label{fig:oktri2} se odnose na oktri sa duplikatima.
-Oktri sa i bez duplikata su često sličnih performansi.
-Međutim, postoje situacije kada to nije tako. 
-Jedna od njih je kada se veliki broj objekata nalazi na istom mestu.
+Grafici \ref{fig:oktri1} i \ref{fig:oktri2} se odnose na oktri sa duplikatima.
+Oktri sa i bez duplikata imaju slične performanse dok je broj objekata ispod 5000.
+Kao što se vidi na slici \ref{fig:dupvsnodup}, vreme izvršavanja u zavisnosti od broja objekata kod oktrija bez duplikata raste brže od oktrija sa duplikatima.
+
+\begin{figure}[h!]
+	\centerfloat
+	\includegraphics[
+		trim=0 0 0 19,clip,
+		scale=1]{octree_dup_vs_nodup.pdf}
+	\caption{Zavisnost relativnog dt od broja objekata za veći broj objekata - oktri sa duplikatima naspram oktrija bez duplikata.}
+	\label{fig:dupvsnodup}
+\end{figure}
+
+Međutim, postoje situacije kada oktri bez duplikata ima bolje performanse. 
+Jedna od njih je kada se veliki broj objekata nalazi na istom mestu, kao što je slučaj na slici \ref{fig:ssyank}.
 Za potrebe demonstriranja ove pojave se koristi scenario gde se objekti nasumično kreću i onda svi bivaju povučeni ka jednoj istoj tački.
 Tada se svi nalaze na istom mestu za trenutak, i potom se razilaze.
 Ovaj efekat prikazan je na slici \ref{fig:octreSpike} i mogu se uočiti tri manja plava skoka za oktri bez duplikata, i dva narandžasta skoka reda veličine za oktri sa duplikatima.
@@ -1200,7 +1306,7 @@ ona onemogućava grupisanje preseka objekata i time ubrzava izvršavanje oktrija
 	\includegraphics[
 		trim=0 0 0 19,clip,
 		scale=1]{octreeSpikes.pdf}
-	\caption{Usporenje oktrija pri klasterovanju objekata.}
+	\caption{Usporenje oktrija pri klasterovanju objekata. Pikovi su trenuci kada su objekti klasterovani. }
 	\label{fig:octreSpike}
 \end{figure}
 
@@ -1267,6 +1373,7 @@ Vidi se direktna veza broja zamena i relativnog $dt$ jer broj zamena kvadratne s
 
 Kao što povećanje brzine kretanja može imati jako negativne posledice na performanse SAP algoritma, tako i smanjivanje brzine utiče povoljno na njegovo vreme izvršavanja.
 Upoređivanje vremena za tri različite brzine objekata je dato na slici \ref{fig:sap3speeds}. 
+Podrazumevanja brzina objekata je $w/5$ jedinica u sekundi, gde je $w$ širina kontejnera unutar koga se objekti kreću.
 Prvo merenje je izvršeno pri podrazumevanoj brzini, drugo pri duplo manjoj i treće pri četri puta manjoj brzini.
 Što se sporije objekti kreću to je tačka kada povratna sprega počinje da uzima maha više odložena.
 Međutim, izvesno je da će se to u nekom trenutku desiti, tako da u zavisnosti od situacije SAP algoritam može biti loš ili idealan.
@@ -1281,9 +1388,9 @@ Međutim, izvesno je da će se to u nekom trenutku desiti, tako da u zavisnosti 
 \end{figure}
 
 Svi do sada razmatrani algoritmi detekcije kolizije pre 20 000 objekata prelaze granicu od dva relativna $dt$.
-Na slici \ref{fig:sap_great} je prikazana situacija kada je SAP algoritam ubedljivo najbolji.
+Na slici \ref{fig:sap_great} je prikazan rezultat merenja gde se objekti kreću brzinom 64 puta sporijom od podrazumevane i tada je SAP algoritam ubedljivo najbolji.
 Prilikom merenja je isključeno iscrtavanje pošto ono traje duže od samog algoritma kolizije u ovakvom slučaju,
-što se može videti na \ref{fig:drawVsNoDraw}, jer za oko 50 000 objekata relativan dt prelazi 2.
+što se može videti na \ref{fig:drawVsNoDraw}, jer za oko 50 000 objekata relativan dt prelazi 2. 
 Ovde je SAP višestruko bolji od ostalih, dostižući 60fps tek na 75 000, a 30fps na 92 000 objekata.
 Pritom ostaje ispod referentne prave koja označava linearnu zavisnost, sve do momenta kada se približava broju objekata koji dovodi 
 do akumuliranja usporavanja, koji iznosi oko 100 000.
@@ -1294,7 +1401,7 @@ do akumuliranja usporavanja, koji iznosi oko 100 000.
 	\includegraphics[
 		trim=0 0 0 19,clip,
 		scale=1]{sap_great.pdf}
-	\caption{Relativan dt u zavisnosti od broja objekta kada se objekti sporo kreću - SAP.}
+	\caption{Relativan dt u zavisnosti od broja objekta kada se objekti sporo kreću (64 puta sporije od podrazumevane brzine) - SAP.}
 	\label{fig:sap_great}
 \end{figure}
 
@@ -1302,8 +1409,23 @@ do akumuliranja usporavanja, koji iznosi oko 100 000.
 
 Na osnovu prethodnih grafika prikazanih u ovoj glavi se može primetiti da za drukčije
 pozicije, brzine, veličine i brojeve objekata različiti algoritmi detekcije kolizije bivaju najefikasniji.
+Primenu trivijalnog algoritma, čije performanse su prikazane na slici \ref{fig:basic}, treba izbegavati.
+Jedini razlog za njegovo korišćenje je kada ima manje od npr. 100 objekata,
+uz opravdanje da je jednostavan za implementaciju i lakše održiv zbog manje koda.
+Međutim, uglavnom se traži algoritam detekcije kolizije koji će biti primenljiv i na više hiljada objekata,
+tako da trivijalni algoritam ne dolazi u obzir.
 
-todo...
+Oktri i njegove varijacije predstavljaju uglavnom najbolji izbor.
+Na osnovu rezultata sa \ref{fig:octree_leaf} preporuka je koristiti oktri sa brojem maksimalnim brojem elemenata u listu 
+postavljenim na 32, a dobar izbor maksimalne dubine je 10. 
+Oktri sa duplikatima je bolji izbor u odnosu na oktri bez duplikata, osim ako može doći do stvaranja klastera objekata, kada
+je (prema grafiku \ref{fig:dupvsnodup}) oktri bez duplikata ima višestruko bolje performanse.
+
+SAP algoritam je u opštem slučaju sporiji od oktrija i ne treba ga koristiti ako se većina objekata 
+brzo kreće.
+Ipak, SAP algoritam predstavlja najbolji izbor ako se skoro svi objekti kreću dovoljno malom brzinom 
+tako da im je potrebno barem 100 sekundi da pređu sa jednog kraja kontejnera u kome se nalaze.
+
 
 % ==============================================================================
 \chapter{Zaključak}

@@ -226,7 +226,7 @@ y strana 17: Kada su svi objekti dinamični -> Kada se svi objekti kreću
 y strana 17:  usput se odrede njihove kolizije ->  usput se ispituje postojanje kolizije između njih
 y strana 17: a za dinamične objekte -> a za objekte koji se kreću
 
-n, ali uradicu strana 18: bilo bi dobro i za algoritme prikazane u poglavljima 3.2, 3.3 i 3.4 dati pseudokod algoritma
+n, ali uradicu todo strana 18: bilo bi dobro i za algoritme prikazane u poglavljima 3.2, 3.3 i 3.4 dati pseudokod algoritma
 y strana 18:  Ako se na sve tri ose -> ako se po sve tri ose 
 y strana 18:  onda se i zaista u prostoru seče taj par AABB ->  onda se taj par AABB seče i u prostoru
 y strana 18: u jednom trenutku vremena -> u jednom vremenskom trenutku
@@ -422,14 +422,14 @@ y strana 33: onda bi bilo nepravilno meriti iz zajedno -> bilo bi nepravilno mer
 y strana 33: Zato je obezbežen način da se isključi iscrtavanje ako bi se to dešavalo. -> U programu je svakako omogućeno da se isključi iscrtavanje.
 nnny strana 33: i sledećim graficima -> napisati koji su grafici u pitanju ili ako je tačno reći "na svim narednim graficima"
  strana 33: u naslovu slike 5.1: isključena detekcija kolizije -> u slučaju kada je isključena detekcija kolizije
-yn todo strana 33: mozda vrednost po x osi staviti u formatu 8*10^4, ovako veliki broj nula kvari sliku
+y strana 33: mozda vrednost po x osi staviti u formatu 8*10^4, ovako veliki broj nula kvari sliku
  strana 33: y0 /x0 -> šta su x0 i y0?
 y strana 33:  su date referentne vrednosti -> prikazane su naredne referentne vrednosti
 y strana 33: sva tri puta deo rečenice "prikazana zelenom/žutom/crvenom bojom" bih stavila u zagradu
 nnn namerno sam stavio da se slabo vide, nije u njima poenta ali je dobro da su tu radi poredjenja, Mozda zutu boju zameniti nekom vidljivijom?
 y strana 34:  Svakako raste linearno sa brojem objekata, ali sa konstantom koja je ... -> Ono i dalje raste linearno sa brojem objekata, ali je konstanta uz linearni član za red veličine manja nego kada je iscrtavanje uključeno.
 y strana 34: Čak i kada ima pre 180000 objekata -> Čak i kada je broj objekata veći od 180000
-todo zameni Slika 5.1 crtanje i bez crtanja
+y zameni Slika 5.1 crtanje i bez crtanja
 y strana 34: trivijalan algoritam kolizije -> trivijalan algoritam za detekciju kolizije
 y strana 34: se naravno vidi -> se uočava
 y strana 34: složenost vremena izvršavanja ista -> vreme izvršavanja isto 
@@ -492,6 +492,6 @@ y strana 39:  što je oko 100 000 -> koji iznosi oko 100 000
 y strana 40: Naziv slika 5.9 i 5.10: u zavisnosti od objekta ->  u zavisnosti od broja objekata
 y strana 40: Naziv slike 5.10: kada se sporo kreću -> kada se objekti sporo kreću
 ny strana 40: Nedostaje evaluacija za metod celija i portala -- ako neće biti dodato u rad napisati zašto
-todo strana 40: Bilo bi dobro na kraju nekako uporediti sve algoritme međusobno, tipa ako je ovakva situacija onda je najbolji ovaj algoritam, ako važi ovaj ili ovaj uslov onda drugi i slično
-todo - Dodati i poglavlje/potpoglavlje o vizuelizaciji u kome bi se dalo par snapshot-ova aplikacije
+y strana 40: Bilo bi dobro na kraju nekako uporediti sve algoritme međusobno, tipa ako je ovakva situacija onda je najbolji ovaj algoritam, ako važi ovaj ili ovaj uslov onda drugi i slično
+y - Dodati i poglavlje/potpoglavlje o vizuelizaciji u kome bi se dalo par snapshot-ova aplikacije
 
