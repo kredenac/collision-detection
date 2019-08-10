@@ -98,7 +98,7 @@ y strana 5:  vektor najmanjeg intenziteta za koji treba jedan -> vektora najmanj
 y strana 5: Kada se ustanovi da se dva objekta preklapaju, potrebno je pomeriti ih ... -> Ovo nije motivisano. Zasto ih pomeramo? Do sad smo samo pricali o tome da zelimo da utvrdimo da li se objekti seku ili ne
 y strana 5:  a ključnu ulogu igra -> i u njemu ključnu igru igra
 
- strana 6: koje ti AABB enkapsuliraju -> sadržana u datim AABB
+y strana 6: koje ti AABB enkapsuliraju -> sadržana u datim AABB
 y strana 6: Takav slučaj -> Jedan takav slučaj
 y strana 6: Rešavanje problema određivanja da li postoji presek... -> Utvrđivanje da li postoji presek objekata sadržanih u AABB koji se seku radi se u uskoj fazi
 y strana 6: U slučaju da su ti -> U slučaju kada su ti
@@ -226,7 +226,7 @@ y strana 17: Kada su svi objekti dinamični -> Kada se svi objekti kreću
 y strana 17:  usput se odrede njihove kolizije ->  usput se ispituje postojanje kolizije između njih
 y strana 17: a za dinamične objekte -> a za objekte koji se kreću
 
-n, ali uradicu todo strana 18: bilo bi dobro i za algoritme prikazane u poglavljima 3.2, 3.3 i 3.4 dati pseudokod algoritma
+y, ali uradicu strana 18: bilo bi dobro i za algoritme prikazane u poglavljima 3.2, 3.3 i 3.4 dati pseudokod algoritma
 y strana 18:  Ako se na sve tri ose -> ako se po sve tri ose 
 y strana 18:  onda se i zaista u prostoru seče taj par AABB ->  onda se taj par AABB seče i u prostoru
 y strana 18: u jednom trenutku vremena -> u jednom vremenskom trenutku
@@ -435,7 +435,7 @@ y strana 34: se naravno vidi -> se uočava
 y strana 34: složenost vremena izvršavanja ista -> vreme izvršavanja isto 
 y strana 34: koliko god da se brzo objekti kreću -> koliko god se brzo objekti kretali
 y strana 34: ih se preseca -> ih se međusobno preseca
-todo strana 34: da li oznaku "uzorak" na slici nekako bolje imenovati?
+nnn strana 34: da li oznaku "uzorak" na slici nekako bolje imenovati?
 y strana 34:  četri maksimalna elementa u listu pre podele na podoktante. -> sa maksimalnom vrednošću od četiri elementa u listu.
 y strana 34: Prati referentnu... -> Može se primetiti da on za manji broj objekata prati referentnu liniju linearne zavisnosti.
 
