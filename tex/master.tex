@@ -80,7 +80,7 @@
 % Strana sa posvetom (u odabranom pismu)
 % \posveta{Mami, tati i dedi}
 % Strana sa podacima o disertaciji na srpskom jeziku
-\apstrakt
+% \apstrakt
 % Sadržaj teze
 % \pagenumbering{arabic}
 
@@ -478,7 +478,7 @@ Na vrlo niskim fps igre postaju neprijatne za korišćenje, a čak mogu postati 
 Dolazi do neželjenih efekata poput tuneliranja prikazanog na slici \ref{fig:tunnel}.
 Tada se često postavlja gornja granica na $dt$, pa 
 ako je vreme između dva koraka veće od te gornje granice onda će igra biti u usporenom snimku.
-To je nešto što svakako nije poželjno, ali predstavlja prihvatljiviju varijantu od toga da dodje do pojave tuneliranja.
+To je nešto što svakako nije poželjno, ali predstavlja prihvatljiviju varijantu od toga da dođe do pojave tuneliranja.
 
 Pogon igara Unity deli sva ažuriranja na fiksna i opšta ažuriranja. 
 Fiksna ažuriranja se koriste za promene sila nad objektima 
@@ -628,19 +628,19 @@ i slučaj jer se uglavnom ne dopušta njihovo trajno presecanje.
 		\State \textbf{return} $Parovi$
 		\EndProcedure
 
-		\Procedure{DodajUČvor}{objekti, čvor, $Parovi$}
+		\Procedure{DodajUČvor}{objekat, čvor, $Parovi$}
 		\If{čvor nije list}
-			\State DodajNaniže(obj, čvor, $Parovi$)
+			\State DodajNaniže(objekat, čvor, $Parovi$)
 			\State \textbf{return}
 		\EndIf		
 
 		\For{element in elementi}
-			\If{obj i element imaju presek}
-				\State dodaj par (obj, element) u kolekciju $Parovi$
+			\If{objekat i element imaju presek}
+				\State dodaj par (objekat, element) u kolekciju $Parovi$
 			\EndIf		
 		\EndFor
 
-		\State dodaj obj u čvor.elementi
+		\State dodaj objekat u čvor.elementi
 
 		\If{čvor na maksimalnoj dubini ili broj(čvor.elementi) <= maksimum}
 			\State \textbf{return}
@@ -656,14 +656,12 @@ i slučaj jer se uglavnom ne dopušta njihovo trajno presecanje.
 
 		\EndProcedure
 
-		\Procedure{DodajNaniže}{obj, čvor, $Parovi$}
-		\State $Parovi := \{ \}$
+		\Procedure{DodajNaniže}{objekat, čvor, $Parovi$}
 		\For{podoktant in čvor}
 			\If{podoktant i obj imaju presek}
-				\State DodajUČvor(obj, podoktant, $Parovi$)
+				\State DodajUČvor(objekat, podoktant, $Parovi$)
 			\EndIf	
 		\EndFor
-		\State \textbf{return} $Parovi$
 		\EndProcedure
     \end{algorithmic}
 \end{algorithm}
@@ -750,6 +748,7 @@ pomere za jednu poziciju udesno. Postoje dva uslova koji utiču na postojanje ko
 
 \end{itemize}  
 
+Parovi objekata koji imaju presek se čuvaju u heš mapi, pa je dodavanje novih parova i uklanjanje postojećih parova objekata koji imaju presek brzo.
 Za inicijalizaciju kolizija može se koristiti isti postupak koji se koristi za održavanje sortiranosti niza.
 Međutim, to znači da je potrebno sortirati prvobitni niz (koji nije blizu sortiranosti) algoritmom sortiranja umetanjem.
 Umesto toga je bolje prvi korak kolizije uraditi nekim drugim algoritmom detekcije kolizije, na primer pomoću oktrija.
@@ -765,23 +764,42 @@ Umesto toga je bolje prvi korak kolizije uraditi nekim drugim algoritmom detekci
 Umesto da se AABB upiti vrše svaki put iznova, moguće je da se čuvaju informacije o presecima 
 na svakoj osi. To zahteva $O(n^2)$ memorije ali smanjuje posao prilikom zamena \cite{sap}. 
 
+Potrebno je definisati metode za inicijalizaciju, napraviti strukture koje će čuvati parove preseka,
+kao i strukturu za tačke projekcije, koja treba da sadrži svoju vrednost na osi, da li je početna ili krajnja tačka projekcije
+i indeks u polaznoj kolekciji objekata.
+Srž SAP algoritma je prikazana pseudokodom \ref{alg:SAP}. 
+U prikazanoj proceduri se ažurira kolekcija $preseci$ koja sadrži parove objekata koji imaju presek. 
+Kolekcija $preseci$ je implementirana kao heš skup celobrojnih indeksa tih parova u nizu $objekti$.
+Kada se traže parovi preseka 
 
 \begin{algorithm}
-	\caption{Briši i odseci algoritam detekcije kolizije todo}
-    \label{alg:triv}
+	\caption{Glavni deo briši i odseci algoritam detekcije kolizije}
+    \label{alg:SAP}
 	\begin{algorithmic}[1]
-		\Procedure{OsnovnaDetekcijaKolizije}{objekti}%\Comment{elements je niz svih objekata}
-		\State $Parovi := \{ \}$
-		\State n := broj(objekti)
-		\For{i:=0 to n-1}
-			\For{j:=i+1 to n}
+		\Procedure{SAPSortirajOsuProjekcije}{osa, $objekti$} 
+		\For{i:=1 to 2*osa.brojTačaka}
+			\State trenutna :=  osa[i]
+			\State vrednost := trenutnaTačka.vrednost
+			\State j := i -1
+			\While{j >= 0 and osa[j].vrednost > vrednost}
+				\State pomeriti := osa[j]
 
-			\If{i-ti i j-ti objekti imaju presek}
-				\State dodaj (i, j) u skup $Parovi$
-			\EndIf		
+				\If{pomeriti je početna i trenutna je krajnja tačka projekcije}
+
+					\Comment{$preseci$ je struktura koja čuva parove objekata koji imaju presek}
+					\State ukloni par (pomeriti, trenutna) iz $preseci$
+				\EndIf		
+
+				\If{pomeriti je krajnja i trenutna je početna tačka projekcije}
+					\If{$objekti$[pomeriti.indeks] i $objekti$[trenutna.indeks] se seku}
+						\State dodaj par (pomeriti.indeks, trenutna.indeks) u $preseci$
+					\EndIf		
+				\EndIf
+
+				\State j := j - 1
+			\EndWhile
 		\EndFor
-		\EndFor
-		\State \textbf{return} $Parovi$
+		\State \textbf{return} $preseci$
 		\EndProcedure
     \end{algorithmic}
 \end{algorithm}
@@ -840,8 +858,24 @@ potrebno je samo proveriti objekte koji su dodeljeni istoj ćeliji kao i X, i u 
 da X preseca neki portal, uraditi i proveru sa objektima koji su u ćeliji sa druge strane tog portala \cite{cells}.
 Primer detekcije kolizije pokretnih objekata dat je na slici \ref{fig:cellsObj}.
 Traženje preseka objekata u okviru jedne ćelije zahteva kvadratni broj operacija u odnosu na broj objekata u toj ćeliji.
+Detekcije kolizije pomoću ćelija i portala prikazana je pseudokodom \ref{alg:cell}.
 Za konstrukciju ćelija i portala uglavnom se koristi algoritam 
 \textbf{binarnog particionisanja prostora} (eng. {\em binary space partitioning}).
+
+\begin{algorithm}
+	\caption{Detekcija kolizije pomoću strukture ćelija i portala}
+    \label{alg:cell}
+	\begin{algorithmic}[1]
+		\Procedure{ĆelijeIPortaliNađiKolizije}{} 
+		\State $Parovi := \{ \}$
+		\For{ćelija in ćelije}
+			\State ParoviUĆeliji := OsnovnaDetekcijaKolizije(ćelija.objekti)
+			\State dodaj u $Parovi$ parove iz ParoviUĆeliji
+		\EndFor
+		\State \textbf{return} $Parovi$
+		\EndProcedure
+    \end{algorithmic}
+\end{algorithm}
 
 \begin{figure}[h!]
 	\begin{center}
@@ -1432,7 +1466,30 @@ tako da im je potrebno barem 100 sekundi da pređu sa jednog kraja kontejnera u 
 \label{sec:zakljucak}
 % ==============================================================================
 
-Zaključak... 
+Virtuelni svetovi postaju sve  grafički složeniji i  interakcija sa njima verodostojnije oponaša fiziku pravog sveta.
+Da bi takav nivo složenosti bio moguć treba koristiti bolji hardver, ali i bolji softver. 
+Problem otkrivanja kolizija može postati usko grlo sistema i zato je potrebno pažljivo konstruisati 
+algoritme i strukture podataka za njegovo efikasno rešavanje.
+
+U tezi je dat pregled bitnih pojmova i fenomena koji utiču na detekciju kolizije, 
+od kojih su najznačajniji vremenska koherentnost i konzistentnost vremena izvršavanja.
+Opisani su algoritmi detekcije kolizije u realnom vremenu: osnovni algoritam, oktri sa duplikatima, oktri bez duplikata,
+algoritam briši i odseci, i ćelije i portali. 
+Urađena je evaluacija i upoređivanje efikasnosti algoritama.
+Ispostavlja se da je u većini slučajeva najbolje koristiti oktri sa duplikatima.
+Dati su i uslovi kada ostali algoritmi predstavljaju bolji izbor.
+
+Implementiran je program koji u realnom vremenu realizuje različite algoritme
+za detekciju kolizije.
+Program omogućava jednostavno podešavanje parametara algoritama i objekata čiji preseci se ispituju,
+sa ciljem poređenja i odabira najboljeg algoritma u određenom slučaju.
+
+Sledeći koraci za razvoj projekta bi bili usmereni ka istraživanju modifikacija oktrija 
+i sličnih particionisanja prostora.
+Još jedna ideja je implementacija dinamičkog izbora algoritma prilikom izvršavanja iz skupa algoritama.
+Na taj način bi se mogli izbeći najgori slučajevi za neke algoritme privremenim korišćenjem drugih  
+algoritama otkrivanja kolizije.
+
 
 
 % ------------------------------------------------------------------------------
