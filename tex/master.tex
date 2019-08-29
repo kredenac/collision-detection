@@ -96,56 +96,57 @@
 \label{sec:uvod}
 % ==============================================================================
 
-Problematika kojom se bavi ovaj rad je detekcija kolizije, široka tema koja ima naizgled jednostavan zadatak:
-naći sve parove objekata koji se presecaju.
-Nekada se dodatno traži i oblik preseka ili precizan trenutak početka preseka. 
+Problem detekcije kolizije ima naizgled veoma jednostavan zadatak: naći sve parove objekata
+koji se presecaju. Pored parova objekata, nekada je potrebno odrediti i oblik preseka
+ili precizan trenutak u kome objekti počinju da se presecaju.
 
 Nije teško konstruisati naivni algoritam koji utvrđuje da li postoji presek jednostavnih geometrijskih tela.
 Međutim, današnji virtuelni svetovi sadrže hiljade pokretnih tela i stotine miliona poligona i 
 zato je potrebno koristiti napredne strukture podataka i razviti efikasne algoritme. 
 Nedovoljno efikasan algoritam za otkrivanje kolizije može predstavljati usko grlo sistema.
 
-Objekat čiji se presek razmatra može biti jednostavan kao što je npr. kocka, a može biti izgrađen i od desetine hiljada poligona.
-Stoga nije praktično da se 
-za sve poligone svih objekata proverava da li postoji presek sa nekim poligonom nekog drugog objekta.
+Objekat čiji se presek razmatra može biti jednostavan kao što je kocka, a može biti izgrađen i od desetine hiljada poligona.
+Stoga nije praktično da se za svaki poligon svakog od razmatranih objekata
+proverava da li postoji presek sa nekim poligonom nekog drugog objekta.
 Umesto toga, složeni objekti se zamenjuju kvadrima koji su opisani oko njih.
-Na taj način se prvo nalaze preseci prostih objekata, pa tek ako se oni seku traže se preseci konkretnih poligona od kojih je objekat sastavljen.
+Na taj način se prvo nalaze preseci prostih objekata, pa tek ako se oni seku ispituje se da li postoji presek konkretnih poligona od kojih je objekat sastavljen.
 %
-Prvi deo ovog postupka naziva se široka faza (eng. {\em broadphase}), a drugi deo se naziva uska faza (eng. {\em narrowphase}).
-Drugi deo ovog procesa nije uvek neophodan, na primer kada su svi objekti na koje se primenjuje algoritam kocke, kao što je slučaj u nekim igrama.
-Ovaj rad je usmeren na široku fazu (eng. {\em broadphase}) pošto je ona od ključnog značaja kada se radi o velikom broju objekata.
-Široka faza je tako bitna pošto je problem koji ona rešava u najgorem slučaju kvadratne vremenske i prostorne složenosti.
+Prvi deo ovog postupka naziva se \textbf{široka faza} (eng. {\em broadphase}), a drugi deo se naziva \textbf{uska faza} (eng. {\em narrowphase}).
+Drugi deo ovog procesa nije uvek neophodan, na primer kada su svi objekti na koje se primenjuje algoritam kocke, kao što je to slučaj u nekim igrama.
+Ovaj rad je usmeren na široku fazu pošto je ona od ključnog značaja kada se radi o velikom broju objekata.
+Razlog za to je taj što je problem koji ona rešava u najgorem slučaju kvadratne vremenske i prostorne složenosti.
 Uglavnom je broj parova objekata koji se presecaju neznatan u odnosu na broj potencijalnih parova. 
 Zato je uticaj uske faze na performanse manji u odnosu na široku fazu za koju je važno imati što efikasniju implementaciju.
 
 Za interaktivne svetove je neophodno otkrivanje kolizija u realnom vremenu. 
 Potreba izvršavanja u realnom vremenu nosi sa sobom nove probleme za čije rešavanje se koriste posebni mehanizmi 
-i uglavnom dolazi do nagodbe preciznosti i efikasnosti.
+i uglavnom dolazi do kompromisa između preciznosti i efikasnosti.
 
 U prvom poglavlju rada biće data motivacija. 
 Pregled relevantnih pojmova i fenomena biće prikazanu u drugom poglavlju uz fokus na konzistentne korake izvršavanja.
 Algoritmi široke faze biće predstavljeni u trećoj glavi. 
 Implementacija projekta biće opisana u četvrtoj, 
-a evaluacija performansi i demonstracija nekih principa biće razmotreno u petoj glavi.
+a evaluacija performansi i demonstracija nekih principa biće razmotrena u petoj glavi.
+U poslednjoj glavi biće dati glavni zaključci ovog rada i mogući pravci za dalji rad.
 
 \section{Motivacija}
 \label{sec:naslov1}
 Otkrivanje kolizije ima široke primene u kontekstu virtuelne realnosti, računarskih igrara, planiranja putanje robota,
-dizajna uz pomoć računara (eng. {Computer aided design, CAD}) i fizičkih simulacija. 
-Za neke od navedenih primena zahtev realnog vremena nije neophodan, kao što su planiranje putanje robota ili renderovanje računarski generisanih slika filmova.
-Međutim, detekcija kolizije u realnom vremenu je ključan deo svakog pogona igre (eng. {\em game engine}), a danas ga svaka velika
-video igra koristi. Industrija video igara svake godine raste \cite{game_industry},
+dizajna uz pomoć računara (eng. {\em Computer aided design, CAD}) i fizičkih simulacija. 
+Za neke od navedenih primena zahtev realnog vremena nije neophodan, na primer za planiranje putanje robota ili renderovanje računarski generisanih slika filmova.
+Međutim, detekcija kolizije u realnom vremenu predstavlja ključni deo svakog pogona igre (eng. {\em game engine}), a danas ga svaka složenija
+video igra koristi. Industrija video igara svake godine raste \cite{game_industry}
 u toj meri da ima veći prihod od filmske i muzičke industrije zajedno! Zaista, 2018. godine industrija igara imala je prihod od
-137 milijardi Američkih dolara naspram 41 milijardi filmske i 17 milijardi dolara prihoda muzičke industrije \cite{music, movie, game_industry}.
-Posledice manjih grešaka (bagova) u igrama nisu dramatične poput neispravnost softvera u avionskoj ili automobilskoj industriji, ali 
+137 milijardi američkih dolara naspram 41 milijarde filmske i 17 milijardi dolara prihoda muzičke industrije \cite{movie, music, game_industry}.
+Posledice manjih grešaka (bagova) u igrama nisu dramatične poput potencijalnih posledica neispravnog softvera u avionskoj ili automobilskoj industriji, ali 
 se svakako negativno odražavaju na prihod.
 Korisnici očekuju visok stepen doteranosti video igara, pa bi postojanje velikog broja bagova 
 obeshrabrilo potencijalne kupce. Na slici \ref{fig:batman} je prikazana greška gde je igrač propao kroz
 pod virtuelnog sveta, a na slici \ref{fig:horse} igrač ne može da se popne na konja pošto on lebdi u vazduhu.
 
 Na tržištu se poslednjih godina pojavljuju rukavice za virtuelnu realnost koje simuliraju dodir virtuelnih objekata, a za njih je 
-detekcija kolizije i izvršavanje u realnom vremenu presudno.
-Potrebno je bar 1000 puta u sekundi pružiti povratnu informaciju da bi simulacija dodira bila uverljiva \cite{haptic}. 
+detekcija kolizije i izvršavanje u realnom vremenu od presudnog značaja.
+Potrebno je bar 1000 puta u sekundi pružiti povratnu informaciju korisniku da bi simulacija dodira bila uverljiva \cite{haptic}. 
 
 \begin{figure}[h!]
 \centering
@@ -161,8 +162,11 @@ Potrebno je bar 1000 puta u sekundi pružiti povratnu informaciju da bi simulaci
 	\label{fig:horse}
 \end{figure}
 
-Problem detekcije kolizije svih parova objekata je u najgorem slučaju kvadratne vremenske i prostorne složenosti i od toga se ne može pobeći,
-ali preseka uglavnom ima mnogo manje od gornje granice. Taj najgori slučaj je na primer kada se svaka dva objekta seku.
+Problem detekcije kolizije svih parova objekata je u najgorem slučaju kvadratne vremenske i prostorne složenosti 
+jer se može desiti da se svaka dva objekta seku te je maksimalni broj parova objekata koji su u koliziji reda $n^2$, 
+gde je $n$ broj objekata koji se razmatra.
+Međutim, broj preseka je najčešće mnogo manji od ove gornje granice.
+Taj najgori slučaj je na primer kada se svaka dva objekta seku.
 Potreba da se algoritam izvršava u realnom vremenu je očigledna kod interaktivnih primena.
 Međutim i za neinteraktivne primene, potrebno je imati što efikasniji algoritam za utvrđivanje kolizije koji bi mogao da se često pokreće.
 Filmovi nisu interaktivan sadržaj i zato je učestalost osvežavanja slike od 24Hz, uz korišćenje zamućivanja pokreta (eng. {\em motion blur}),
@@ -191,7 +195,7 @@ Zato treba uzeti u obzir sve relevantne činjenice koje utiču na performanse im
 
 \section{Faze problema detekcije kolizjie}
 
-Celokupan zadatak detekcije kolizije se deli na dve etape: \textbf{ široku fazu } i \textbf{usku fazu}. 
+Celokupan zadatak detekcije kolizije se deli na dve etape: široku fazu i usku fazu. 
 U prvoj, širokoj, fazi
 odbacuje se (često) većina kandidata od svih mogućih parova objekata za koje se ispituje da li postoji presek.
 Zadatak uske faze je da se za parove objekata dobijenih u širokoj fazi utvrdi da li oni zaista imaju presek.
@@ -432,8 +436,8 @@ $p$ jednak $0.01$ sekund, onda je dovoljno da se u svakom koraku vrednost $x$ ko
 
 
 \begin{equation}
+	x:= x + 10 * 0.01
 	\label{eq:prx}
-$$ x:= x + 10 * 0.01 $$
 \end{equation}
 % \begin{primer}
 % \label{pr:x}
@@ -465,7 +469,7 @@ za 1 svake sekunde, jer vreme svih koraka tokom jedne sekunde mora ukupno biti b
 Umesto ažuriranja kao u primeru \ref{eq:prx}, sada se vrednost $x$ ažurira na sledeći način:
 \begin{equation}
 	\label{eq:prx}
-	$$ x:= x + 10 * dt $$
+	x:= x + 10 * dt
 \end{equation}
 % \begin{primer}
 % 	\label{pr:x2}

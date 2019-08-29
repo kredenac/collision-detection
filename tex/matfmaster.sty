@@ -89,6 +89,10 @@
 %%%%%
 \else % ako se koristi pdflatex
   % ulazno kodiranje postavljamo na utf-8
+
+  % ubacih ovo da bih mogao da sortiram reference
+  \usepackage{natbib}
+
   \usepackage[utf8]{inputenc}
   \ifmatfmaster@latinica      % ako je odabrana latinica
     % koristimo višejezički paket babel
@@ -400,7 +404,7 @@
 \else                                      % ako se koristi bibtex
   \renewcommand{\bibname}{Literatura}
    \bibliography{\matfmaster@bib}{}%
-   \bibliographystyle{plain}%
+   \bibliographystyle{plain}%apa%plain
 \fi}
 
 %%%%%%%%%%%%%%% end of *.sty file

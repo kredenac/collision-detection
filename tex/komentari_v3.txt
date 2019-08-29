@@ -1,0 +1,239 @@
+y str. 1: Problematika kojom se bavi ovaj rad je detekcija kolizije, široka tema koja ima
+naizgled jednostavan zadatak: naći sve parove objekata koji se presecaju. Nekada
+se dodatno traži i oblik preseka ili precizan trenutak početka preseka. ->
+Problem detekcije kolizije ima naizgled veoma jednostavan zadatak: naći sve parove objekata
+koji se presecaju. Pored parova objekata, nekada je potrebno odrediti i oblik preseka
+ili precizan trenutak u kome objekti počinju da se presecaju.
+TODO str. 1: Nekako bih jos obogatila ovaj prvi pasus, razmislite imate li neku ideju
+str. 1:  kao što je npr. kocka ->  kao što je kocka
+str. 1: za sve poligone svih objekata -> za svaki poligon svakog od razmatranih objekata 
+str. 1:  traže se preseci  -> ispituje se da li postoji presek
+str. 1: možda termine široka faza i uska faza staviti u bold
+str. 1:  kao što je slučaj ->  kao što je to slučaj
+str. 1:  (eng. broadphase) drugi put obrisati
+str. 1: Široka faza je tako bitna pošto je problem -> Razlog za to je taj što je probelm
+str. 2:  nagodbe -> kompromisa između
+str. 2:  biće razmotreno u petoj glavi. ->  biće razmotrena u petoj glavi.
+str. 2: U poslednjoj glavi biće dati glavni zaključci ovog rada i mogući pravci za dalji rad. 
+todoKada sortiram referenec str. 2: kada ima vise referenci na jednom mestu, onda ih sortirajte rastuce
+str. 2: eng. Computer aided design treba da bude italic
+str. 2:  kao što su planiranje -> na primer za planiranje
+str. 2: u je ključan deo -> predstavlja ključni deo
+str. 2: velika video igra -> složenija video igra
+str. 2: , u toj meri -> u toj meri 
+str. 2:  Američkih dolara ->  američkih dolara 
+str. 2:  41 milijardi ->  41 milijarde
+str. 2:  poput neispravnost softvera u avionskoj ->  poput potencijalnih posledica neispravnog softvera u avionskoj
+str. 2:  presudno -> od presudnog značaja
+str. 2: povratnu informaciju -> povratnu informaciju korisniku
+str. 2: kvadratne vremenske i prostorne složenosti... -> kvadratne vremenske i prostorne složenosti jer se može desiti da se svaka dva objekta seku te je maksimalni broj parova objekata koji su u koliziji reda $n^2$, gde je $n$ broj objekata koji se razmatra. Međutim, broj preseka je najčešće mnogo manji od ove gornje granice.
+
+
+str. 4:  dovoljno dobro ->  dovoljno dobra
+str. 4:  dizorijentaciju -> dezorijentaciju
+str. 4:  kada su svi na jednom mestu ->  kada su svi objekti na jednom mestu
+str. 4:  dok na druge ->  dok na druge algoritme
+str. 4:  okečivani raspored ->  ili za očekivani raspored
+str. 4:  razvoj programa koji ->  razvoj aplikacije koja
+str. 4:  različitih algoritama ->  algoritma
+str. 4:  posmatranje performansi -> posmatranje performansi trenutno odabranog algoritma za dati izbor parametara
+str. 5: U ovom poglavju -> U ovom poglavlju 
+str. 5:  iyolovani algoritam ->  izolovani algoritam
+str. 5:  zajedno sa -> paralelno sa
+str. 5: rukovanjem ulaza -> rukovanjem ulazom
+str. 5: Naslov 2.1:  kolizjie ->  kolizije
+str. 5: na dve etape -> na dve faze
+str. 5: širokoj, fazi -> širokoj fazi
+str. 5:  da li postoji presek ->  da li se seku
+str. 5: Cilj je razviti što efikasniji ... za odbacivanje ovakvih parova objekata. -> ovu rečenicu prebaciti ispred prethodne, nadovezati na priču o širokoj fazi, tipa: Cilj široke faze je razviti što efikasniji algoritam za ...
+str. 5:  kao kompozicija ->  u vidu kompozicije
+str. 5: Mnogo je bolje -> U ovim situacijama veoma je važno osmisliti i razmatrati nekakvu jednostavniju ...
+str. 5:  koristi kvadar ->  koriste kvadri
+str. 6: je telo sastavljeno -> su tela sastavljena
+str. 6: sadrže sve objekte. -> ovo je malo "nesrecno" formulisano jer se ne veze za one proste objekte, nego deluje kao da gledamo kutiju koja sadrzi sve objekte na slici... Nekako preformulisite
+str. 6: Dodati jos jednu recenicu koja objasnjava OBB, sta to znaci da su kutije orijentisane?
+str. 6: Objasniti kakva je veza OBB i BVH
+str. 6: pošto rotiranjem mogu uže da opišu tela -> ko može uže da opiše? prvi deo recenice govori o reprezentaciji, pa malo preformulisati ili dodati subjekat -- npr "posto ti_i_ti mogu uze da opisu tela..."
+str. 6: Teorema 2.1.1:  na kojoj se projekcije ... -> malo preciznije, mozda "tako da se projekcije objekata na tu pravu ne seku"?
+str. 6: Dovoljno je pronaći -> Prema teoremi 2.1.1 dovoljno je pronaći
+str. 6: Moguće je na primer -> Moguće je, na primer,
+str. 6: , i za neku od tih prava važi -> , i ako za neku od tih prava važi
+str. 6: da ne postoji presek -> precizirati presek čega...
+str. 6: dodati engleski termin za minimalni vektor translacije
+str. 6: potrebno da se predstavi njihovo odbijanje promenom prvca kretanja -> potrebno njihovo odbijanje predstaviti promenom pravca kretanja
+str. 7: razrešenje kolizije -> napisati bold jer se prvi put javlja
+str. 7: ti objekti unutar AABB -> objekti unutar AABB
+str. 7: prikazana su dve površi -> prikazane su dve površi
+str. 7: , što predstavlja primer zašto teorema o razdvajajućim osama ne radi -> . Dakle, teorema o razdvajajućim osama ne važi
+str. 7: Primer u tri dimenzije dat je na slici 2.3 ... -> Pise da se radi o dva konveksna objekta, a to nije tacno jer je jedan nekonveksan... Preformulisati celu recenicu
+str. 9: dovodi neupotrebljivog proizvoda. -> dovodi do neupotrebljivog proizvoda. 
+str. 9:  fiksnu učestalost osvežavanja ->  fiksnu učestalost osvežavanja slike
+str. 9: iznosti -> iznosi
+str. 9: Još bolje da nova slika -> u sliku. Još bolje je kada se nova slika izračunava
+str. 9: manjak slika dovodi do neprijatnosti. -> Ne bih rekla da je u pitanju manjak slika, već da nisu ravnomerno vremenski generisane, nekako ovo preformulisati...
+str. 9: nekonzistentnosti vremena izvršavanja. -> nekonzistentnog vremena izvršavanja.
+str. 10: U poglavlju vremenski antialiasing prvo uvesti termin vremenski aliasing, pa tek kasnije staviti prvu recenicu sta je vremenski antialiasing
+str. 10:  kada je premali broj slika ->  kada se generiše premali broj slika 
+str. 10:  kao da poskaču ->  kao da poskakuju
+str. 10:  Čest primer vremenskog aliasinga ->  Jedan od često viđanih primera vremenskog aliasinga 
+str. 10: jasno poboljšanje -> čega? precizirati
+str. 10: Nekako poslednju recenicu povezati sa kontekstom, na primer na slici 2.5 prikazana je jos jedna tehnika umanjenja... ali nam ona nije zančajna zbog toga i toga...
+str. 11: dodatno proverava -> ne proverava se dodatno, već se ona proverava umesto samog objekta, preformulisati
+str. 11: predstavljen model za svrhe kolizije -> predstavljen model objekta prilikom ispitivanja postojanja kolizije 
+str. 12:  između dve slike scene ->  između dve uzastopne slike scene
+str. 12: Na primer, potrebno je ... -> Razmotrimo naredni scenario. Potrebno je ...
+str. 13: x:= x + 10 * 0.01 i jednacina na narednoj strani isto -> Jednačinu prebaciti u matematički mod
+str. 13:  napredovala za p -> p staviti pod matematicki mod
+str. 13:  vreme između dva koraka ->  vreme koje protekne između dva koraka
+str. 13:  u oznaci dt, ->  u oznaci dt
+str. 15:  odredi sve parove ->  odredi sve parove objekata
+str. 15:  razmatranjem svakog para se radi razrešenje kolizije svih objekata -> razrešenje kolizije svih objekata se izvodi razmatranjem svakog od parova.
+str. 15: Drugi način je da -> Drugi način za razrešavanje kolizije se sastoji u tome da 
+str. 15:  r1 , r2 dve sfere i intenziteta udaljenost centara ->  r1 i r2 dve sfere i intenziteta udaljenosti centara
+str. 15: Nesto razmisljam kako je sa m oznacen vektor potreban za translaciju, a onda sa m_1 i m_2 mase, mozda ono prvo m preimenovati da ne buni?
+str. 15: mase sfera s1 i s2 -> mase sfera s_1 i s_2
+str. 16: se svaki objekat seče sa svim ostalim -> svaki objekat se seče sa svim ostalim
+str. 16: gde je k broj parova -> gde je $k$ broj parova
+str. 16: prikazan na 1. -> Šta je 1? Nezgodno je što kod nema neku oznaku -- da li moze makar da bude numerisan kao slika? Ili nekako preformulisati i reci prikazan je pseudokodom 1
+str. 17: ja bih u pseudokodu sve promenljive pisala italic, kao sto je Parovi, dakle n, objekti, i, j
+str. 17:  unutrasnji čvor ->  unutrašnji čvor 
+str. 17: dubinu stabla Oktrja -> dubinu stabla oktrija
+str. 17:  Pošto to nije uvek moguće ->  Pošto to nije uvek moguće izvesti, 
+str. 17:  proveri se da li on ima presek ->  proverava se da li on ima presek 
+str. 17:  Drugi način je da se prvo ->  Drugi način da se odrede svi parovi objekata u koliziji se sastoji u tome da se prvo
+str. 18:  pripadaju više oktanata ->  pripadaju većem broju oktanata
+str. 18:  dat na 2. -> Šta je 2? Slicno kao i za prethodni pseudokod
+str. 18: nazive procedura u pseudokodu uniformosati, npr OktriDetekcijaKolizije
+str. 18: u pseudokodu " for element in elementi do" -- nigde ne pise sta su elementi
+str. 18: podoktant je u stvari sin cvora, pa mozda nekako uniformnije dati nazive?
+str. 18: mozda pseudokod vise matematizovati: npr Parovi:=Parovi \cup \{objekat, element\} ili objekat \cap element != \emptyset..., slicno i za naredne pseudokodove...
+str. 18:  "if podoktant i obj" -> umesto obj treba objekat
+str 18: oktri sa duplikatima -> staviti bold i engleski termin
+str. 19: oktri bez duplikata -> staviti bold i engleski termin
+str. 19:  usput se odrede njihove kolizije. -> i usput otkrivaju kolizije.
+str. 19: velik broj objekata -> veliki broj objekata 
+str. 19:  sa n statičkih -> sa n statičkih objekata
+str. 19:  naći sve parove koji su u koliziji ->  naći sve parove objekata koji su u koliziji
+str. 20: projekciju svih AABB -> projekciju svakog AABB 
+str. 20:  jedan element je početak , ->  jedan element je početak,
+str. 20:  projekcije na ose 
+str. 20:  Prilikom sortiranja se ->  Prilikom sortiranja nizova se 
+str. 21: odgovarajućih objekata dodaje -> odgovarajućih objekata dodaje u kolekciju parova kolizije
+str. 21: (koji nije blizu sortiranosti) -> (koji može biti veoma daleko od sortiranog niza)
+str. 22:  kao i strukturu za tačke projekcije, koja treba da sadrži ->  kao i strukturu za tačke projekcije (sadrži ...)
+str. 22: U pseudokodu se ovde javljaju preseci, a u prethodna dva Parovi... Malo to uniformisati zbog jednostavnijeg pracenja
+str. 22: ". preseci je struktura koja čuva parove objekata koji imaju presek" -- da li je ovo komentar? ako jeste, bolje pisati // ili /* */
+str. 22:  Kada se traže parovi preseka -> Ova rečenica nema kraj...
+str. 23:  nekad dovoljna ->  nekad sasvim dovoljna
+str. 23: graf scene staviti bold i dati engleski termin i u narednoj recenici ukratko objasniti sta on predstavlja. Nije takodje jasno da li se metod celija i portala odnosi na graf scene ili je to alternativni nacin organizacije, pa to malo pojasniti
+str. 23: Novi pasus od recenice Metoda celija i portala i spojiti sa narednim pasusom
+str. 23: koja se koristi za detekcije kolizije. -> za detekciju kolizije.
+str. 23:  proces renderovanje ->  proces renderovanja
+str. 24:  Ova metoda se ne koristi u modernim igarama -> Objasniti ukratko zasto
+str. 26: I Unity i Unreal su pogoni igara -> Ako se opredelite da ih kao gore transkribujete u Juniti i Anril, onda nastaviti da se koriste pod tim imenima
+str. 26:  započeo ravoj igre ->  započeo razvoj igre 
+str. 26:  ) , putem programskog jezika C++ -> ), putem programskog jezika C++ 
+str. 26:  nalik JavaSkriptu. ->  nalik jeziku Javaskript.
+str. 27: brzine objekata. -> brzine objekata,
+str. 27:  a i zajedno sa njim ->  a zajedno sa njim 
+str. 27:  (eng. callbacks ) ->  (eng. callbacks) 
+str. 27:  repozicionira -> iznova (ili ponovo) pozicionira
+str. 27: u listi neka sve stavke počinju malim slovom i neka iza svake stavke bude zarez osim kod poslednje gde treba tacka
+str. 27: za upravljanje svim parametrima algoritama -> za upravljanje parametrima algoritama
+str. 28: Da li je moguce prosiriti ona polja kod komponenti gde se poslednje slovo tesko cita (npr GLUT inicijalizacija, Interpolacija brzine, Upravljanje parametrima, Oktri sa duplikatima)
+str. 28: U okviru komponente Azuriranje pozicije i brzine postoji polje Pokreta -- cudno jer je u genitivu, mozda preformulisati malo?
+str. 28: U nastavku teksta će biti -> U nastavku teksta biće
+str. 28: njihovih izmenama -> njihovim izmenama
+str. 29: mogu katastrofalno .. -> mogu u velikoj meri da uspore izvršavanje
+str. 29: kako odnos veličine objekata sa celim prostorom, ovde kontejnerom, utiču na performanse. -> kako odnos veličine objekata i veličine celog prostora, ovde kontejnera, utiče na performanse.
+str. 29: velik broj objekata -> veliki broj objekata
+str. 29:  taj put je beznadežan -> ti pokušaji ne dovode do rezultata.
+str. 29: odvojen problem od detekcije kolizije -> odvojen problem od problema detekcije kolizije
+str. 29:  detekciju kolizije u narednim koracima u programu -> problem detekcije kolizije u narednim koracima u programu
+str. 29:  pa time smanjuje verovatnoću ->  pa se time smanjuje verovatnoća 
+str. 29:  S obzirom da je ->  S obzirom na to da je 
+str. 30: počinje značajno da ima uticaj -> vreme iscrtavanja ima značajniji udeo u ukupnom vremenu izvršavanja
+str. 30: , pa je za te slučajeve dodata opcija -> , pa je za te slučajeve dodata opcija da se iscrtavanje isključi
+str. 30: Takođe je moguće isključiti detekciju kolizije u celosti -> Moguće je i u potpunosti isključiti detekciju kolizije
+str. 30:  pogotovo u slučaju oktrija sa duplikatima -> posebno u slučaju oktrija sa duplikatima
+str. 30: a nego dopuna postojećih metoda -> već kao dopuna postojećih metoda
+str. 30: Uobičajeno je da se materijali objekata opisuju pomoću Fongovog modela senčenja --> Ne opisuju se valjda materijali? Isto pise i u poslenjoj recenici u pasusu... Malo preformulisati
+str. 30:  kao kombinaciju ->  kao kombinacija 
+str. 30:  refleksija sa ->  refleksije sa
+str. 30: Uključeno je jedno globalno svetlo, -> Precizirati da je tako u aplikaciji koja se razvija
+str. 31:  redosledu pozivanja ažuriranja stanja ... -> Možda redosledu pozivanja funkcija za ažuriranje stanja,... Ili tako nekako?
+str. 31:  je potrebna još jedna trojka -> potrebno je čuvati još jednu trojku vrednosti
+str. 31:  kada se primeni sila na njega ->  kada se na njega primeni sila 
+str. 31:  Isto, kada se pusti dugme -> Slično, kada se ovo dugme pusti, 
+str. 31: malo napred. -> da se kreće još malo unapred.
+str. 32: za kretanje levo-desno poveća ili smanji -> da je prilikom kretanja levo-desno potrebno povećati ili smanjiti 
+str. 32:  preko strana sveta -> apsolutno, u terminima strana sveta,
+str. 32: prema formulama (2.4) i (2.3) -> prema formulama (2.3) i (2.4) 
+str. 33: slika 4.2 može da bude malo manja
+str. 33:  broja objekta ->  broja objekata
+str. 33: Već je uveden engleski termin callback function
+str. 33:  koje će FreeGLUT pozivati. ->  koje će FriGLUT pozivati.
+str. 34: njegova brzina bi zavisila -> čija brzina? precizirati
+str. 34: dugmeta za napred -> dugmeta za kretanje napred 
+str. 34:  Takođe svaka implementira -> Takođe, svaka klasa implementira
+str. 34:  Npr. broj elemenata u .. -> ovu recenicu staviti u zagradu na kraju prethodne recenice
+str. 35: da se koristi interaktivno -> za interaktivno korišćenje
+str. 35:  vršenjem merenja ->  izvršavanjem odgovarajućih merenja; Na kakva merenja se ovde misli? mozda precizirati
+str. 35:  podrazumevano stanje kada se program pokrene ->  podrazumevano stanje programa prilikom njegovog pokretanja
+str. 35:  da li je razrešavanje kolizije uključeno ->  da li je uključeno razrešavanje kolizije ili ne 
+str. 35: Desnim klikom miša su prikazane -> Desnim klikom miša mogu se prikazati...
+str. 35: sve kontrole sa leve strane -> na levoj strani ekrana precice za sve kontrole, kao sto su recimo kako povecati kontejner ili broj objekata i slicno...
+str. 35:  prikazana grupa objekata u centru kontejnera -> prikazana situacija kada postoji grupa objekata u centru kontejnera
+str. 37: i lakša je interpretacija -> lakše se interpretira
+str. 37: ja ne bih Python, pandas i matplotlib pisala bold slovima
+str. 38:  U programu je svakako -> Kao što je već pomenuto, u programu je omogućeno isključiti iscrtavanje
+str. 38:  najmanje y i najmanje x -> najmanje $y$ i najmanje $x$
+str. 38:  zavisnosti relativnog dt u odnosu na broj objekata. -> zavisnosti relativnog dt od broja objekata.
+str. 39:  Na oko 24 000 objekata relativan dt prelazi 1 ->  Na oko 24 000 objekata vrednost relativnog dt prelazi 1,
+str. 39:  dt prelazi 2 -> ona prelazi 2.
+str. 39: Čak pre 2000 objekata -> Čak i za manje od 2000 objekata
+str. 40:  Za manji broj objekata on je višestruko -> Kada je broj objekata mali, on je višestruko
+str. 40: prehtodno -> prethodno
+str. 40:  I za manji broj objekata je višestruko bolji.. -> Ovu nepotpunu rečenicu obrisati
+str. 40:  Ipak, na slici 5.4 -> Na slici 5.4
+str 40:  pošto algoriam -> što je i očekivano, s obzirom na to da algoritam
+str. 42: tri manja plava skoka za oktri bez duplikata -> i tri manja skoka za oktri bez duplikata (prikazana plavom bojom)
+str. 42: narandžasta skoka reda veličine za oktri sa duplikatima -> skoka reda veličine za oktri sa duplikatima (prikazana narandžastom bojom)
+str. 42:  izvršavanje oktrija -> izvršavanje algoritma zasnovanog na oktrima
+str. 42:  Pokazuje se  -> Pokazuje se, takođe, 
+str. 43:  čak 36.2% bolje ->  čak za 36.2% bolje 
+str. 43: samo promenom jednog koeficijenta -> promenom samo jednog koeficijenta
+str. 44:  sa kraćim vremenom između dva koraka -> da je proteklo vreme između dva koraka kraće
+str. 44: dok on ponovo postane sortiran -> da bi on ponovo postao sortiran
+str. 44: a vreme izvršavanja eksplodira, -> i za koje vreme izvršavanja eksplodira
+str. 44: Kao što povećanje brzine kretanja -> Dok povećanje brzine kretanja
+str. 44: , tako i smanjivanje brzine utiče povoljno -> , smanjenje brzine kretanja utiče povoljno
+str. 44:  Upoređivanje vremena -> Poređenje vremena izvršavanja 
+str. 45:  četri puta ->  četiri puta 
+str. 45: pošto ono traje duže od samog algoritma kolizije u ovakvom slučaju -> pošto u ovom slučaju ono traje duže od samog algoritma detekcije kolizije
+str. 45:  jer za oko 50 000 objekata -> gde tek za vrednosti bliske 50 000 objekata 
+str. 45: tek na 75 000, a 30fps na 92 000 objekata -> tek za 75 000, a 30fps za 92 000 objekata
+str. 45:  Pritom ostaje ispod referentne ->  Pritom vrednost relativnog dt ostaje ispod referentne
+str. 46: Na osnovu prethodnih grafika prikazanih u ovoj glavi se može -> Na osnovu grafika prikazanih prikazanih u ovoj glavi može se
+str. 46: drukčije pozicije, -> drugačije pozicije, 
+str. 46:  Primenu trivijalnog algoritma, ->  Može se zaključiti i da primenu trivijalnog algoritma, 
+str. 46:   Jedini razlog za njegovo korišćenje je kada ima manje od npr. 100 objekata -> Njega jedino ima smisla koristiti u slučaju kada je broj objekata manji od 100
+str. 46:  uglavnom se traži algoritam -> uglavnom je potrebno imati algoritam
+str. 46: Oktri i njegove varijacije predstavljaju uglavnom najbolji izbor. -> U najvećem broju slučajeva oktri i njegove varijacije predstavljaju najbolji izbor.
+str. 46: rezultata sa 5.7 -> rezultata prikazanih na grafiku 5.7
+str. 46: brojem maksimalnim brojem elemenata -> maksimalnim brojem elemenata
+str. 46:  kada je (prema grafiku 5.5) ->  kada (prema grafiku 5.5) 
+str. 47: 100 sekundi da pređu sa jednog kraja kontejnera u kome se nalaze. -> sa jednog kraja dokle?
+str. 48: Virtuelni svetovi postaju sve grafički složeniji -> Virtuelni svetovi postaju grafički sve složeniji 
+str. 48: nivo složenosti -> možda nivo detaljnosti ili nivo kompleksnosti?
+str. 48:  treba koristiti -> potrebno je koristiti
+str. 48:  i ćelije i portali. -> i algoritam koji koristi ćelije i portale
+str. 48:  Urađena je evaluacija i upoređivanje efikasnosti algoritama. -> Urađena je evaluacija ovih algoritama i izvršeno poređenje njihove efikasnosti.
+str. 48: . Dati su i uslovi kada ostali -> Prepoznati su i formulisani i uslovi kada neki drugi algoritam
+str. 48: Implementiran je program -> Kao glavni doprinos teze, implementiran je računarski program
+str. 48:  za razvoj projekta bi bili ->  za razvoj projekta bili bi 
+str. 48: i sličnih particionisanja prostora. -> i sličnih metoda particionisanja prostora.
+str. 48: Još jedna ideja... -> U planu je i implementacija programa kojim bi se tokom izvršavanja programa dinamički birao najpogodniji algoritam iz skupa raspoloživih algoritama. (samo ovako kazemo, ne morate to stvarno i da implementirate :))
+
+TODO abecedno po prezimenu/imenu rada, da li je u redu sada? srediti bibliografiju, sortirati abecedno sve reference
+
