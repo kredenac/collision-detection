@@ -993,35 +993,36 @@ Na slici \ref{fig:archi} je prikazana arhitektura programa sa navedenim komponen
 
 \subsection{Kontroler komponenta}
 
-Uloga kontroler komponente je upravljanje parametrima programa i rukovanje njihovih izmenama.
+Uloga kontroler komponente je upravljanje parametrima programa i rukovanje njihovim izmenama.
 Parametri koji se menjaju kroz kontroler komponentu su: 
 \begin{itemize}  
 	\item Broj objekata koji su podložni koliziji. 
 	Ovo je parametar koji svakako najviše utiče na ponašanje algoritama.
 	\item Veličina objekata. 
-	Na prvi pogled deluje da vrednost ovog parametra ne utiče previše na performanse, međutim veliki objekti u malom prostoru mogu katastrofalno usporiti izvršavanje.
+	Na prvi pogled deluje da vrednost ovog parametra ne utiče previše na performanse, međutim veliki objekti u malom prostoru mogu u velikoj meri da uspore izvršavanje.
 	\item Brzina kretanja objekata.
 	Ovaj faktor ne utiče na sve algoritme, ali je u slučaju SAP algoritma najbitniji. Može promeniti odlično ponašanje SAP algoritma u slučaju sporog kretanja 
 	objekata i učiniti ga algoritmom kvadratne složenosti u najgorem slučaju.
 	\item Veličina kontejnera u kome se nalaze i kreću svi objekti. Kontejner je ovde eksplicitno predstavljen, mada bi se inače mogao podrazumevati kao kvadar 
 	koji u potpunosti sadrži svet čije se kolizije simuliraju.
-	Ovaj parametar daje još jednu perspektivu kako odnos veličine objekata sa celim prostorom, ovde kontejnerom, utiču na performanse.
+	Ovaj parametar daje još jednu perspektivu kako odnos veličine objekata i veličine celog prostora, ovde kontejnera, utiče na performanse.
 	\item Maksimalan broj elemenata u listu oktrija.
 	Promena maksimalnog broja elemenata u listu pre nego što se on podeli na podoktante utiče "samo" na konstantan faktor vremenske složenosti.
 	To uopšte nije zanemarljivo u datom kontekstu i pogodnosti koje daje povoljno izabran parametar su osetne.
 	\item Maksimalna dubina oktrija. Veća dubina oktrija je uglavnom povoljnija jer omogućava da se u listovima oktrija nalazi mali broj objekata.
 	Međutim, treba biti oprezan ako se može desiti 
-	da se velik broj objekata preklapa unutar jednog oktanta, jer se tada samo gubi vreme i troši dodatna memorija. 
-	U tom scenariju pokušavaju se razdvojiti objekti rekurzivnom podelom potprostora, ali pošto se oni presecaju taj put je beznadežan.
+	da se veliki broj objekata preklapa unutar jednog oktanta, jer se tada samo gubi vreme i troši dodatna memorija. 
+	U tom scenariju pokušavaju se razdvojiti objekti rekurzivnom podelom potprostora, ali pošto se oni presecaju ti pokušaji ne dovode do rezultata.
 	\item Da li raditi razrešenje kolizije. 
-	Razrešenje kolizije je odvojen problem od detekcije kolizije, a pošto se uglavnom koriste oba, onda je dobro videti 
-	kako razrešenje kolizije deluje na detekciju kolizije u narednim koracima u programu. Pokazuje se da praktično uvek deluje povoljno, pošto onemogućava da se mnogo 
-	objekata međusobno preseca, pa time smanjuje verovatnoću da se stvori veliki klaster objekata koji bi usporio izvršavanje.
+	Razrešenje kolizije je odvojen problem od problema detekcije kolizije, a pošto se uglavnom koriste oba, onda je dobro videti 
+	kako razrešenje kolizije deluje na problem detekcije kolizije u narednim koracima u programu. Pokazuje se da praktično uvek deluje povoljno, pošto onemogućava da se mnogo 
+	objekata međusobno preseca, pa se time smanjuje verovatnoća da se stvori veliki klaster objekata koji bi usporio izvršavanje.
 	\item Da li je iscrtavanje uključeno ili isključeno. 
-	S obzirom da je projekat više procesorski nego grafički zahtevan, iscrtavanje uglavnom ne kvari performanse više od 2 do 3 posto.
-	Svakako, kada je na sceni više od 30 000 objekata počinje značajno da ima uticaj, pa je za te slučajeve dodata opcija kako bi merenja bila nepristrasna.
+	S obzirom na to da je projekat više procesorski nego grafički zahtevan, iscrtavanje uglavnom ne kvari performanse više od 2 do 3 posto.
+	Svakako, kada je na sceni više od 30 000 objekata vreme iscrtavanja ima značajniji udeo u ukupnom vremenu izvršavanja,
+	pa je za te slučajeve dodata opcija kako bi merenja bila nepristrasna.
 	\item Algoritam detekcije kolizije koji se koristi. Podržani su: osnovni (trivijalni) algoritam, oktri sa duplikatima,
-	oktri bez duplikata i SAP algoritam. Takođe je moguće isključiti detekciju kolizije u celosti da bi se dobila referentna vrednost vremena izvršavanja.
+	oktri bez duplikata i SAP algoritam. Moguće je i u potpunosti isključiti detekciju kolizije da bi se dobila referentna vrednost vremena izvršavanja.
 
 \end{itemize}  
 
@@ -1029,7 +1030,7 @@ Kontroler komponenta takođe pruža mogućnost menjanja pravca kretanja objekata
 Tada svi objekti bivaju usmereni prema trenutnoj poziciji posmatrača. 
 Ova funkcionalnost je potrebna pošto ona povećava koncentraciju objekata, 
 pogotovo nakon što se odbiju o ivicu kontejnera. Tada će se većina objekata 
-naći oko centra kontejnera (kao na slici \ref{fig:ssyank}), što dovodi do eksplozije vremena izvršavanja, pogotovo u slučaju oktrija sa duplikatima.
+naći oko centra kontejnera (kao na slici \ref{fig:ssyank}), što dovodi do eksplozije vremena izvršavanja, posebno u slučaju oktrija sa duplikatima.
 
 \subsection{Komponenta za iscrtavanje}
 
@@ -1041,18 +1042,17 @@ U pravom svetu se zraci svetlosti odbijaju od više objekata pre nego što stign
 Simulacija takvog ponašanja se naziva praćenje svetlosti (eng. {\em raytracing}).  
 Praćenje svetlosti je računarski zahtevno, pa do skoro nije bilo moguće izvršavati ga u realnom vremenu, već samo na farmi servera koji renderuju neku scenu.
 2018. godine je firma NVIDIA pustila u prodaju novu seriju grafičkih karti koje hardverski implementiraju praćenje svetlosti. 
-U trenutku pisanja ove master teze se ova tehnologija koristi kao hibrid, dakle ne kao zamena nego dopuna postojećih metoda.
+U trenutku pisanja ove master teze se ova tehnologija koristi kao hibrid, dakle ne kao zamena već kao dopuna postojećih metoda.
 
-Uobičajeno je da se materijali objekata opisuju pomoću Fongovog modela senčenja. 
+Uobičajeno je da se izvor svetla i materijali objekata opisuju pomoću Fongovog modela senčenja. 
 Fongov model je empirijski model osvetljenja. Razvio ga je Bui Tuong Fong i objavio ga u svojoj doktorskoj tezi 1975. godine.
-U ovom modelu boja površi se opisuje kao kombinaciju difuzne refleksije, tj. odbijanja svetlosti sa grubih površi, 
-spekularne refleksije, tj. refleksija sa sjajnih površi, i ambijentalne refleksije, koja predstavlja manju količinu svetlosti 
+U ovom modelu boja površi se opisuje kao kombinacija difuzne refleksije, tj. odbijanja svetlosti sa grubih površi, 
+spekularne refleksije, tj. refleksije sa sjajnih površi, i ambijentalne refleksije, koja predstavlja manju količinu svetlosti 
 koja je raspršena kroz celu scenu \cite{Phong}.
-OpenGL nudi Fongov model pa se on koristi za opisivanje materijala svih objekata.
+OpenGL nudi Fongov model pa se on koristi za opisivanje izvora svetla i materijala svih objekata.
 
-% slika možda.
 
-Uključeno je jedno globalno svetlo, a posmatrač može da postavi jos najviše osam svetala na 
+U aplikaciji koja se razvija uključeno je jedno globalno svetlo, a posmatrač može da postavi jos najviše osam svetala na 
 proizvoljne statične blokove na mapi. 
 Slabljenje svetlosti se izražava preko tri faktora: konstantnog, linearnog i kvadratnog.
 Konstantan faktor jednako oslabljuje svetlost svuda, dok linearni i kvadratni faktori oslabljuju svetlost

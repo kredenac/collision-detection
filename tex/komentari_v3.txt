@@ -104,7 +104,7 @@ str. 15: mase sfera s1 i s2 -> mase sfera s_1 i s_2
 
 str. 16: se svaki objekat seče sa svim ostalim -> svaki objekat se seče sa svim ostalim
 str. 16: gde je k broj parova -> gde je $k$ broj parova
-str. 16: prikazan na 1. -> Šta je 1? Nezgodno je što kod nema neku oznaku -- da li moze makar da bude numerisan kao slika? Ili nekako preformulisati i reci prikazan je pseudokodom 1
+yn da li ste ovako mislili? str. 16: prikazan na 1. -> Šta je 1? Nezgodno je što kod nema neku oznaku -- da li moze makar da bude numerisan kao slika? Ili nekako preformulisati i reci prikazan je pseudokodom 1
 str. 17: ja bih u pseudokodu sve promenljive pisala italic, kao sto je Parovi, dakle n, objekti, i, j
 str. 17:  unutrasnji čvor ->  unutrašnji čvor 
 str. 17: dubinu stabla Oktrja -> dubinu stabla oktrija
@@ -130,7 +130,7 @@ str. 19:  naći sve parove koji su u koliziji ->  naći sve parove objekata koji
 
 str. 20: projekciju svih AABB -> projekciju svakog AABB 
 str. 20:  jedan element je početak , ->  jedan element je početak,
-str. 20:  projekcije na ose 
+nn??? str. 20:  projekcije na ose 
 str. 20:  Prilikom sortiranja se ->  Prilikom sortiranja nizova se 
 str. 21: odgovarajućih objekata dodaje -> odgovarajućih objekata dodaje u kolekciju parova kolizije
 str. 21: (koji nije blizu sortiranosti) -> (koji može biti veoma daleko od sortiranog niza)
@@ -179,7 +179,7 @@ str. 30: , pa je za te slučajeve dodata opcija -> , pa je za te slučajeve doda
 str. 30: Takođe je moguće isključiti detekciju kolizije u celosti -> Moguće je i u potpunosti isključiti detekciju kolizije
 str. 30:  pogotovo u slučaju oktrija sa duplikatima -> posebno u slučaju oktrija sa duplikatima
 str. 30: a nego dopuna postojećih metoda -> već kao dopuna postojećih metoda
-str. 30: Uobičajeno je da se materijali objekata opisuju pomoću Fongovog modela senčenja --> Ne opisuju se valjda materijali? Isto pise i u poslenjoj recenici u pasusu... Malo preformulisati
+nnn str. 30: Uobičajeno je da se materijali objekata opisuju pomoću Fongovog modela senčenja --> Ne opisuju se valjda materijali? Isto pise i u poslenjoj recenici u pasusu... Malo preformulisati
 str. 30:  kao kombinaciju ->  kao kombinacija 
 str. 30:  refleksija sa ->  refleksije sa
 str. 30: Uključeno je jedno globalno svetlo, -> Precizirati da je tako u aplikaciji koja se razvija
