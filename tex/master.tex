@@ -12,7 +12,7 @@
 \documentclass[12pt,oneside]{memoir} 
 
 % Paket koji definiše sve specifičnosti master rada Matematičkog fakulteta
-\usepackage[latinica]{matfmaster} 
+\usepackage[latinica,biblatex]{matfmaster} 
 %
 
 \usepackage{amsmath}
@@ -98,7 +98,9 @@
 
 Problem detekcije kolizije ima naizgled veoma jednostavan zadatak: naći sve parove objekata
 koji se presecaju. Pored parova objekata, nekada je potrebno odrediti i oblik preseka
-ili precizan trenutak u kome objekti počinju da se presecaju.
+ili precizan trenutak u kome objekti počinju da se presecaju. 
+Realizacija uspešnog algoritma detekcije kolizije zahteva korišćenje 
+koncepata iz računarske grafike i računarske geometrije.
 
 Nije teško konstruisati naivni algoritam koji utvrđuje da li postoji presek jednostavnih geometrijskih tela.
 Međutim, današnji virtuelni svetovi sadrže hiljade pokretnih tela i stotine miliona poligona i 
@@ -151,7 +153,8 @@ Potrebno je bar 1000 puta u sekundi pružiti povratnu informaciju korisniku da b
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.22]{batman.jpg}
-\caption{Propadanje ispod modelovanog sveta.}
+\caption{Propadanje ispod modelovanog sveta. }
+\tiny Izvor: https://tinyurl.com/y5g987j5
 \label{fig:batman}
 \end{figure}
 
@@ -159,6 +162,7 @@ Potrebno je bar 1000 puta u sekundi pružiti povratnu informaciju korisniku da b
 	\centering
 	\includegraphics[scale=0.54]{horse.png}
 	\caption{Levitirajući konj.}
+	\tiny Izvor: https://tinyurl.com/y6qbaxqm
 	\label{fig:horse}
 \end{figure}
 
@@ -206,7 +210,7 @@ Iako postoje takvi slučajevi, u mnogim primenama nisu svi objekti prosta geomet
 Objekti koji se razmatraju mogu biti veoma složeni, predstavljeni u vidu kompozicije velikog broja prostijih tela ili kao mreže sastavljene od stotina hiljada trouglova.
 U ovim situacijama veoma je važno osmisliti i razmatrati nekakvu jednostavniju reprezentaciju tih objekata.
 
-\textbf{Granični opsezi} (eng. {\em bounding volume}) prestavljaju jedan tip jednostavnije reprezentacije.
+\textbf{Granični opsezi} (eng. {\em bounding volume}) prestavljaju jedan tip jednostavnije reprezentacije \cite{rgpdf}.
 Za granične opsege se uglavnom koriste kvadari, a pored toga se mogu koristiti sfere, kapsule i druga tela.
 Ono što se najčešće radi jeste da se naprave najmanje "kutije" koje će sadržati u potpunosti te objekte.
 Te "kutije" su u obliku kvadra čije su strane poravnate sa osama koordinatnog sistema i nazivaju se
@@ -256,9 +260,8 @@ Kada se utvrdi da postoji presek između dva AABB, to ne znači da zaista postoj
 sadržana u datim AABB, čak i ako su ti objekti konveksni. Jedan takav slučaj je prikazan na slici \ref{fig:2dfalse}. 
 
 \begin{figure}[h!]
-	\begin{center}
+	\centering
 	\includegraphics[scale=0.2]{2dfalseCol.png}
-	\end{center}
 	\caption{Krug i rotiran pravugaonik nemaju presek dok njihovi granični opsezi imaju.}
 	\label{fig:2dfalse}
 \end{figure}
@@ -276,10 +279,10 @@ na neki drugi način, ali se to ostavlja za usku fazu.
 
 % https://en.wikipedia.org/wiki/User:Oleg_Alexandrov/Pictures
 \begin{figure}[h!]
-	\begin{center}
+	\centering
 	\includegraphics[scale=0.17]{theorem_counterexample.png}
-	\end{center}
 	\caption{Projekcija nekonveksne površi na pravu.}
+	\tiny https://tinyurl.com/yxbqg5hq
 	\label{fig:counter}
 \end{figure}
 
@@ -290,10 +293,8 @@ Primer u tri dimenzije dat je na slici \ref{fig:falseCollision}, gde iako ne pos
 posmatranjem njihovih graničnih opsega bi se zaključilo da postoji presek.
 
 \begin{figure}[h!]
-	\begin{center}
+	\centering
 	\includegraphics[scale=0.5]{falseCollision.jpg}
-	\end{center}
-	
 	\caption{Konveksan i nekonveksan objekat u prostoru bez preseka sa leve strane i
 	njihovi granični opsezi koji se presecaju sa desne strane. }
 	\label{fig:falseCollision}
@@ -338,9 +339,8 @@ Na slici \ref{fig:fpsdiv2} se vidi da je kreirano 6 slika, tj. da praktično ima
 ekvivalentan sa 3fps, što je još jedan primer nepoželjne posledice nekonzistentnotog vremena izvršavanja. 
 
 \begin{figure}[h!]
-	\begin{center}
+	\centering
 	\includegraphics[scale=0.5]{fpsdiv2.png}
-	\end{center}
 	\caption{ Trenuci kreiranja nove slike (crvena boja) i trenuci osvežavanja ekrana (crna boja) koji su loše sinhronizovani. }
 	\label{fig:fpsdiv2}
 \end{figure}
@@ -377,10 +377,10 @@ Na slici \ref{fig:txaa} prikazan je i efekat primene MSAA, ali ta tehnika ovde n
 pošto vreme između dve generisane slike i brzina kretanja objekta ne utiču na njeno izvršavanje.
 
 \begin{figure}[h!]
-	\begin{center}
+	\centering
 	\includegraphics[scale=0.65]{txaa.png}
-	\end{center}
 	\caption{Upoređivanje tehnika antialiasinga.}
+	\tiny Izvor: https://tinyurl.com/y2c6nw5l
 	\label{fig:txaa}
 \end{figure}
 
@@ -398,10 +398,10 @@ Ovaj fenomen se naziva \textbf{tuneliranje} (eng. {\em tunneling}) i ilustrovan 
 
 %https://github.com/Stencyl/stencylpedia/blob/master/chapter-5/ccd.md
 \begin{figure}[h!]
-	\begin{center}
+	\centering
 	\includegraphics[scale=0.55]{tunnel.png}
-	\end{center}
 	\caption{Tuneliranje.}
+	\tiny Izvor: https://tinyurl.com/yxjz7vga
 	\label{fig:tunnel}
 \end{figure}
 
@@ -412,10 +412,10 @@ od prošlog trenutka provere kolizije pa do trenutnog. Na slici \ref{fig:tunnel_
 koja se proverava umesto da se proverava samo objekat. 
 
 \begin{figure}[h!]
-	\begin{center}
+	\centering
 	\includegraphics[scale=0.55]{tunnel_fixed.png}
-	\end{center}
 	\caption{Sprečavanje tuneliranja.}
+	\tiny Izvor: https://tinyurl.com/yxjz7vga
 	\label{fig:tunnel_fix}
 \end{figure}
 
@@ -428,10 +428,10 @@ Nekada se ceo model čoveka aproksimira samo jednom vertikalnom kapsulom
 (uglavnom za proveru kolizije modela čoveka sa statičnom geometrijom sveta). 
 
 \begin{figure}[h!]
-	\begin{center}
+	\centering
 	\includegraphics[scale=0.55]{hitbox.png}
-	\end{center}
 	\caption{Reprezentacija modela čoveka.}
+	\tiny Izvor: https://tinyurl.com/yyjhzlyo
 	\label{fig:hitbox}
 \end{figure}
 
@@ -449,10 +449,6 @@ $p$ jednak $0.01$ sekund, onda je dovoljno da se u svakom koraku vrednost $x$ ko
 	x:= x + 10 * 0.01
 	\label{eq:prx}
 \end{equation}
-% \begin{primer}
-% \label{pr:x}
-% $$ x:= x + 10 * 0.01 $$
-% \end{primer}
 
 Zaista, kako se pri svakom koraku $x$ uveća za 0.1, a ima tačno 100 koraka u sekundi, onda će se $x$ uvećati za 10 svake sekunde.
 
@@ -481,10 +477,6 @@ Umesto ažuriranja kao u primeru \ref{eq:prx}, sada se vrednost $x$ ažurira na 
 	\label{eq:prx}
 	x:= x + 10 * dt
 \end{equation}
-% \begin{primer}
-% 	\label{pr:x2}
-% 	$$ x:= x + 10 * dt $$
-% \end{primer}
 
 Kada se za ažuriranje svih objekata koristi ova formula, onda se simulacija može lako ubrzati $k$ puta
 (množenjem vrednosti $dt$ sa $k$), odnosno usporiti $k$ puta (deljenjem vrednost $dt$ sa $k$).
@@ -717,10 +709,10 @@ izvršiti detekciju kolizije njihovim ponovnim ubacivanjem u stablo. Time se sma
 kolizije jednog objekta koji se kreće sa $n$ statičkih objekata sa $O(n)$ na očekivanih $O(\log n)$.
 
 \begin{figure}[h!]
-	\begin{center}
+	\centering
 	\includegraphics[scale=0.22]{octree.png}
-	\end{center}
 	\caption{Rekurzivno deljenje kocke na oktante.}
+	\tiny Izvor: https://tinyurl.com/y4ep88wa
 	\label{fig:oct}
 \end{figure}
 
@@ -770,10 +762,10 @@ Međutim, to znači da je potrebno sortirati prvobitni niz (koji može biti veom
 Umesto toga je bolje prvi korak kolizije uraditi nekim drugim algoritmom detekcije kolizije, na primer pomoću oktrija.
 
 \begin{figure}[h!]
-	\begin{center}
+	\centering
 	\includegraphics[scale=0.8]{sap.jpg}
-	\end{center}
 	\caption{Projekcije tela na jednu osu u dva koraka.}
+	\tiny Izvor: https://tinyurl.com/y3zetsmj
 	\label{fig:sap}
 \end{figure}
 
@@ -894,11 +886,11 @@ Za konstrukciju ćelija i portala uglavnom se koristi algoritam
 \end{figure}
 
 \begin{figure}[h!]
-	\begin{center}
+	\centering
 	\includegraphics[scale=1]{cellsObj.jpg}
-	\end{center}
 	\caption{ Objekti B i C redom u potpunosti i delimično pripadaju istoj ćeliji, pa se moraju međusobno testirati na presek,
 	 dok za objekat A nije potrebno izvršiti testiranje ni sa jednim drugim objektom. }
+	\tiny Izvor: \cite{glavnaKnjiga}
 	\label{fig:cellsObj}
 \end{figure}
 
@@ -922,18 +914,18 @@ Tri glavna kandidata su OpenGL, Unity i Unreal Engine.
 I Unity i Unreal su pogoni igara (eng. {\em game engine}), pa samim tim imaju sve što je neophodno da 
 bi se započeo razvoj igre ili neke druge aplikacije.
 Unreal pruža mogućnost implementiranja preko shema (eng. {\em blueprints}),
-putem programskog jezika C++ ili njihovom mešavinom.
-Unity omogućava implementiranje putem programskog jezika C\# ili unityscript,
+putem programskog jezika C\texttt{++} ili njihovom mešavinom.
+Unity omogućava implementiranje putem programskog jezika C\texttt{\#} ili unityscript,
 koji ima sintaksu nalik jeziku JavaScript. Unityscript polako izlazi iz upotrebe, i 
-sva nova dokumentacija podrazumeva korišćenje jezika C\#.
-Jezik C\# u odnosu na C++ često omogućava kraće vreme implementacije nekog rešenja,
+sva nova dokumentacija podrazumeva korišćenje jezika C\texttt{\#}.
+Jezik C\texttt{\#} u odnosu na C\texttt{++} često omogućava kraće vreme implementacije nekog rešenja,
 međutim postoji cena toga - nešto sporije vreme izvršavanja.
 To "nešto" je uglavnom moguće ignorisati, prateći citat Donalda Knuta 
 "Prevremena optimizacija je koren svog zla u programiranju".
 Ipak, u slučaju programa čije su performanse od kritičnog značaja, npr. kao što je 
 slučaj sa operativnim sistemima i pogonima igara, to usporenje se ne može tolerisati.
 %https://en.wikipedia.org/wiki/List_of_game_engines - kako referenca za ovo
-Zato su danas praktično svi pogoni 3D igara implementirani u jeziku C++.
+Zato su danas praktično svi pogoni 3D igara implementirani u jeziku C\texttt{++}.
 
 Upravo zbog raznih funkcionalnosti koje pogoni igara pružaju i zbog njihove masivnosti nisu izabrani
 za osnovu implementacije ovog projekta. Oni već imaju integrisanu fiziku, detekciju 
@@ -1434,7 +1426,7 @@ Dok povećanje brzine kretanja može imati jako negativne posledice na performan
 smanjenje brzine kretanja utiče povoljno na njegovo vreme izvršavanja.
 Poređenje vremena izvršavanja za tri različite brzine objekata je dato na slici \ref{fig:sap3speeds}. 
 Podrazumevanja brzina objekata je $w/5$ jedinica u sekundi, gde je $w$ širina kontejnera unutar koga se objekti kreću.
-Prvo merenje je izvršeno pri podrazumevanoj brzini, drugo pri duplo manjoj i treće pri četri puta manjoj brzini.
+Prvo merenje je izvršeno pri podrazumevanoj brzini, drugo pri duplo manjoj i treće pri četiri puta manjoj brzini.
 Što se sporije objekti kreću to je tačka kada povratna sprega počinje da uzima maha više odložena.
 Međutim, izvesno je da će se to u nekom trenutku desiti, tako da u zavisnosti od situacije SAP algoritam može biti loš ili idealan.
 
@@ -1449,10 +1441,10 @@ Međutim, izvesno je da će se to u nekom trenutku desiti, tako da u zavisnosti 
 
 Svi do sada razmatrani algoritmi detekcije kolizije pre 20 000 objekata prelaze granicu od dva relativna $dt$.
 Na slici \ref{fig:sap_great} je prikazan rezultat merenja gde se objekti kreću brzinom 64 puta sporijom od podrazumevane i tada je SAP algoritam ubedljivo najbolji.
-Prilikom merenja je isključeno iscrtavanje pošto ono traje duže od samog algoritma kolizije u ovakvom slučaju,
-što se može videti na \ref{fig:drawVsNoDraw}, jer za oko 50 000 objekata relativan dt prelazi 2. 
-Ovde je SAP višestruko bolji od ostalih, dostižući 60fps tek na 75 000, a 30fps na 92 000 objekata.
-Pritom ostaje ispod referentne prave koja označava linearnu zavisnost, sve do momenta kada se približava broju objekata koji dovodi 
+Prilikom merenja je isključeno iscrtavanje pošto u ovom slučaju ono traje duže od samog algoritma detekcije kolizije,
+što se može videti na \ref{fig:drawVsNoDraw}, gde tek za vrednosti bliske 50 000 objekata relativan dt prelazi 2. 
+Ovde je SAP višestruko bolji od ostalih, dostižući 60fps tek za 75 000, a 30fps za 92 000 objekata.
+Pritom vrednost relativnog dt ostaje ispod referentne prave koja označava linearnu zavisnost, sve do momenta kada se približava broju objekata koji dovodi 
 do akumuliranja usporavanja, koji iznosi oko 100 000.
 
 
@@ -1467,24 +1459,24 @@ do akumuliranja usporavanja, koji iznosi oko 100 000.
 
 \section{Odabir algoritma detekcije kolizije}
 
-Na osnovu prethodnih grafika prikazanih u ovoj glavi se može primetiti da za drukčije
+Na osnovu grafika prikazanih prikazanih u ovoj glavi može se se može primetiti da za drugačije
 pozicije, brzine, veličine i brojeve objekata različiti algoritmi detekcije kolizije bivaju najefikasniji.
-Primenu trivijalnog algoritma, čije performanse su prikazane na slici \ref{fig:basic}, treba izbegavati.
-Jedini razlog za njegovo korišćenje je kada ima manje od npr. 100 objekata,
+Može se zaključiti i da primenu trivijalnog algoritma, čije performanse su prikazane na slici \ref{fig:basic}, treba izbegavati.
+Njega jedino ima smisla koristiti u slučaju kada je broj objekata manji od 100,
 uz opravdanje da je jednostavan za implementaciju i lakše održiv zbog manje koda.
-Međutim, uglavnom se traži algoritam detekcije kolizije koji će biti primenljiv i na više hiljada objekata,
+Međutim, uglavnom je potrebno imati algoritam detekcije kolizije koji će biti primenljiv i na više hiljada objekata,
 tako da trivijalni algoritam ne dolazi u obzir.
 
-Oktri i njegove varijacije predstavljaju uglavnom najbolji izbor.
-Na osnovu rezultata sa \ref{fig:octree_leaf} preporuka je koristiti oktri sa brojem maksimalnim brojem elemenata u listu 
+U najvećem broju slučajeva oktri i njegove varijacije predstavljaju najbolji izbor.
+Na osnovu rezultata prikazanih na grafiku \ref{fig:octree_leaf} preporuka je koristiti oktri sa maksimalnim brojem elemenata u listu 
 postavljenim na 32, a dobar izbor maksimalne dubine je 10. 
 Oktri sa duplikatima je bolji izbor u odnosu na oktri bez duplikata, osim ako može doći do stvaranja klastera objekata, kada
-je (prema grafiku \ref{fig:dupvsnodup}) oktri bez duplikata ima višestruko bolje performanse.
+(prema grafiku \ref{fig:dupvsnodup}) oktri bez duplikata ima višestruko bolje performanse.
 
 SAP algoritam je u opštem slučaju sporiji od oktrija i ne treba ga koristiti ako se većina objekata 
 brzo kreće.
 Ipak, SAP algoritam predstavlja najbolji izbor ako se skoro svi objekti kreću dovoljno malom brzinom 
-tako da im je potrebno barem 100 sekundi da pređu sa jednog kraja kontejnera u kome se nalaze.
+tako da im je potrebno barem 100 sekundi da pređu širinu kontejnera u kome se nalaze.
 
 
 % ==============================================================================
@@ -1492,27 +1484,27 @@ tako da im je potrebno barem 100 sekundi da pređu sa jednog kraja kontejnera u 
 \label{sec:zakljucak}
 % ==============================================================================
 
-Virtuelni svetovi postaju sve  grafički složeniji i  interakcija sa njima verodostojnije oponaša fiziku pravog sveta.
-Da bi takav nivo složenosti bio moguć treba koristiti bolji hardver, ali i bolji softver. 
+Virtuelni svetovi postaju grafički sve složeniji i interakcija sa njima verodostojnije oponaša fiziku pravog sveta.
+Da bi takav nivo kompleksnosti bio moguć potrebno je koristiti bolji hardver, ali i bolji softver. 
 Problem otkrivanja kolizija može postati usko grlo sistema i zato je potrebno pažljivo konstruisati 
 algoritme i strukture podataka za njegovo efikasno rešavanje.
 
 U tezi je dat pregled bitnih pojmova i fenomena koji utiču na detekciju kolizije, 
 od kojih su najznačajniji vremenska koherentnost i konzistentnost vremena izvršavanja.
 Opisani su algoritmi detekcije kolizije u realnom vremenu: osnovni algoritam, oktri sa duplikatima, oktri bez duplikata,
-algoritam briši i odseci, i ćelije i portali. 
-Urađena je evaluacija i upoređivanje efikasnosti algoritama.
+algoritam briši i odseci, i algoritam koji koristi ćelije i portale. 
+Urađena je evaluacija ovih algoritama i izvršeno poređenje njihove efikasnosti.
 Ispostavlja se da je u većini slučajeva najbolje koristiti oktri sa duplikatima.
-Dati su i uslovi kada ostali algoritmi predstavljaju bolji izbor.
+Prepoznati su i formulisani i uslovi kada neki drugi algoritam predstavlja bolji izbor.
 
-Implementiran je program koji u realnom vremenu realizuje različite algoritme
+Kao glavni doprinos teze, implementiran je računarski program koji u realnom vremenu realizuje različite algoritme
 za detekciju kolizije.
 Program omogućava jednostavno podešavanje parametara algoritama i objekata čiji preseci se ispituju,
 sa ciljem poređenja i odabira najboljeg algoritma u određenom slučaju.
 
-Sledeći koraci za razvoj projekta bi bili usmereni ka istraživanju modifikacija oktrija 
-i sličnih particionisanja prostora.
-Još jedna ideja je implementacija dinamičkog izbora algoritma prilikom izvršavanja iz skupa algoritama.
+Sledeći koraci za razvoj projekta bili bi usmereni ka istraživanju modifikacija oktrija 
+i sličnih metoda particionisanja prostora.
+U planu je i implementacija programa kojim bi se tokom izvršavanja programa dinamički birao najpogodniji algoritam iz skupa raspoloživih algoritama.
 Na taj način bi se mogli izbeći najgori slučajevi za neke algoritme privremenim korišćenjem drugih  
 algoritama otkrivanja kolizije.
 

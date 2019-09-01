@@ -91,7 +91,7 @@
   % ulazno kodiranje postavljamo na utf-8
 
   % ubacih ovo da bih mogao da sortiram reference
-  \usepackage{natbib}
+  % \usepackage[numbers]{natbib} %[square,sort,comma,numbers]
 
   \usepackage[utf8]{inputenc}
   \ifmatfmaster@latinica      % ako je odabrana latinica
@@ -400,7 +400,7 @@
 % komanda koja kreira stranicu sa literaturom
 \newcommand{\literatura}{%                
 \ifmatfmaster@biblatex %                 % ako se koristi biblatex
-   \printbibliography{title={Literatura}}%
+   \printbibliography%{title={Literatura}}%
 \else                                      % ako se koristi bibtex
   \renewcommand{\bibname}{Literatura}
    \bibliography{\matfmaster@bib}{}%

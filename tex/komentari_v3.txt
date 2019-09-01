@@ -272,5 +272,5 @@ str. 48:  za razvoj projekta bi bili ->  za razvoj projekta bili bi
 str. 48: i sličnih particionisanja prostora. -> i sličnih metoda particionisanja prostora.
 str. 48: Još jedna ideja... -> U planu je i implementacija programa kojim bi se tokom izvršavanja programa dinamički birao najpogodniji algoritam iz skupa raspoloživih algoritama. (samo ovako kazemo, ne morate to stvarno i da implementirate :))
 
-TODO abecedno po prezimenu/imenu rada, da li je u redu sada? srediti bibliografiju, sortirati abecedno sve reference
+abecedno po prezimenu/imenu rada, da li je u redu sada? srediti bibliografiju, sortirati abecedno sve reference
 
