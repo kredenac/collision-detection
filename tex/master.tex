@@ -523,7 +523,7 @@ Najpre je potrebno izračunati minimalni vektor translacije. Npr. za dve sfere $
 određen centrima $c_1, c_2$ dve sfere čiji je intenzitet jednak razlici intenziteta zbira poluprečnika
 $r_1$ i $r_2$ dve sfere i intenziteta udaljenosti centara, odnosno:
 \begin{equation}
-	\label{eq:razresenje2}
+	\label{eq:mtv}
 	 \vec{mtv} := \frac{{c_1 - c_2}} {\|{c_1 - c_2}\|} 
 	(r_1 + r_2 - \| {c_1 - c_2} \| ) 
 \end{equation}
@@ -820,7 +820,7 @@ Kolekcija $Parovi$ je implementirana kao heš skup celobrojnih indeksa tih parov
 \end{figure}
 
 Ovaj metod pokazuje najbolje performanse kada su objekti uniformno raspoređeni, dok mu je ponašanje lošije kada je
-prisutan klaster većine objekata na nekoj osi, što vodi kvadratnoj složenosti po broju objekata \cite{glavna2}.
+prisutan klaster većine objekata na nekoj osi, što vodi kvadratnoj složenosti po broju objekata \cite{sap}.
 
 Prilikom evaluacije pokazuje se da najveći uticaj na performanse ima brzina kretanja objekata.
 U slučaju kada se objekti brzo kreću, pomeraji objekata su veliki i potrebno je vršiti brojnije zamene njihovih pozicija u sortiranom nizu,
@@ -878,8 +878,7 @@ Detekcije kolizije pomoću ćelija i portala prikazana je pseudokodom \ref{alg:c
 Za konstrukciju ćelija i portala uglavnom se koristi algoritam 
 \textbf{binarnog particionisanja prostora} (eng. {\em binary space partitioning}).
 
-\begin{algorithm}
-	\caption{Detekcija kolizije pomoću strukture ćelija i portala}
+\begin{figure}[!h]
     \label{alg:cell}
 	\begin{algorithmic}[1]
 		\Procedure{ĆelijeIPortaliNađiKolizije}{} 
@@ -890,8 +889,9 @@ Za konstrukciju ćelija i portala uglavnom se koristi algoritam
 		\EndFor
 		\State \textbf{return} $Parovi$
 		\EndProcedure
-    \end{algorithmic}
-\end{algorithm}
+	\end{algorithmic}
+	\caption{Detekcija kolizije pomoću strukture ćelija i portala}
+\end{figure}
 
 \begin{figure}[h!]
 	\begin{center}
@@ -960,7 +960,7 @@ FreeGLUT se stara o pravljenju prozora, obrađivanju događaja kroz glavnu petlj
 a zajedno sa njim su dostupne i standardne funkcije OpenGL-a koje se koriste
 za iscrtavanje poput glTranslatef, glScalef, glLightf, glMaterialfv, glViewPort, itd.
 Za odgovore na događaje pritiskanja tastera, puštanja tastera i pomeraja miša
-FreeGLUT propisuje korišćenje funkcija povratnog poziva  (eng. {\em callbacks}) koje je potrebno implementirati.
+FreeGLUT propisuje korišćenje funkcija povratnog poziva  (eng. {\em callback function}) koje je potrebno implementirati.
 FreeGLUT se ne stara o tome da li je u nekom trenutku neko dugme pritisnuto, 
 koliki je pomeraj miša, niti ga automatski iznova pozicionira, ali barem pruža 
 funkcije koje su neophodne da bi se to ostvarilo.
@@ -1081,26 +1081,26 @@ U OpenGL koordinatnom sistemu je $y$ osa vertikalna, $x$ horizontalna, a $z$ pre
 
 Centralna komponenta inicijalizuje GLUT funkcije povratnog poziva, postavlja GL parametre, i pokreće sistem.
 Ona definiše i tajmer koji će periodično pozivati ažuriranje sistema i zakazati njegovo ponovno iscrtavanje. 
-Ona se takođe stara o računanju vremena između dva uzastopna koraka izvršavanja, redosledu pozivanja ažuriranja stanja,
+Ona se takođe stara o računanju vremena između dva uzastopna koraka izvršavanja, redosledu pozivanja funkcija za ažuriranje stanja,
 detekcije kolizije, razrešavanja kolizije i iscrtavanja.
 
 \subsection{Komponenta za ažuriranje brzine i pozicije objekata}
 % ona radi i razresavanje kolizije
 
 Svakom objektu pridružena je  uređena trojka brojeva u pokretnom zarezu koja označava njegovu poziciju u trodimenzionom prostoru.
-Za održavanje pravca kretanja je potrebna još jedna trojka koja predstavlja vektor brzine kretanja.
-Ako se pritom želi da objekat postepeno ubrzava kada se primeni sila na njega, ili da postepeno usporava 
+Za održavanje pravca kretanja potrebno je čuvati još jednu trojku vrednosti koja predstavlja vektor brzine kretanja.
+Ako se pritom želi da objekat postepeno ubrzava kada se na njega primeni sila, ili da postepeno usporava 
 kada prestane delovanje sile, onda se uz pomenute podatke mora čuvati još jedna trojka brojeva, koja predstavlja ciljnu brzinu.
 Postepeno ubrzavanje se koristi pri kretanju posmatrača. 
 Kada se pritisne dugme na tastaturi za pomeranje posmatrača, očekivano ponašanje je da neće istog trenutka 
 početi da se kreće maksimalnom brzinom, već postepeno da ubrzava.
-Isto, kada se pusti dugme, "sila" koja je delovala na posmatrača je nestala, ali je on imao momenat pa će
-nastaviti malo napred.
+Slično, kada se ovo dugme pusti, "sila" koja je delovala na posmatrača je nestala, ali je on imao momenat pa će
+nastaviti da se kreće još malo unapred.
 
 Potrebno je pažljivo razmotriti kako posmatrač treba da se kreće na komandu da ide napred-nazad ili levo-desno.
-Naivno razmišljanje bi navelo na ideju da se za kretanje levo-desno poveća ili smanji vrednost pozicije $x$ koordinate posmatrača,
+Naivno razmišljanje bi navelo na ideju da je prilikom kretanja levo-desno potrebno povećati ili smanjiti vrednost pozicije $x$ koordinate posmatrača,
 odnosno da se menja $z$ koordinata posmatrača kada treba da se kreće napred-nazad.
-To ipak nije dobro rešenje pošto kada neko želi da se pomeri ne razmišlja preko strana sveta na koju će stranu, 
+To ipak nije dobro rešenje pošto kada neko želi da se pomeri ne razmišlja apsolutno, u terminima strana sveta, na koju će stranu, 
 već relativno u odnosu na njegovo trenutno usmerenje (dato formulom \ref{eq:camera}).
 Neka je dat trodimenzioni jedinični vektor $v$ koji predstavlja usmerenje pogleda; tada je vektor 
 kretanja unapred jednak: 
@@ -1117,7 +1117,7 @@ Koordinatni sistem koji se koristi je prikazan na slici \ref{fig:coord}.
 
 \begin{figure}[h!]
 	\centerfloat
-	\includegraphics[scale=1]{coord.png}
+	\includegraphics[scale=0.75]{coord.png}
 	\caption{OpenGL koordinatni sistem.}
 	\label{fig:coord}
 \end{figure}
@@ -1132,14 +1132,14 @@ već se kretati paralelno uz stranu zida. Isti princip važi i za kretanje posma
 takvo ponašanje standardno za sve video igre.
 
 Detekcija kolizije kao rezultat daje parove svih objekata u koliziji. 
-Na te parove se primenjuje algoritam za razrešenje kolizije prema formulama (\ref{eq:razresenje}) i (\ref{eq:razresenje2}).
+Na te parove se primenjuje algoritam za razrešenje kolizije prema formulama (\ref{eq:mtv}) i (\ref{eq:razresenje}).
 
 \subsection{Komponenta za merenje performansi}
 \label{sec:perf}
 
 Ova komponenta služi za prikupljanje podataka kako bi se uradila evaluacija data u poglavlju \ref{sec:evaluacija}.
 Jedna instanca merenja predstavlja jedan korak izvršavanja i sastoji se od 
-vremena izvršavanja koraka, veličine objekta, broja objekta i dodatnih podataka u zavisnosti od toga 
+vremena izvršavanja koraka, veličine objekta, broja objekata i dodatnih podataka u zavisnosti od toga 
 koji algoritam detekcije kolizije se koristi. 
 Sakupljeni podaci se ne zapisuju direktno u izlaznu datoteku, pošto bi 
 to usporavalo izvršavanje, već se čuvaju u vektoru, 
@@ -1147,7 +1147,7 @@ i tek kada je gotovo celokupno merenje, vrši se ispis u odgovarajuću datoteku.
 
 \subsection{Komponenta za rukovanje ulazima korisnika}
 
-Komponenta za rukovanje ulazima korisnika definiše funkcije povratnog poziva (eng. {\em callback function}) koje će FreeGLUT pozivati.
+Komponenta za rukovanje ulazima korisnika definiše funkcije povratnog poziva koje će FreeGLUT pozivati.
 Od funkcija biće potrebne funkcija za akciju pritiska dugmeta tastature, puštanje dugmeta, kao i 
 radnja koja se vrši dok je dugme pritisnuto. 
 Za poslednju navedenu akciju se za svako dugme sa tastature mora ručno implementirati pamćenje stanja pritisnutosti.
@@ -1158,8 +1158,8 @@ poput F1, F5, strelice i slično, onda se zahteva definisanje odvojenih funkcija
 To je u redu ako je ta akcija na primer izlazak iz programa, promena izabranog algoritma, ili neka druga jedinična akcija.
 Ako je pak u pitanju akcija poput kretanja napred, onda bi takvo ponašanje imalo neprijatan efekat. 
 Oslanjalo bi se na učestale ponovljene signale da je dugme pritisnuto, koji u praksi uopšte nisu periodični.
-To bi dovelo do efekta "seckanja" prilikom kretanja i njegova brzina bi zavisila od mogućnosti glavne petlje događaja da signal pritiska dugmeta često i ravnomerno poziva.
-Takođe, mogla bi se desiti  dva uzastopna signala pritiska dugmeta za napred između dva iscrtavanja scene. 
+To bi dovelo do efekta "seckanja" prilikom kretanja i brzina kretanja bi zavisila od mogućnosti glavne petlje događaja da signal pritiska dugmeta često i ravnomerno poziva.
+Takođe, mogla bi se desiti  dva uzastopna signala pritiska dugmeta za kretanje napred između dva iscrtavanja scene. 
 Da li bi tada trebalo da se napravi duplo veći pomeraj? Odgovor je ne, ali bi to bio efekat ovakve implementacije.
 
 Ispravno rešenje bilo bi da se zapamti da je dugme pritisnuto,  a da se na ovaj događaj reaguje  tek zajedno sa ostalim ažuriranjima 
@@ -1179,21 +1179,22 @@ Kursor miša se podrazumevano ne prikazuje na ekranu, a dodata je opcija da se p
 S obzirom na tematiku ovog rada, najznačajnija i najinteresantnija je funkcionalnost koju pruža ova komponenta.
 Algoritmi za detekciju kolizije su implementirani u odvojenim klasama, ali imaju isti interfejs.
 Svaka klasa implementira metodu kojoj se prosleđuje vektor objekata za koje treba proveriti da li su u koliziji
-i vraća sve parove objekata koji jesu u koliziji. Takođe svaka implementira metod koji daje relevantne podatke 
-o stanju algoritma specifičnom za njega. Npr. broj elemenata u unutrašnjim čvorovima oktrija ili broj 
-zamena u SAP algoritmu. Oni se koriste za merenje i za ispisivanje trenutnih informacija prilikom testiranja.
+i vraća sve parove objekata koji jesu u koliziji. Takođe, svaka klasa implementira metod koji daje relevantne podatke 
+o stanju algoritma specifičnom za njega (npr. broj elemenata u unutrašnjim čvorovima oktrija ili broj 
+zamena u SAP algoritmu). Oni se koriste za merenje i za ispisivanje trenutnih informacija prilikom testiranja.
 
 \section{Vizuelizacija}
 
 U ovoj sekciji biće predstavljen izgled programa. 
-Program je namenjen da se koristi interaktivno. 
+Program je namenjen za interaktivno korišćenje. 
 Korisnik može da se kreće, pomera kameru (usmerenje pogleda), menja parametre koji utiču na detekciju kolizije,
-zapaža rezultate posmatranjem objekata na sceni, posmatranjem prikazanih vrednosti ili vršenjem merenja.
+zapaža rezultate posmatranjem objekata na sceni, posmatranjem prikazanih vrednosti ili izvršavanjem odgovarajućih merenja
+(zapisivanjem informacija o svakom koraku izvršavanja).
 
-Na slici \ref{fig:ssdefault} prikazano je podrazumevano stanje kada se program pokrene.
+Na slici \ref{fig:ssdefault} prikazano je podrazumevano stanje programa prilikom njegovog pokretanja.
 U donjem levom uglu su ispisane relevantne informacije, od kojih su najbitnije broj objekata 
 i broj slika u sekundi. Takođe je prikazan algoritam koji se koristi, parametri specifični za njega, kao 
-i veličina objekta, brzina kretanja (kada nije izabrana podrazumevana vrednost), da li je razrešavanje kolizije uključeno i
+i veličina objekta, brzina kretanja (kada nije izabrana podrazumevana vrednost),  da li je uključeno razrešavanje kolizije ili ne  i
 broj objekata koji su u koliziji.
 
 \begin{figure}[h!]
@@ -1203,7 +1204,9 @@ broj objekata koji su u koliziji.
 	\label{fig:ssdefault}
 \end{figure}
 
-\noindent Desnim klikom miša su prikazane sve kontrole sa leve strane, kao na slici \ref{fig:ssinfo}.
+\noindent Desnim klikom miša mogu se prikazati 
+na levoj strani ekrana kontrole,
+poput kako povećati kontejner ili broj objekata, kao na slici \ref{fig:ssinfo}.
 
 \begin{figure}[h!]
 	\centerfloat
@@ -1212,7 +1215,7 @@ broj objekata koji su u koliziji.
 	\label{fig:ssinfo}
 \end{figure}
 
-\noindent Na slici \ref{fig:ssyank} je prikazana grupa objekata u centru kontejnera i takav slučaj biće 
+\noindent Na slici \ref{fig:ssyank} je prikazana situacija kada postoji grupa objekata u centru kontejnera i takav slučaj biće 
 razmatran u evaluaciji (glava \ref{sec:evaluacija}).
 
 \begin{figure}[h!]
@@ -1235,7 +1238,7 @@ $$ \frac{ dt }{16.67} $$
 
 Razlog za deljenje brojem 16.67 je taj što je poželjan minimalan broj iscrtavanja u sekundi 60, 
 što je $1/60$ sekunde, odnosno 16.67 milisekundi u terminima proteklog vremena $dt$.
-Tako relativan $dt$ predstavlja umnoške od 16.67 milisekundi i lakša je interpretacija
+Tako relativan $dt$ predstavlja umnoške od 16.67 milisekundi i lakše se interpretira
 (npr. mere 33.33 i 8.33 milisekundi redom postaju 2 i 0.5 relativnog $dt$).
 
 Sva merenja su izvršena na računaru sa sledećom konfiguracijom:
@@ -1248,20 +1251,20 @@ Sva merenja su izvršena na računaru sa sledećom konfiguracijom:
 Pritom se vodilo računa da nisu pokrenuti drugi programi koji bi uticali na rezultate.
 Procesorski takt je postavljen na 4.4 GHz.
 
-Za preprocesiranje i prikaz podataka korišćen je programski jezik \textbf{Python},
-biblioteka \textbf{pandas} za obradu podataka i biblioteka \textbf{matplotlib}
+Za preprocesiranje i prikaz podataka korišćen je programski jezik Python,
+biblioteka pandas za obradu podataka i biblioteka matplotlib
 za pravljenje grafika.
 
 \section{Opšti zaključci}
 
 Za početak, potrebno je ustanoviti  koliki uticaj na vreme izvršavanja ima postupak iscrtavanja.
 U slučaju da iscrtavanje troši veći ili sličan udeo vremena  u odnosu na detekciju kolizije bilo bi nepravilno meriti ih zajedno.
-U programu je svakako omogućeno da se isključi iscrtavanje.
+Kao što je već pomenuto, u programu je omogućeno isključiti iscrtavanje.
 
 Na svim narednim graficima (osim \ref{fig:dtSapCrawl} ) prikazane su sledeće referentne vrednosti:
 \begin{itemize}  
 	\item Prava koja predstavlja linearnu zavisnost $y$ od $x$ (prikazana isprekidanom zelenom bojom).
-	Koeficijent prave je jednak odnosu najmanje y i najmanje x vrednosti, tj. $y_0/x_0$.
+	Koeficijent prave je jednak odnosu najmanje $y$ i najmanje $x$ vrednosti, tj. $y_0/x_0$.
 	\item Ciljna vrednost od 60 slika po sekundi (prikazana žutom bojom).
 	60 slika po sekundi je traženi minimum za računare.
 	\item Ciljna vrednost od 30 slika po sekundi (prikazana crvenom bojom).
@@ -1277,10 +1280,10 @@ Na svim narednim graficima (osim \ref{fig:dtSapCrawl} ) prikazane su sledeće re
 	\label{fig:drawVsNoDraw}
 \end{figure}
 
-Na slici \ref{fig:drawVsNoDraw} prikazan je grafik zavisnosti relativnog dt u odnosu na broj objekata.
+Na slici \ref{fig:drawVsNoDraw} prikazan je grafik zavisnosti relativnog dt od broja objekata.
 Detekcija kolizije je isključena, tako da na vreme utiče samo kretanje objekata i iscrtavanje.
 Kada je iscrtavanje uključeno onda vreme izvršavanja raste linearno (sa koeficijentom manjim od 1).
-Na oko 24 000 objekata relativan dt prelazi 1, a na 50 000 objekata dt prelazi 2. 
+Na oko 24 000 objekata vrednost relativnog dt prelazi 1, a na 50 000 objekata ona prelazi 2. 
 Sa druge strane, kada je crtanje isključeno vreme izvršavanja je mnogo manje. 
 Ono i dalje raste linearno sa brojem objekata, ali je konstanta uz linearni član za red veličine manja nego kada je iscrtavanje uključeno.
 Čak i kada je broj objekata veći od 180 000 program se izvršava sa malim relativnim dt, 
@@ -1288,7 +1291,8 @@ Ono i dalje raste linearno sa brojem objekata, ali je konstanta uz linearni čla
 
 Na slici \ref{fig:basic} prikazana je zavisnost relativnog dt od broja objekata kada se koristi 
 trivijalan algoritam za detekciju kolizije. Na grafiku se uočava nagli rast, što je i očekivano pošto 
-je algoritam kvadratne vremenske složenosti. Čak pre 2000 objekata relativan dt postaje veći od 1, 
+je algoritam kvadratne vremenske složenosti.
+Čak i za manje od 2000 objekata relativan dt postaje veći od 1, 
 a na 2500 veći od 2. Takvo rešenje je neupotrebljivo za veći broj objekata. Jedina "prednost" je što 
 je vreme izvršavanja isto koliko god se brzo objekti kretali, koje god da su veličine i koliko god 
 da ih se međusobno preseca.
@@ -1306,12 +1310,13 @@ da ih se međusobno preseca.
 
 Na slici \ref{fig:oktri1} su prikazane performanse oktrija sa maksimalnom dubinom od deset nivoa i sa maksimalnom vrednošću od četiri elementa u listu.
 Može se primetiti da on za manji broj objekata prati referentnu liniju linearne zavisnosti.
-Za manji broj objekata on je višestruko bolji od prehtodno prikazanog (trivijalnog) algoritma.
+Kada je broj objekata mali, on je višestruko bolji od prethodno prikazanog (trivijalnog) algoritma.
 Broj slika u sekundi pri korišćenju oktrija pada ispod 60fps tek nakon 12 000 objekata, a ispod 30fps nakon 20 000 objekata.
-I za manji broj objekata je višestruko bolji u odnosu na prethodno prikazani, pada 
+I za manji broj objekata je višestruko bolji u odnosu na prethodno prikazani,
+pada ispod 60fps tek nakon 12 000 objekata, i ispod 30fps nakon 20 000.
 Ipak, na slici \ref{fig:oktri2} prikazano je ponašanje istog algoritma za veće vrednosti broja objekata. 
 Može se uočiti brže udaljavanje od referentne prave linearne zavisnosti,
-pošto algoriam nije linearne vremenske složenosti.
+što je i očekivano, s obzirom na to da algoritam nije linearne vremenske složenosti.
 
 \begin{figure}[h!]
 	\centerfloat
@@ -1348,9 +1353,10 @@ Međutim, postoje situacije kada oktri bez duplikata ima bolje performanse.
 Jedna od njih je kada se veliki broj objekata nalazi na istom mestu, kao što je slučaj na slici \ref{fig:ssyank}.
 Za potrebe demonstriranja ove pojave se koristi scenario gde se objekti nasumično kreću i onda svi bivaju povučeni ka jednoj istoj tački.
 Tada se svi nalaze na istom mestu za trenutak, i potom se razilaze.
-Ovaj efekat prikazan je na slici \ref{fig:octreSpike} i mogu se uočiti tri manja plava skoka za oktri bez duplikata, i dva narandžasta skoka reda veličine za oktri sa duplikatima.
+Ovaj efekat prikazan je na slici \ref{fig:octreSpike} i mogu se uočiti i tri manja skoka za oktri bez duplikata (prikazana plavom bojom),
+i dva skoka reda veličine za oktri sa duplikatima (prikazana narandžastom bojom).
 Za potrebe ovog merenja je isključeno razrešenje kolizije da bi više objekata bilo u koliziji, što pokazuje interesantno svojstvo da iako je za razrešavanje kolizija potrebna dodatna obrada, 
-ona onemogućava grupisanje preseka objekata i time ubrzava izvršavanje oktrija (i mnogih drugih algoritama detekcije kolizije).
+ona onemogućava grupisanje preseka objekata i time ubrzava izvršavanje algoritma zasnovanog na oktrima (i mnogih drugih algoritama detekcije kolizije).
 
 
 \begin{figure}[h!]
@@ -1368,9 +1374,9 @@ Ova vrednost je izabrana vodeći se logikom da je manja vrednost pogodna zbog iz
 a da nije dobro ni da je sasvim mala, jer bi se listovi previše često delili. 
 Na slici \ref{fig:octree_leaf} se zapaža da ovako odabrana vrednost nije loš izbor i tada je broj slika u sekundi 69 (0.89 relativan $dt$). 
 Ispostavlja se da 1 predstavlja najlošiju vrednost za ovaj parametar pošto dovodi do viška rekurzivnog particionisanja prostora.
-Pokazuje se da sa porastom vrednosti maksimalnog broja elemenata u listu relativan dt opada sve do vrednosti 32, od koje počinje da raste.
-Najbolje performanse algoritam postiže za vrednost 32, kada je broj slika u sekundi 94 što je čak 36.2\% bolje (u odnosu na prethodnih 69fps)! 
-Ubrzanje od 36.2\% je u praksi veoma značajno, pogotovo što je postignuto samo promenom jednog koeficijenta.
+Pokazuje se, takođe, da sa porastom vrednosti maksimalnog broja elemenata u listu relativan dt opada sve do vrednosti 32, od koje počinje da raste.
+Najbolje performanse algoritam postiže za vrednost 32, kada je broj slika u sekundi 94 što je čak za 36.2\% bolje (u odnosu na prethodnih 69fps)! 
+Ubrzanje od 36.2\% je u praksi veoma značajno, pogotovo što je postignuto promenom samo jednog koeficijenta.
 U svim ovim merenjima broj objekata je fiksan i iznosi 10 000 objekata i korišćen je oktri sa duplikatima.
 
 \begin{figure}[h!]
@@ -1406,12 +1412,13 @@ Algoritam SAP pokazuje dobro ponašanje dok je broj objekata ispod 11 000 (slika
 Kada je broj objekata veći od 11 000 počinje da se manifestuje njegova glavna razlika u odnosu na ostale algoritme.
 Naime, za veći broj objekata potrebno je više vremena da se obradi detekcija kolizije, što produžava vreme između dva ažuriranja pozicija.
 Što je vreme između dva ažuriranja pozicija veće, to je i više vremena proteklo u simulaciji, samim tim će i objekti biti udaljeniji od svojih prethodnih pozicija 
-nego što bi bio slučaj sa kraćim vremenom između dva koraka. Veći pomeraj objekata znači da je niz koji se održava sortiranim u SAP algoritmu daleko od toga da bude 
-sortiran, pa je potrebno izvesti dodatne zamene elemenata u nizu dok on ponovo postane sortiran. 
+nego što bi bio slučaj da je proteklo vreme između dva koraka kraće.
+Veći pomeraj objekata znači da je niz koji se održava sortiranim u SAP algoritmu daleko od toga da bude 
+sortiran, pa je potrebno izvesti dodatne zamene elemenata u nizu da bi on ponovo postao sortiran. 
 Time se iznova povećava vreme izvršavanja između dva koraka, što vodi većoj udaljenosti objekta od prošle pozicije, i tako u krug.
 
-Ovaj fenomen je prikazan na slici \ref{fig:dtSapCrawl}, gde je ilustrovan slučaj kada je fiksiran broj od 12 800 objekata na sceni,
-a vreme izvršavanja eksplodira, čak ispod jednog iscrtavanja u sekundi.
+Ovaj fenomen je prikazan na slici \ref{fig:dtSapCrawl}, gde je ilustrovan slučaj kada je fiksiran broj od 12 800 objekata na sceni
+i za koje vreme izvršavanja eksplodira, čak ispod jednog iscrtavanja u sekundi.
 Vidi se direktna veza broja zamena i relativnog $dt$ jer broj zamena kvadratne složenosti čini algoritam veoma sporim.
 
 \begin{figure}[h!]
@@ -1423,8 +1430,9 @@ Vidi se direktna veza broja zamena i relativnog $dt$ jer broj zamena kvadratne s
 	\label{fig:dtSapCrawl}
 \end{figure}
 
-Kao što povećanje brzine kretanja može imati jako negativne posledice na performanse SAP algoritma, tako i smanjivanje brzine utiče povoljno na njegovo vreme izvršavanja.
-Upoređivanje vremena za tri različite brzine objekata je dato na slici \ref{fig:sap3speeds}. 
+Dok povećanje brzine kretanja može imati jako negativne posledice na performanse SAP algoritma,
+smanjenje brzine kretanja utiče povoljno na njegovo vreme izvršavanja.
+Poređenje vremena izvršavanja za tri različite brzine objekata je dato na slici \ref{fig:sap3speeds}. 
 Podrazumevanja brzina objekata je $w/5$ jedinica u sekundi, gde je $w$ širina kontejnera unutar koga se objekti kreću.
 Prvo merenje je izvršeno pri podrazumevanoj brzini, drugo pri duplo manjoj i treće pri četri puta manjoj brzini.
 Što se sporije objekti kreću to je tačka kada povratna sprega počinje da uzima maha više odložena.
