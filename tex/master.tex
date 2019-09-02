@@ -167,7 +167,7 @@ Potrebno je bar 1000 puta u sekundi pružiti povratnu informaciju korisniku da b
 \end{figure}
 
 Problem detekcije kolizije svih parova objekata je u najgorem slučaju kvadratne vremenske i prostorne složenosti 
-jer se može desiti da se svaka dva objekta seku te je maksimalni broj parova objekata koji su u koliziji reda $n^2$, 
+jer se može desiti da se svaka dva objekta seku, te je maksimalni broj parova objekata koji su u koliziji reda $n^2$, 
 gde je $n$ broj objekata koji se razmatra.
 Međutim, broj preseka je najčešće mnogo manji od ove gornje granice.
 Taj najgori slučaj je na primer kada se svaka dva objekta seku.
@@ -219,7 +219,7 @@ Umesto da se računaju preseci između velikog broja prostih objekata od kojih s
 samo preseci među kutijama. tj. uprošćene reprezentacije tela.
 
 Umesto AABB moguće je koristiti konveksne omotače tela ili \textbf{orijentisane ograničavajuće kutije} (eng. {\em Oriented Bounding Box}), skraćeno \textbf{OBB}.
-Orijentisane ograničavajuće kutije su kavdri čije strane ne moraju biti paralelne baznim osama, 
+Orijentisane ograničavajuće kutije su kvadri čije strane ne moraju biti paralelne baznim osama, 
 već se mogu slobodno rotirati (orijentisati) tako da uže opišu telo koje reprezentuju.
 \textbf{Hijerarhije graničnih opsega} (eng. {\em Bounding Volume Hierarchy}), skraćeno \textbf{BVH}, su stabla koja se grade rekurzivnom podelom 
 prostora na granične opsege. Što je granični opseg bliže telima koje aproksimira to bolje, pošto to vodi do manjeg broja 
@@ -1243,7 +1243,7 @@ Sva merenja su izvršena na računaru sa sledećom konfiguracijom:
 Pritom se vodilo računa da nisu pokrenuti drugi programi koji bi uticali na rezultate.
 Procesorski takt je postavljen na 4.4 GHz.
 
-Za preprocesiranje i prikaz podataka korišćen je programski jezik Python,
+Za pretprocesiranje i prikaz podataka korišćen je programski jezik Python,
 biblioteka pandas za obradu podataka i biblioteka matplotlib
 za pravljenje grafika.
 
@@ -1459,7 +1459,7 @@ do akumuliranja usporavanja, koji iznosi oko 100 000.
 
 \section{Odabir algoritma detekcije kolizije}
 
-Na osnovu grafika prikazanih prikazanih u ovoj glavi može se se može primetiti da za drugačije
+Na osnovu grafika prikazanih u ovoj glavi se može primetiti da za drugačije
 pozicije, brzine, veličine i brojeve objekata različiti algoritmi detekcije kolizije bivaju najefikasniji.
 Može se zaključiti i da primenu trivijalnog algoritma, čije performanse su prikazane na slici \ref{fig:basic}, treba izbegavati.
 Njega jedino ima smisla koristiti u slučaju kada je broj objekata manji od 100,
