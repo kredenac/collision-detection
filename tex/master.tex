@@ -110,18 +110,20 @@ Objekat čiji se presek razmatra može biti jednostavan kao što je kocka, a mo�
 Stoga nije praktično da se za svaki poligon svakog od razmatranih objekata
 proverava da li postoji presek sa nekim poligonom nekog drugog objekta.
 Umesto toga, složeni objekti se zamenjuju kvadrima koji su opisani oko njih.
-Na taj način se prvo nalaze preseci prostih objekata, pa tek ako se oni seku ispituje se da li postoji presek konkretnih poligona od kojih je objekat sastavljen.
+Na taj način se najpre razmatraju jednostavniji objekti, pa tek ako se oni seku ispituje se da li postoji presek konkretnih poligona od kojih je objekat sastavljen.
 %
 Prvi deo ovog postupka naziva se \textbf{široka faza} (eng. {\em broadphase}), a drugi deo se naziva \textbf{uska faza} (eng. {\em narrowphase}).
-Drugi deo ovog procesa nije uvek neophodan, na primer kada su svi objekti na koje se primenjuje algoritam kocke, kao što je to slučaj u nekim igrama.
+Drugi deo ovog procesa nije uvek neophodan, na primer kada su svi objekti čiji se presek razmatra kocke, kao što je to slučaj u nekim igrama.
 Ovaj rad je usmeren na široku fazu pošto je ona od ključnog značaja kada se radi o velikom broju objekata.
-Razlog za to je taj što je problem koji ona rešava u najgorem slučaju kvadratne vremenske i prostorne složenosti.
+Razlog za to je taj što je problem koji ona rešava u najgorem slučaju kvadratne vremenske i prostorne složenosti
+jer je broj parova objekata koji se presecaju u najgorem slučaju $O(n^2)$, 
+gde je $n$ broj objekata koji se razmatra.
 Uglavnom je broj parova objekata koji se presecaju neznatan u odnosu na broj potencijalnih parova. 
 Zato je uticaj uske faze na performanse manji u odnosu na široku fazu za koju je važno imati što efikasniju implementaciju.
 
 Za interaktivne svetove je neophodno otkrivanje kolizija u realnom vremenu. 
 Potreba izvršavanja u realnom vremenu nosi sa sobom nove probleme za čije rešavanje se koriste posebni mehanizmi 
-i uglavnom dolazi do kompromisa između preciznosti i efikasnosti.
+i uglavnom dolazi do kompromisa između preciznosti detekcije kolizije i efikasnosti algoritama.
 
 U prvom poglavlju rada biće data motivacija. 
 Pregled relevantnih pojmova i fenomena biće prikazanu u drugom poglavlju uz fokus na konzistentne korake izvršavanja.
@@ -142,7 +144,7 @@ u toj meri da ima veći prihod od filmske i muzičke industrije zajedno! Zaista,
 Posledice manjih grešaka (bagova) u igrama nisu dramatične poput potencijalnih posledica neispravnog softvera u avionskoj ili automobilskoj industriji, ali 
 se svakako negativno odražavaju na prihod.
 Korisnici očekuju visok stepen doteranosti video igara, pa bi postojanje velikog broja bagova 
-obeshrabrilo potencijalne kupce. Na slici \ref{fig:batman} je prikazana greška gde je igrač propao kroz
+obeshrabrilo potencijalne kupce. Na slici \ref{fig:batman} je prikazana greška gde igrač propada kroz
 pod virtuelnog sveta, a na slici \ref{fig:horse} igrač ne može da se popne na konja pošto on lebdi u vazduhu.
 
 Na tržištu se poslednjih godina pojavljuju rukavice za virtuelnu realnost koje simuliraju dodir virtuelnih objekata, a za njih je 
@@ -152,8 +154,7 @@ Potrebno je bar 1000 puta u sekundi pružiti povratnu informaciju korisniku da b
 \begin{figure}
 \centering
 \includegraphics[scale=0.22]{batman.jpg}
-\caption{Propadanje ispod modelovanog sveta.}
-\tiny Preuzeto sa \url{ https://tinyurl.com/y5g987j5 } 
+\caption{Propadanje ispod modelovanog sveta (\tiny preuzeto sa \url{ https://tinyurl.com/y5g987j5 }).}
 \label{fig:batman}
 \end{figure}
 
@@ -161,16 +162,17 @@ Potrebno je bar 1000 puta u sekundi pružiti povratnu informaciju korisniku da b
 \begin{figure}
 	\centering
 	\includegraphics[scale=0.54]{horse.png}
-	\caption{Levitirajući konj.}
-	\tiny Preuzeto sa \url{ https://tinyurl.com/y6qbaxqm }
+	\caption{Levitirajući konj (\tiny preuzeto sa \url{ https://tinyurl.com/y6qbaxqm }).}
+	
 	\label{fig:horse}
 \end{figure}
 
 Problem detekcije kolizije svih parova objekata je u najgorem slučaju kvadratne vremenske i prostorne složenosti 
-jer se može desiti da se svaka dva objekta seku, te je maksimalni broj parova objekata koji su u koliziji reda $n^2$, 
+jer se može desiti da se svaka dva objekta seku, te je maksimalni broj parova objekata koji su u koliziji reda $O(n^2)$, 
 gde je $n$ broj objekata koji se razmatra.
 Međutim, broj preseka je najčešće mnogo manji od ove gornje granice.
-Taj najgori slučaj je na primer kada se svaka dva objekta seku.
+Ipak, postoje slučajevi kada je vreme izvršavanja algoritma reda $\Theta(n^2)$, na primer u situaciji kada se svaka dva objekta seku.
+
 Potreba da se algoritam izvršava u realnom vremenu je očigledna kod interaktivnih primena.
 Međutim i za neinteraktivne primene, potrebno je imati što efikasniji algoritam za utvrđivanje kolizije koji bi mogao da se često pokreće.
 Filmovi nisu interaktivan sadržaj i zato je učestalost osvežavanja slike od 24Hz, uz korišćenje zamućivanja pokreta (eng. {\em motion blur}),
@@ -204,19 +206,19 @@ Celokupan zadatak detekcije kolizije se deli na dve faze: široku fazu i usku fa
 U prvoj, širokoj fazi
 odbacuje se (često) većina kandidata od svih mogućih parova objekata za koje se ispituje da li se seku.
 Cilj pri implementaciji široke faze je razviti što efikasniji algoritam (u funkciji broja objekata) 
-za pronalaženje parova objekata koji se (verovatno) seku.
+za pronalaženje parova objekata koji se eventualno mogu seći.
 Zadatak uske faze je da se za parove objekata dobijenih u širokoj fazi utvrdi da li oni zaista imaju presek.
 Iako postoje takvi slučajevi, u mnogim primenama nisu svi objekti prosta geometrijska tela poput kocki, kvadara ili lopti.
 Objekti koji se razmatraju mogu biti veoma složeni, predstavljeni u vidu kompozicije velikog broja prostijih tela ili kao mreže sastavljene od stotina hiljada trouglova.
 U ovim situacijama veoma je važno osmisliti i razmatrati nekakvu jednostavniju reprezentaciju tih objekata.
 
 \textbf{Granični opsezi} (eng. {\em bounding volume}) prestavljaju jedan tip jednostavnije reprezentacije \cite{rgpdf}.
-Za granične opsege se uglavnom koriste kvadari, a pored toga se mogu koristiti sfere, kapsule i druga tela.
+Za granične opsege se uglavnom koriste kvadri, a pored toga se mogu koristiti sfere, kapsule i druga tela.
 Ono što se najčešće radi jeste da se naprave najmanje "kutije" koje će sadržati u potpunosti te objekte.
 Te "kutije" su u obliku kvadra čije su strane poravnate sa osama koordinatnog sistema i nazivaju se
-\textbf{ograničavajuće kutije poravnate prema osama} (eng. {\em Axis Aligned Bounding Box}), skraćeno \textbf{ AABB }.
+\textbf{ograničavajuće kutije poravnate prema osama} (eng. {\em Axis Aligned Bounding Box}), skraćeno \textbf{AABB}.
 Umesto da se računaju preseci između velikog broja prostih objekata od kojih su tela sastavljena, sada se posmatraju 
-samo preseci među kutijama. tj. uprošćene reprezentacije tela.
+samo preseci među kutijama. tj. uprošćenim reprezentacijama tela.
 
 Umesto AABB moguće je koristiti konveksne omotače tela ili \textbf{orijentisane ograničavajuće kutije} (eng. {\em Oriented Bounding Box}), skraćeno \textbf{OBB}.
 Orijentisane ograničavajuće kutije su kvadri čije strane ne moraju biti paralelne baznim osama, 
@@ -281,16 +283,16 @@ na neki drugi način, ali se to ostavlja za usku fazu.
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.17]{theorem_counterexample.png}
-	\caption{Projekcija nekonveksne površi na pravu.}
-	\tiny Preuzeto sa \url{ https://tinyurl.com/yxbqg5hq }
+	\caption{Projekcija nekonveksne površi na pravu (\tiny preuzeto sa \url{ https://tinyurl.com/yxbqg5hq }).}
+	
 	\label{fig:counter}
 \end{figure}
 
 Na slici \ref{fig:counter} prikazane su dve površi, jedna konveksna a druga nekonveksna. 
 Za svaku pravu se projekcije datih površi na njoj seku, iako površi u stvari nemaju presek.
- Dakle, teorema o razdvajajućim osama ne važi za nekonveksne objekte. 
+Dakle, teorema o razdvajajućim osama ne važi za nekonveksne objekte. 
 Primer u tri dimenzije dat je na slici \ref{fig:falseCollision}, gde iako ne postoji presek dva objekta, 
-posmatranjem njihovih graničnih opsega bi se zaključilo da postoji presek.
+tek u uskoj fazi može se zaključiti da se objekti ne seku.
 
 \begin{figure}[h!]
 	\centering
@@ -329,14 +331,14 @@ Broj slika po sekundi (eng. {\em frames per second}), skraćeno \textbf{fps}, je
 Naizgled ako program ima 60fps to je savršeno za ekran od 60Hz. To ipak ne mora da bude slučaj.
 U toku jedne sekunde u prvih 500 milisekundi može biti kreirano 59 slika, a u preostalih 500 milisekundi samo jedna nova slika. 
 To zaista jeste 60fps, ali ono što je prikazano na ekranu nije mnogo bolje od 2fps, 
-što je prektično nedopustivo. 
-Dakle sa jedne strane nije dobar višak slika jer se nepotrebno troše resursi na njih iako se ne prikazuju, 
+što je praktično nedopustivo. 
+Dakle, sa jedne strane nije dobar višak slika jer se nepotrebno troše resursi na njih iako se ne prikazuju, 
 a sa druge strane manjak slika i njihovo neravnomerno generisanje dovodi do neprijatnosti.
 Zato je bitno da cela simulacija, a samim tim i detekcija kolizije ima što konzistentnije vreme izvršavanja.
 Konzistentno vreme izvršavanja podrazumeva da je vreme između dve prikazane slike isto.
 
-Na slici \ref{fig:fpsdiv2} se vidi da je kreirano 6 slika, tj. da praktično ima 6fps, iako je prikaz na ekranu 
-ekvivalentan sa 3fps, što je još jedan primer nepoželjne posledice nekonzistentnotog vremena izvršavanja. 
+Na slici \ref{fig:fpsdiv2} se vidi da je kreirano 6 slika, tj. da program praktično ima 6fps, iako je prikaz na ekranu 
+ekvivalentan sa 3fps, što je još jedan primer nepoželjne posledice nekonzistentnog vremena izvršavanja. 
 
 \begin{figure}[h!]
 	\centering
@@ -361,12 +363,13 @@ vremenska složenost svake iteracije algoritma biće linearna (ovo tvrđenje bi�
 
 \textbf{Vremenski aliasing} (eng. {\em temporal aliasing}) je vizuelni fenomen koji 
 nastaje kada se generiše nedovoljan broj slika u sekundi u odnosu na brzinu kretanja objekata na sceni.
-Vremenski antialiasing ima za cilj da smanji ili ukloni efekte vremenskog aliasinga.
+\textbf{Vremenski antialiasing} ima za cilj da smanji ili ukloni efekte vremenskog aliasinga.
 Usled vremenskog aliasinga objekti izgledaju kao da poskakuju umesto da odaju utisak glatkog kretanja,
 ili se naizgled kreću u suprotnom smeru od stvarnog.
 Da bi se izbegao vremenski aliasing potrebno je da broj slika scene u sekundi bude bar duplo veći 
 od brzine objekta koji se najbrže kreće \cite{Grant}. 
 Jedan od često viđanih primera vremenskog aliasinga je da se na snimku točkovi automobila naizgled kreću unazad.
+
 Vremenski antialiasing se takođe koristi za smanjenje oštrih ivica koje trepere kada se pomera kamera.
 Na slici \ref{fig:txaa} se vidi jasno poboljšanje izgleda ivica kada se koristi TXAA,
 tehnika koju koristi kompanija NVIDIA da bi umanjila efekat vremenskog i prostornog aliasinga.
@@ -379,15 +382,15 @@ pošto vreme između dve generisane slike i brzina kretanja objekta ne utiču na
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.65]{txaa.png}
-	\caption{Upoređivanje tehnika antialiasinga.}
-	\tiny Preuzeto sa \url{ https://tinyurl.com/y2c6nw5l }
+	\caption{Upoređivanje tehnika antialiasinga (\tiny preuzeto sa \url{ https://tinyurl.com/y2c6nw5l }).}
+	
 	\label{fig:txaa}
 \end{figure}
 
 \section{Preciznost i preseci zapremina pokretnih tela}
 
 Koliziju je moguće utvrđivati sa različitim nivoom preciznosti. 
-Pod preciznošću se misli da li su otkrivene sve kolizije koje su se desile i 
+Pod preciznošću se podrazumevaju dve stvari: da li su otkrivene sve kolizije koje su se desile i 
 da li se objekti koji se iscrtavaju reprezentuju uprošćeno za svrhe kolizije. 
 Jasno je da veća preciznost sa sobom iziskuje veće vremenske i prostorne resurse. 
 Stoga se često bira nešto nepreciznija varijanta koja ima kraće vreme izvršavanja i manju potrošnju memorije.
@@ -400,13 +403,13 @@ Ovaj fenomen se naziva \textbf{tuneliranje} (eng. {\em tunneling}) i ilustrovan 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.55]{tunnel.png}
-	\caption{Tuneliranje.}
-	\tiny Preuzeto sa \url{ https://tinyurl.com/yxjz7vga }
+	\caption{Tuneliranje (\tiny preuzeto sa \url{ https://tinyurl.com/yxjz7vga }).}
+	
 	\label{fig:tunnel}
 \end{figure}
 
 Tuneliranje se češće javlja kod malih objekata ili kod onih koji se brzo kreću.
-U oba slučaja problem je u tome što je put koji objekat pređe između dve provere kolizije velik u odnosu na veličinu objekta. 
+U oba slučaja problem je u tome što je put koji objekat pređe između dve provere kolizije dosta veći u odnosu na veličinu objekta. 
 Problem se rešava tako što se ne proverava kolizija za sâm objekat, već za celu zapreminu kroz koju je on prošao 
 od prošlog trenutka provere kolizije pa do trenutnog. Na slici \ref{fig:tunnel_fix} je obojena dodatna zapremina 
 koja se proverava umesto da se proverava samo objekat. 
@@ -414,8 +417,8 @@ koja se proverava umesto da se proverava samo objekat.
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.55]{tunnel_fixed.png}
-	\caption{Sprečavanje tuneliranja.}
-	\tiny Preuzeto sa \url{ https://tinyurl.com/yxjz7vga }
+	\caption{Sprečavanje tuneliranja (\tiny preuzeto sa \url{ https://tinyurl.com/yxjz7vga }).}
+	
 	\label{fig:tunnel_fix}
 \end{figure}
 
@@ -430,19 +433,20 @@ Nekada se ceo model čoveka aproksimira samo jednom vertikalnom kapsulom
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.55]{hitbox.png}
-	\caption{Reprezentacija modela čoveka.}
-	\tiny Preuzeto sa \url{ https://tinyurl.com/yyjhzlyo }
+	\caption{Reprezentacija modela čoveka (\tiny preuzeto sa \url{ https://tinyurl.com/yyjhzlyo }).}
+	
 	\label{fig:hitbox}
 \end{figure}
 
 \section{Izvršavanje na različitom hardveru}
 
 S obzirom na to da se simulacija izvršava u diskretnim koracima,
-bitan parametar predstavlja vremenska razlika između dva koraka.
+bitan parametar prilikom izvršavanja predstavlja vremenska razlika između dva koraka.
 Prevelika razlika između dva koraka je svakako nepoželjna jer je onda i prevelika razlika između dve uzastopne slike scene.
 
-Razmotrimo naredni scenario. Potrebno je objekat pomerati duž $x$ ose za 10 jedinica svake sekunde. Neka je interval koraka simulacije 
-$p$ jednak $0.01$ sekund, onda je dovoljno da se u svakom koraku vrednost $x$ koordinate tog objekta ažurira na sledeći način:
+Razmotrimo naredni scenario. Potrebno je objekat pomerati duž $x$ ose za 10 jedinica svake sekunde.
+Ako je interval koraka simulacije 
+$p$ jednak $0.01$ sekund, onda je dovoljno da se u svakom koraku vrednost $x$ koordinate tog objekta ažurira prema sledećoj formuli:
 
 
 \begin{equation}
@@ -463,7 +467,7 @@ simulacija bila ubrzana.
 Jedno rešenje ovog problema se sastoji u tome da se koristi 
 razlika vremena proteklog između dva uzastopna koraka, u oznaci $dt$ (eng. {\em delta time}).
 Korišćenjem $dt$ je moguće izvršavanje simulacije čije vreme teče konzistentno nezavisno od broja izvršenih koraka u 
-jedinici vremena. Ako je harver bolji onda će simulacija imati više koraka, odnosno više slika u sekundi, a ako je 
+jedinici vremena. Ako je hardver bolji onda će simulacija imati više koraka, odnosno više slika u sekundi, a ako je 
 sporiji onda će biti manje slika u sekundi, ali vreme u simulaciji neće proticati sporije.
 $dt$ bi u idealnom slučaju bilo jednako recipročnoj vrednosti broja slika u sekundi:
 
@@ -493,14 +497,14 @@ pošto se koraci u kojima se primenjuju neka pravila fizike izvode u fiksnim int
 dok se opšta ažuriranja koriste za operacije koje je potrebno izvršiti pre svakog iscrtavanja slike. 
 Na primer, izmena korisničkog interfejsa igre spada pod opšta ažuriranja, a primena sile ili obrtnog momenta spada pod fiksna ažuriranja.
 Unity izvršava fiksno ažuriranje i fizička izračunavanja 50 puta u sekundi, nezavisno od broja slika u sekundi \cite{unity}.
-To znači da ako se igra izvršava na 25fps onda će otprilike biti dva poziva fiksnog ažuriranja na svaku iscrtanu sliku,
+To znači da ako se igra izvršava na 25fps onda će biti oko dva poziva fiksnog ažuriranja na svaku iscrtanu sliku,
 a ako se izvršava na 100fps tada između nekih slika neće biti nijednog fizičkog izračunavanja ni fiksnog ažuriranja.
 
 \section{Metode za razrešavanje kolizije}
 \label{sec:razresenje}
 
 Razrešenje kolizije se sastoji od
-pomeranja objekata tako da se više ne seku i postavljanja novih vektora brzina i sila koje deluju na objekte.
+pomeranja objekata tako da se oni više ne seku i postavljanja novih vektora brzina i sila koje deluju na objekte.
 Nakon što algoritam detekcije kolizije odredi sve parove objekata koji su u koliziji, 
 razrešenje kolizije svih objekata se izvodi razmatranjem svakog od parova.
 Postoje dva glavna načina za razrešenje kolizija \cite{Moore}.
@@ -508,19 +512,19 @@ Jedan način je da se ubaci kruta opruga između dva objekta u koliziji.
 Sila opruge se primenjuje jednako u suprotnom smeru na ta dva objekta.
 Smer sile je takav da što pre razdvoji objekte. Metod sa oprugama nije težak 
 za implementaciju, dobar je i za čvrsta i za fleksibilna tela, ali je problem što je računski zahtevan. 
-Što je kruća opruga potrebni su kraći vremenski koraci za fina numerička izračunavanja.
+Što je opruga kruća, potrebni su kraći vremenski koraci za fina numerička izračunavanja.
 
 Drugi način za razrešavanje kolizije se sastoji u tome da se analitički izračunaju nova svojstva objekata u jednom koraku.
-Najpre je potrebno izračunati minimalni vektor translacije. Npr. za dve sfere $s_1$ i $s_2$ to je vektor $\vec{mtv}$
+Najpre je potrebno izračunati minimalni vektor translacije. Npr. za dve sfere $s_1$ i $s_2$ to je vektor $\overrightarrow{mtv}$
 određen centrima $c_1, c_2$ dve sfere čiji je intenzitet jednak razlici intenziteta zbira poluprečnika
 $r_1$ i $r_2$ dve sfere i intenziteta udaljenosti centara, odnosno:
 \begin{equation}
 	\label{eq:mtv}
-	 \vec{mtv} := \frac{{c_1 - c_2}} {\|{c_1 - c_2}\|} 
+	 \overrightarrow{mtv} := \frac{{c_1 - c_2}} {\|{c_1 - c_2}\|} 
 	(r_1 + r_2 - \| {c_1 - c_2} \| ) 
 \end{equation}
 
-Potom se jedna sfera translira za $ \frac{ \vec{mtv} }{ 2 }$, a druga za $ -\frac{ \vec{mtv} }{ 2 }$.
+Potom se jedna sfera translira za $ \frac{ \overrightarrow{mtv} }{ 2 }$, a druga za $ -\frac{ \overrightarrow{mtv} }{ 2 }$.
 Sada sfere više nisu u koliziji, ali je potrebno da se promene njihovi vektori brzina nakon sudara.
 Kada se koristi elastična kolizija onda se nove brzine računaju prema formulama:
 
@@ -535,8 +539,8 @@ Kada se koristi elastična kolizija onda se nove brzine računaju prema formulam
 \end{equation}
 
 
-pri čemu su $m_1$ i $m_2$ redom mase sfera $s_1$ i $s_2$, a uglaste zagrade označavaju skalarni proizvod vektora.
-Analitičko izračuavanje je glavni metod koji se koristi u pogonima igara.
+\noindent pri čemu su $m_1$ i $m_2$ redom mase sfera $s_1$ i $s_2$, a uglaste zagrade označavaju skalarni proizvod vektora.
+Analitičko izračunavanje je glavni metod koji se koristi u pogonima igara.
 On je pogodniji za jake sudare, pošto je dovoljno jednom izračunati sve promene.
 Ipak, za delikatnije sudare poput tela koje je polegnuto na drugo, bolje je koristiti opruge.
 
@@ -545,9 +549,9 @@ Ipak, za delikatnije sudare poput tela koje je polegnuto na drugo, bolje je kori
 \label{sec:algoritmi}
 % ==============================================================================
 
-Rezultat izvršavanja algoritma detekcije kolizije je skup svih parova koji su u koliziji.
+Rezultat izvršavanja algoritma detekcije kolizije je skup svih parova objekata koji su u koliziji.
 U najgorem slučaju (na primer kada su svi objekti kocke na istoj poziciji) svaki objekat se seče sa svim ostalim
- i tada ima $ {n\choose 2}  $ preseka, gde je $n$ broj objekata. 
+i tada ima $ {n\choose 2}  $ preseka, gde je $n$ broj objekata. 
 
 Međutim, taj najgori slučaj se retko dešava u stvarnim primenama. 
 Stoga, bilo bi poželjno da složenost algoritma za detekciju kolizije zavisi od broja parova objekata koji su u koliziji.
@@ -564,9 +568,9 @@ se na osnovu toga vrši odabir postojećih ili konstruišu novi algoritmi.
 \label{subsec:triv}
 
 Do trivijalnog algoritma detekcije kolizije nije teško doći: za svaki element se proverava da li postoji presek sa svakim drugim elementom.
-Algoritam je ispravan i njegova vremenska složenost je $\Theta (n^2) $ (gde je $n$ broj objekata), dok je prostorna složenost
+Nije teško pokazati korektnost ovog algoritma i njegova vremenska složenost je $\Theta (n^2) $ (gde je $n$ broj objekata), dok je prostorna složenost
 $O(n^2)$, odnosno $\Theta(k)$ (gde je $k$ broj parova objekata koji se presecaju), pošto svaki par objekata koji je u koliziji treba sačuvati.
-Na složenost vremena izvršavanja ne utiču veličina objekata, njihova brzina, ni broj parova koji su u koliziji.
+Na složenost vremena izvršavanja ne utiču veličina objekata, njihova brzina, ni broj parova objekata koji su u koliziji.
 
 Algoritam je prikazan pseudokodom \ref{alg:triv}.
 Glavna mana ovakvog algoritma je kvadratna vremenska složenost čak i kada nema nijedne kolizije.
@@ -579,10 +583,9 @@ se provere kolizije vrše samo nad manjim podskupovima svih elemenata.
 		\Procedure{OsnovnaDetekcijaKolizije}{$objekti$}
 		\State $Parovi := \{ \}$
 		\State $n$ := broj($objekti$)
-		\For{$i$:=0 to $n$-1}
-			\For{$j$:=$i$+1 to $n$}
-
-			\If{$i$-ti i $j$-ti $objekti$ imaju presek}
+		\For{$i := 0 $ to $n-1$}
+			\For{$j$ := $i+1$ to $n$}
+			\If{$objekti[i] \cap objekti[j] \neq \emptyset$}
 				\State $Parovi:=Parovi \cup \{i, j\}$
 			\EndIf		
 		\EndFor
@@ -609,8 +612,8 @@ Pritom, postoji namenska konstanta $c$ koja sadrži vrednost najvećeg dozvoljen
 Kada se prekorači taj maksimum $c$, onda list postaje unutrašnji čvor, njegov potprostor se deli 
 na osam podoktanata u koje se prebacuju objekti koje je sadržao.
 Potrebno je izabrati još jednu konstantu $h$ koja predstavlja maksimalnu dubinu stabla oktrja.
-Ukoliko maksimalna dubina stabla ne bi bila ograničena onda u slučaju da se ubacuje $n$ identičnih objekata (gde je $n > c$) bi se stablo 
-beskonačno rekurzivno delilo pokušavajući da podeli tih $n$ objekata u različite listove 
+Ukoliko maksimalna dubina stabla ne bi bila ograničena onda u slučaju da se ubacuje $n$ identičnih objekata (gde je $n > c$)
+stablo bi se beskonačno rekurzivno delilo pokušavajući da podeli tih $n$ objekata u različite listove 
 tako da svaki ima manje ili jednako $c$ objekata u sebi. 
 Pošto to nije uvek moguće izvesti, konstanta $h$ zaustavlja takve podele stabla.
 
@@ -643,7 +646,7 @@ i slučaj jer se uglavnom ne dopušta njihovo trajno presecanje.
 		/*{$\check{c}vor.elementi$ je vektor elemenata u listu oktrija}*/
 		\For{$element$ in $\check{c}vor.elementi$}
 			\If{$objekat \cap element \neq \emptyset$}
-				\State $Parovi:=Parovi \cup \{objekat, element\}$
+				\State $Parovi := Parovi \cup \{objekat, element\}$
 			\EndIf		
 		\EndFor
 
@@ -675,9 +678,9 @@ i slučaj jer se uglavnom ne dopušta njihovo trajno presecanje.
 \end{figure}
 
 Ukoliko se razmatra tačkasti objekat, opisani postupak umetanja radi korektno,
-ali se postavlja pitanje šta raditi sa većim objektima koji pripadaju više oktanata.
-Jedno rešenje je da se objekat ubaci u svaki oktant kome bar delimično pripada.
-Bitan problem sa tim rešenjem je ako je u pitanju veliki objekat, onda će on pokriti mnoge oktante, njihove 
+ali se postavlja pitanje šta raditi sa većim objektima koji pripadaju većem broju oktanata.
+Jedno rešenje bi bilo da se objekat ubaci u svaki oktant kome bar delimično pripada.
+Bitan problem sa tim rešenjem je taj što ako je u pitanju veliki objekat, onda će on pokriti mnoge oktante, njihove 
 podoktante i tako rekurzivno. 
 Tada veliki broj listova mora da pamti taj objekat, tj. njegovu referencu ili indeks u nekom nizu.
 To nije velika smetnja kada su svi objekti sličnih veličina, ali ako 
@@ -685,7 +688,7 @@ nisu, onda i memorijska i vremenska složenost mogu eksplodirati.
 Ovakav oktri će se u daljem tekstu nazivati \textbf{oktri sa duplikatima} (eng. {\em octree with duplicates}). 
 Oktri sa duplikatima prikazan je pseudokodom \ref{alg:octree}.
 
-Drugo rešenje je da se dopusti i unutrašnjim čvorovima stabla da čuvaju objekte.
+Drugo rešenje bi bilo da se dopusti i unutrašnjim čvorovima stabla da čuvaju objekte.
 Kada neki objekat seče više od jednog oktanta nekog unutrašnjeg čvora $U$, tada se on ne ubacuje 
 u podoktante čvora $U$, nego se pamti u čvoru $U$. Time se može značajno uštedeti na memoriji i vremenu izvršavanja.
 U daljem tekstu će se ovakav oktri nazivati \textbf{oktri bez duplikata} (eng. {\em octree without duplicates}).
@@ -702,17 +705,17 @@ imati nešto veći broj elemenata u listu nego da se stablo više particioniše 
 Ti parametri su promenljivi u projektu i dobre vrednosti ovih parametara mogu se odrediti njihovim podešavanjem u realnom vremenu,
 o čemu će biti reči kasnije.
 
-Kada se svi objekti kreću onda se u svakom koraku simulacije  gradi novi oktri u
+Kada se svi objekti kreću, onda se u svakom koraku simulacije  gradi novi oktri u
 koga se ubacuju svi elementi i usput otkrivaju kolizije.
-Često je slučaj da je veliki broj objekata statički pa je tada dovoljno jednom izgraditi oktri za njih, a za objekte koji se kreću u svakom koraku 
+Čest je slučaj kada je veliki broj objekata statički pa je tada dovoljno jednom izgraditi oktri za njih, a za objekte koji se kreću u svakom koraku 
 izvršiti detekciju kolizije njihovim ponovnim ubacivanjem u stablo. Time se smanjuje vreme izvršavanja upita 
 kolizije jednog objekta koji se kreće sa $n$ statičkih objekata sa $O(n)$ na očekivanih $O(\log n)$.
 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.22]{octree.png}
-	\caption{Rekurzivno deljenje kocke na oktante.}
-	\tiny Preuzeto sa \url{ https://tinyurl.com/y4ep88wa }
+	\caption{Rekurzivno deljenje kocke na oktante (\tiny preuzeto sa \url{ https://tinyurl.com/y4ep88wa }).}
+	
 	\label{fig:oct}
 \end{figure}
 
@@ -729,11 +732,11 @@ Ako je potrebno naći sve parove objekata koji su u koliziji samo u jednom vreme
 Moć briši i odseci algoritma je u tome što koristi svojstvo vremenske koherentnosti.
 Objekti se ne teleportuju nasumično kroz prostor nego se postepeno kreću. 
 Zbog toga je za svaku iteraciju moguće inkrementalno ažurirati parove objekata koji su u koliziji.
-To se može postići na sledeći način: održavaju se tri sortirana niza, svaki od njih sadrži $2n$ elemenata, gde je $n$ broj objekata.
+To se može postići na sledeći način: održavaju se tri sortirana niza, pri čemu svaki od njih sadrži $2n$ elemenata, gde je $n$ broj objekata.
 Svaki niz sadrži po dva elementa za projekciju svakog AABB po jednoj osi: jedan element je početak,
 odnosno teme sa manjom koordinatom, a drugi je kraj projekcije, tj. teme sa većom koordinatom. 
 
-Na slici \ref{fig:sap} je prikazana projekcija 4 objekta na jednu osu. 
+Na slici \ref{fig:sap} je prikazana projekcija četiri objekta na jednu osu. 
 Tačka $b_i$ označava početak, a $e_i$ kraj projekcije $i$-tog objekta.
 U prvom momentu $e_3$ se nalazi desno od $b_4$, što posmatranjem projekcije na jednoj osi govori da su njihovi AABB možda u koliziji.
 Potrebno je proveriti i ostale (ovde samo još jednu) osu sa projekcijama da bi se utvrdilo da li se stvarno seku.
@@ -745,13 +748,13 @@ Prilikom sortiranja nizova se u stvari dodaju i uklanjaju kolizije.
 
 Za održavanje sortiranosti se koristi sortiranje umetanjem (eng. {\em insertion sort}) 
 pošto ovaj algoritam sortiranja pokazuje veoma dobre osobine za skoro sortirane nizove.
-Dok se sortira niz posmatraju se elementi koji predstavljaju projekcije sleva (početak niza) nadesno i za svaki element $A$ se proverava da li treba da se elementi $B_i$ levo od $A$
+Tokom sortiranja niza posmatraju se elementi koji predstavljaju projekcije sleva (početak niza) nadesno i za svaki element $A$ se proverava da li treba da se elementi $B_i$ levo od $A$
 pomere za jednu poziciju udesno. Postoje dva uslova koji utiču na postojanje kolizija:
 \begin{itemize}  
-	\item Ako je $A$ krajnja tačka projekcije a tačka $B_i$ je početna onda se par ovih objekata izbacuje iz kolekcije parova kolizije.
-	Naravno prave kolizije nije moralo ni biti u slučaju da se projekcije na ostale ose ne seku, 
+	\item Ako je $A$ krajnja tačka projekcije, a tačka $B_i$ je početna onda se par ovih objekata izbacuje iz kolekcije parova kolizije.
+	Naravno, prave kolizije nije moralo ni biti u slučaju da se projekcije na ostale ose ne seku, 
 	pa tada izbacivanje ovog para iz kolekcije neće imati nikakvog efekta.
-	\item Ako je $A$ početna tačka projekcije a tačka $B_i$ je krajnja onda se vrši provera da li se seku projekcije na ostale ose (AABB upit) i ako se seku
+	\item Ako je $A$ početna tačka projekcije, a tačka $B_i$ je krajnja onda se vrši provera da li se seku projekcije na ostale ose (AABB upit) i ako se seku
 	onda se par odgovarajućih objekata dodaje u kolekciju parova kolizije.
 
 \end{itemize}  
@@ -759,13 +762,13 @@ pomere za jednu poziciju udesno. Postoje dva uslova koji utiču na postojanje ko
 Parovi objekata koji imaju presek se čuvaju u heš mapi, pa je dodavanje novih parova i uklanjanje postojećih parova objekata koji imaju presek brzo.
 Za inicijalizaciju kolizija može se koristiti isti postupak koji se koristi za održavanje sortiranosti niza.
 Međutim, to znači da je potrebno sortirati prvobitni niz (koji može biti veoma daleko od sortiranog niza) algoritmom sortiranja umetanjem.
-Umesto toga je bolje prvi korak kolizije uraditi nekim drugim algoritmom detekcije kolizije, na primer pomoću oktrija.
+Umesto toga je bolje prvi korak realizovati nekim drugim algoritmom detekcije kolizije, na primer pomoću oktrija.
 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.8]{sap.jpg}
-	\caption{Projekcije tela na jednu osu u dva koraka.}
-	\tiny Preuzeto sa \url{ https://tinyurl.com/y3zetsmj }
+	\caption{Projekcije tela na jednu osu u dva koraka (\tiny preuzeto sa \url{ https://tinyurl.com/y3zetsmj }).}
+	
 	\label{fig:sap}
 \end{figure}
 
@@ -783,32 +786,32 @@ Kolekcija $Parovi$ je implementirana kao heš skup celobrojnih indeksa tih parov
     \label{alg:SAP}
 	\begin{algorithmic}[1]
 		\Procedure{SAPSortirajOsuProjekcije}{$osa$, $objekti$} 
-		\For{$i$:=1 to $2 \cdot osa.brojTa\check{c}aka$}
+		\For{$i$ :=1 to $2 \cdot osa.brojTa\check{c}aka$}
 			\State $trenutna$ :=  $osa[i]$
 			\State $vrednost$ := $trenutna.vrednost$
 			\State $j$ := $i$ -1
 			\While{$j$ >= 0 and $osa[j].vrednost$ > $vrednost$}
 				\State $pomeriti$ := $osa[j]$
 
-				\If{$pomeriti$ je početna i $trenutna$ je krajnja tačka projekcije}
+				\If{$pomeriti$ je početna and $trenutna$ je krajnja tačka projekcije}
 
-					\State $Parovi:=Parovi \setminus \{pomeriti.indeks, trenutna.indeks\}$
+					\State $Parovi := Parovi \setminus \{pomeriti.indeks, trenutna.indeks\}$
 				\EndIf		
 
 				% todo mozda bools
-				\If{$pomeriti$ je krajnja i $trenutna$ je početna tačka projekcije}
-					\If{$objekti[pomeriti.indeks]$ i $objekti[trenutna.indeks]$ se seku}
-						\State $Parovi:=Parovi \cup \{pomeriti.indeks, trenutna.indeks\}$
+				\If{$pomeriti$ je krajnja and $trenutna$ je početna tačka projekcije}
+					\If{$objekti[pomeriti.indeks] \cap objekti[trenutna.indeks] \neq \emptyset$}
+						\State $Parovi := Parovi \cup \{pomeriti.indeks, trenutna.indeks\}$
 					\EndIf		
 				\EndIf
 
-				\State j := j - 1
+				\State $j := j - 1$
 			\EndWhile
 		\EndFor
 		\State \textbf{return} $Parovi$
 		\EndProcedure
 	\end{algorithmic}
-	\caption{Glavni deo briši i odseci algoritam detekcije kolizije}
+	\caption{Glavni deo briši i odseci algoritma detekcije kolizije}
 \end{figure}
 
 Ovaj metod pokazuje najbolje performanse kada su objekti uniformno raspoređeni, dok mu je ponašanje lošije kada je
@@ -830,7 +833,7 @@ Postojeća hijerarhijska organizacija koja se koristi za renderovanje slika je n
 Jedan primer takve organizacije predstavlja \textbf{graf scene} (eng. {\em scene graph}).
 Graf scene je struktura podataka koja se koristi u svrhe logičke i prostorne organizacije objekata na sceni.
 
-\textbf{Metod ćelija i portala}  je organizaciona struktura koja se može upotrebiti kao graf scene
+\textbf{Metod ćelija i portala} (eng. {\em cells and portals}) je organizaciona struktura koja se može upotrebiti kao graf scene
 i istovremeno koristiti kao struktura prostornog particionisanja koja se koristi za detekciju kolizije.
 Ova metoda je razvijena za potrebe renderovanja sistema arhitekturalnog prolaska. 
 Za ove sisteme je karakteristično okruženje koje se sastoji od velikog broja prostorija, tako da u svakom trenutku
@@ -852,11 +855,11 @@ Primer renderovanja stana predstavljenog preko ćelija i portala je dat na slici
 	\end{center}
 	\caption{
 	Osenčen region predstavlja ono što posmatrač vidi. 
-	Potrebno je da se renderuju samo tri od šest ćelija. }
+	Potrebno je da se renderuju samo tri od šest ćelija (\tiny preuzeto sa \cite{glavnaKnjiga}). }
 	\label{fig:cellsRooms}
 \end{figure}
 
-Ista struktura ćelija i portala može da se iskoristi i za brzu detekciju kolizije. 
+Ista struktura ćelija i portala može se iskoristiti i za brzu detekciju kolizije. 
 Objekti su pridruženi ćeliji u kojoj im se nalazi centar. Kada se objekti kreću vrši 
 se provera da li je objekat napustio svoju ćeliju. Ako jeste, onda se pravi presek tog objekta
 sa susednim ćelijama da bi se saznalo gde je otišao. 
@@ -866,7 +869,7 @@ potrebno je samo proveriti objekte koji su dodeljeni istoj ćeliji kao i X, i u 
 da X preseca neki portal, uraditi i proveru sa objektima koji su u ćeliji sa druge strane tog portala \cite{cells}.
 Primer detekcije kolizije pokretnih objekata dat je na slici \ref{fig:cellsObj}.
 Traženje preseka objekata u okviru jedne ćelije zahteva kvadratni broj operacija u odnosu na broj objekata u toj ćeliji.
-Detekcije kolizije pomoću ćelija i portala prikazana je pseudokodom \ref{alg:cell}.
+Algoritam detekcije kolizije pomoću ćelija i portala prikazan je pseudokodom \ref{alg:cell}.
 Za konstrukciju ćelija i portala uglavnom se koristi algoritam 
 \textbf{binarnog particionisanja prostora} (eng. {\em binary space partitioning}).
 
@@ -876,7 +879,7 @@ Za konstrukciju ćelija i portala uglavnom se koristi algoritam
 		\Procedure{ĆelijeIPortaliNađiKolizije}{} 
 		\State $Parovi := \{ \}$
 		\For{$\acute{c}elija$ in $\acute{c}elije$}
-			\State $ParoviU\acute{C}eliji$ := OsnovnaDetekcijaKolizije(ćelija.objekti)
+			\State $ParoviU\acute{C}eliji$ := OsnovnaDetekcijaKolizije($\acute{c}elija.objekti$)
 			\State $Parovi:=Parovi \cup ParoviU\acute{C}eliji$
 		\EndFor
 		\State \textbf{return} $Parovi$
@@ -889,13 +892,14 @@ Za konstrukciju ćelija i portala uglavnom se koristi algoritam
 	\centering
 	\includegraphics[scale=1]{cellsObj.jpg}
 	\caption{ Objekti B i C redom u potpunosti i delimično pripadaju istoj ćeliji, pa se moraju međusobno testirati na presek,
-	 dok za objekat A nije potrebno izvršiti testiranje ni sa jednim drugim objektom. }
-	\tiny Preuzeto sa \cite{glavnaKnjiga}
+	 dok za objekat A nije potrebno izvršiti testiranje ni sa jednim drugim objektom (\tiny preuzeto sa \cite{glavnaKnjiga}). }
+	
 	\label{fig:cellsObj}
 \end{figure}
 
-Ova metoda daje najbolje rezultate kada svaka ćelija ima približno isti broj objekata, kada je 
-broj ćelija proporcionalan broju objekata i što su portali manji to će se brže zaustaviti rekurzija.
+Ova metoda daje najbolje rezultate kada svaka ćelija ima približno isti broj objekata i kada je 
+broj ćelija proporcionalan broju objekata.
+Takođe, što su portali manji to će se brže zaustaviti rekurzija.
 Tada se velik broj objekata može podeliti u ćelije tako da u svakoj ćeliji bude mali broj objekata,
 pa kvadratni broj provera u okviru jedne ćelije neće doći do izražaja.
 Ova metoda se ne koristi u modernim igarama (pre svega zbog pretpostavke da se radi o sobama sa vratima) i zato nije evaluirana u poglavlju \ref{sec:evaluacija},
@@ -909,9 +913,9 @@ koje je zamišljena i daje nov način razmatranja konstrukcije rešenja za probl
 
 Jedno od prvih pitanja koje je bilo postavljeno na početku rada na ovoj temi odnosilo se na to 
 u kom okruženju ima najviše smisla implementirati algoritme detekcije kolizije.
-Tri glavna kandidata su OpenGL, Unity i Unreal Engine.
+Tri glavna kandidata koja su razmatrana su OpenGL, Unity i Unreal Engine.
 
-I Unity i Unreal su pogoni igara (eng. {\em game engine}), pa samim tim imaju sve što je neophodno da 
+I Unity i Unreal su pogoni igara pa samim tim imaju sve što je neophodno da 
 bi se započeo razvoj igre ili neke druge aplikacije.
 Unreal pruža mogućnost implementiranja preko shema (eng. {\em blueprints}),
 putem programskog jezika C\texttt{++} ili njihovom mešavinom.
@@ -941,15 +945,15 @@ upravljanje ulazima korisnika i razrešenje kolizije.
 
 \section{FreeGLUT}
 
-FreeGLUT je alternativa otvorenog koda za GLUT (eng. {\em OpenGL Utility Toolkit}). 
-GLUT je prvobitno napisan da bi se podržali primeri programa u knjizi "OpenGL:
+GLUT je biblioteka pomoćnih funkcija za OpenGL programe.
+GLUT je prvobitno napisana da bi se podržali primeri programa u knjizi "OpenGL:
 vodič za programiranje", poznatijoj pod nazivom "Crvena Knjiga" (eng. {\em "the Red Book"}).
-GLUT se ne razvija od 1998. godine, pa je još 1999. započet FreeGLUT projekat koji 
-se razvija do danas. 
-\cite{freeglut}
+FreeGLUT je alternativa otvorenog koda za GLUT (eng. {\em OpenGL Utility Toolkit}). 
+GLUT se ne razvija od 1998. godine, pa je još 1999. započet projekat FreeGLUT  koji 
+se razvija do danas \cite{freeglut}. 
 
-FreeGLUT se stara o pravljenju prozora, obrađivanju događaja kroz glavnu petlju,
-a zajedno sa njim su dostupne i standardne funkcije OpenGL-a koje se koriste
+Biblioteka FreeGLUT se stara o pravljenju prozora, obrađivanju događaja kroz glavnu petlju,
+a takođe su dostupne i standardne funkcije OpenGL-a koje se koriste
 za iscrtavanje poput glTranslatef, glScalef, glLightf, glMaterialfv, glViewPort, itd.
 Za odgovore na događaje pritiskanja tastera, puštanja tastera i pomeraja miša
 FreeGLUT propisuje korišćenje funkcija povratnog poziva  (eng. {\em callback function}) koje je potrebno implementirati.
@@ -1006,7 +1010,7 @@ Parametri koji se menjaju kroz kontroler komponentu su:
 	da se veliki broj objekata preklapa unutar jednog oktanta, jer se tada samo gubi vreme i troši dodatna memorija. 
 	U tom scenariju pokušavaju se razdvojiti objekti rekurzivnom podelom potprostora, ali pošto se oni presecaju ti pokušaji ne dovode do rezultata.
 	\item Da li raditi razrešenje kolizije. 
-	Razrešenje kolizije je odvojen problem od problema detekcije kolizije, a pošto se uglavnom koriste oba, onda je dobro videti 
+	Razrešenje kolizije je zaseban problem od problema detekcije kolizije, a pošto se uglavnom koriste oba, onda je dobro videti 
 	kako razrešenje kolizije deluje na problem detekcije kolizije u narednim koracima u programu. Pokazuje se da praktično uvek deluje povoljno, pošto onemogućava da se mnogo 
 	objekata međusobno preseca, pa se time smanjuje verovatnoća da se stvori veliki klaster objekata koji bi usporio izvršavanje.
 	\item Da li je iscrtavanje uključeno ili isključeno. 
@@ -1066,7 +1070,7 @@ z = cos(rot_h) \cdot  cos(rot_v)
 \end{equation}
 
 
-\noindent Gde je $rot_v$ ugao između $xz$ ravni i pravca gledanja, dok je $rot_h$ ugao rotacije oko $y$ ose.
+\noindent gde je $rot_v$ ugao između $xz$ ravni i pravca gledanja, dok je $rot_h$ ugao rotacije oko $y$ ose.
 U OpenGL koordinatnom sistemu je $y$ osa vertikalna, $x$ horizontalna, a $z$ predstavlja dubinu.
 
 \subsection{Centralna komponenta}
@@ -1084,15 +1088,15 @@ Za održavanje pravca kretanja potrebno je čuvati još jednu trojku vrednosti k
 Ako se pritom želi da objekat postepeno ubrzava kada se na njega primeni sila, ili da postepeno usporava 
 kada prestane delovanje sile, onda se uz pomenute podatke mora čuvati još jedna trojka brojeva, koja predstavlja ciljnu brzinu.
 Postepeno ubrzavanje se koristi pri kretanju posmatrača. 
-Kada se pritisne dugme na tastaturi za pomeranje posmatrača, očekivano ponašanje je da neće istog trenutka 
-početi da se kreće maksimalnom brzinom, već postepeno da ubrzava.
+Kada se pritisne dugme na tastaturi za pomeranje posmatrača, očekivano ponašanje je da posmatrač neće istog trenutka 
+početi da se kreće maksimalnom brzinom, već da će postepeno ubrzavati.
 Slično, kada se ovo dugme pusti, "sila" koja je delovala na posmatrača je nestala, ali je on imao momenat pa će
 nastaviti da se kreće još malo unapred.
 
 Potrebno je pažljivo razmotriti kako posmatrač treba da se kreće na komandu da ide napred-nazad ili levo-desno.
 Naivno razmišljanje bi navelo na ideju da je prilikom kretanja levo-desno potrebno povećati ili smanjiti vrednost pozicije $x$ koordinate posmatrača,
 odnosno da se menja $z$ koordinata posmatrača kada treba da se kreće napred-nazad.
-To ipak nije dobro rešenje pošto kada neko želi da se pomeri ne razmišlja apsolutno, u terminima strana sveta, na koju će stranu, 
+To ipak nije dobro rešenje pošto kada neko želi da se pomeri on ne razmišlja apsolutno, u terminima strana sveta, na koju će stranu, 
 već relativno u odnosu na njegovo trenutno usmerenje (dato formulom \ref{eq:camera}).
 Neka je dat trodimenzioni jedinični vektor $v$ koji predstavlja usmerenje pogleda; tada je vektor 
 kretanja unapred jednak: 
@@ -1119,7 +1123,7 @@ Kada se objekat sudari sa ivicom kontejnera onda je potrebno reflektovati onu ko
 brzine objekta koja odgovara osi duž koje su se sudarili.
 Objekti će nekada delom izaći van kontejnera, pa se tada oni pomeraju u unutrašnjost tako da jedna njihova strana bude uz stranu kontejnera.
 
-Kada se na primer na kuglu koja stoji uz zid primeni sila koja nije upravna na stranu zida, onda kugla neće ostati nepokretna,
+Kada se, na primer, na kuglu koja stoji uz zid primeni sila koja nije upravna na stranu zida, onda kugla neće ostati nepokretna,
 već se kretati paralelno uz stranu zida. Isti princip važi i za kretanje posmatrača uz zid jer je 
 takvo ponašanje standardno za sve video igre.
 
@@ -1152,7 +1156,8 @@ Ako je pak u pitanju akcija poput kretanja napred, onda bi takvo ponašanje imal
 Oslanjalo bi se na učestale ponovljene signale da je dugme pritisnuto, koji u praksi uopšte nisu periodični.
 To bi dovelo do efekta "seckanja" prilikom kretanja i brzina kretanja bi zavisila od mogućnosti glavne petlje događaja da signal pritiska dugmeta često i ravnomerno poziva.
 Takođe, mogla bi se desiti  dva uzastopna signala pritiska dugmeta za kretanje napred između dva iscrtavanja scene. 
-Da li bi tada trebalo da se napravi duplo veći pomeraj? Odgovor je ne, ali bi to bio efekat ovakve implementacije.
+Da li bi tada trebalo da se napravi duplo veći pomeraj?
+Ispravan odgovor bio bi ne, ali bi to bio efekat ovakve implementacije.
 
 Ispravno rešenje bilo bi da se zapamti da je dugme pritisnuto,  a da se na ovaj događaj reaguje  tek zajedno sa ostalim ažuriranjima 
 stanja i pozicija, što se dešava periodičnim pozivima komponente koja je za to zadužena. Tako je reakcija nezavisna od učestalosti 
@@ -1177,7 +1182,8 @@ zamena u SAP algoritmu). Oni se koriste za merenje i za ispisivanje trenutnih in
 
 \section{Vizuelizacija}
 
-U ovoj sekciji biće predstavljen izgled programa. 
+U ovoj sekciji biće predstavljen izgled razvijene aplikacije. 
+Izvorni kod implementacije je dostupan na \url{https://github.com/kredenac/collision-detection}.
 Program je namenjen za interaktivno korišćenje. 
 Korisnik može da se kreće, pomera kameru (usmerenje pogleda), menja parametre koji utiču na detekciju kolizije,
 zapaža rezultate posmatranjem objekata na sceni, posmatranjem prikazanih vrednosti ili izvršavanjem odgovarajućih merenja
@@ -1198,7 +1204,7 @@ broj objekata koji su u koliziji.
 
 \noindent Desnim klikom miša mogu se prikazati 
 na levoj strani ekrana kontrole,
-poput kako povećati kontejner ili broj objekata, kao na slici \ref{fig:ssinfo}.
+poput one kojom je moguće povećati kontejner ili broj objekata, kao na slici \ref{fig:ssinfo}.
 
 \begin{figure}[h!]
 	\centerfloat
@@ -1253,7 +1259,7 @@ Za početak, potrebno je ustanoviti  koliki uticaj na vreme izvršavanja ima pos
 U slučaju da iscrtavanje troši veći ili sličan udeo vremena  u odnosu na detekciju kolizije bilo bi nepravilno meriti ih zajedno.
 Kao što je već pomenuto, u programu je omogućeno isključiti iscrtavanje.
 
-Na svim narednim graficima (osim \ref{fig:dtSapCrawl} ) prikazane su sledeće referentne vrednosti:
+Na svim narednim graficima (osim \ref{fig:dtSapCrawl}) prikazane su sledeće referentne vrednosti:
 \begin{itemize}  
 	\item Prava koja predstavlja linearnu zavisnost $y$ od $x$ (prikazana isprekidanom zelenom bojom).
 	Koeficijent prave je jednak odnosu najmanje $y$ i najmanje $x$ vrednosti, tj. $y_0/x_0$.
@@ -1268,23 +1274,23 @@ Na svim narednim graficima (osim \ref{fig:dtSapCrawl} ) prikazane su sledeće re
 	\includegraphics[
 		trim= 0 0 0 19, clip,
 		scale=1]{idleDrawVsNoDraw.pdf}
-	\caption{Relativan dt u zavisnosti od broja objekata u slučaju kada je isključena detekcija kolizije.}
+	\caption{Relativan $dt$ u zavisnosti od broja objekata u slučaju kada je isključena detekcija kolizije.}
 	\label{fig:drawVsNoDraw}
 \end{figure}
 
-Na slici \ref{fig:drawVsNoDraw} prikazan je grafik zavisnosti relativnog dt od broja objekata.
+Na slici \ref{fig:drawVsNoDraw} prikazan je grafik zavisnosti relativnog $dt$ od broja objekata.
 Detekcija kolizije je isključena, tako da na vreme utiče samo kretanje objekata i iscrtavanje.
 Kada je iscrtavanje uključeno onda vreme izvršavanja raste linearno (sa koeficijentom manjim od 1).
-Na oko 24 000 objekata vrednost relativnog dt prelazi 1, a na 50 000 objekata ona prelazi 2. 
+Na oko 24 000 objekata vrednost relativnog $dt$ prelazi 1, a na 50 000 objekata ona prelazi 2. 
 Sa druge strane, kada je crtanje isključeno vreme izvršavanja je mnogo manje. 
 Ono i dalje raste linearno sa brojem objekata, ali je konstanta uz linearni član za red veličine manja nego kada je iscrtavanje uključeno.
-Čak i kada je broj objekata veći od 180 000 program se izvršava sa malim relativnim dt, 
+Čak i kada je broj objekata veći od 180 000 program se izvršava sa malim relativnim $dt$, 
 što znači da je to vreme zanemarljivo u odnosu na vreme potrebno za detekciju kolizije.
 
-Na slici \ref{fig:basic} prikazana je zavisnost relativnog dt od broja objekata kada se koristi 
+Na slici \ref{fig:basic} prikazana je zavisnost relativnog $dt$ od broja objekata kada se koristi 
 trivijalan algoritam za detekciju kolizije. Na grafiku se uočava nagli rast, što je i očekivano pošto 
 je algoritam kvadratne vremenske složenosti.
-Čak i za manje od 2000 objekata relativan dt postaje veći od 1, 
+Čak i za manje od 2000 objekata relativan $dt$ postaje veći od 1, 
 a na 2500 veći od 2. Takvo rešenje je neupotrebljivo za veći broj objekata. Jedina "prednost" je što 
 je vreme izvršavanja isto koliko god se brzo objekti kretali, koje god da su veličine i koliko god 
 da ih se međusobno preseca.
@@ -1294,7 +1300,7 @@ da ih se međusobno preseca.
 	\includegraphics[
 		trim= 0 0 0 19, clip,
 		scale=1]{basicCollision.pdf}
-	\caption{Relativan dt u zavisnosti od broja objekata - trivijalan algoritam.}
+	\caption{Relativan $dt$ u zavisnosti od broja objekata - trivijalan algoritam.}
 	\label{fig:basic} 
 \end{figure}
 
@@ -1315,7 +1321,7 @@ Može se uočiti brže udaljavanje od referentne prave linearne zavisnosti,
 	\includegraphics[
 		trim=0 0 0 19,clip,
 		scale=1]{oktri_dt_vs_numobj.pdf}
-	\caption{Zavisnost relativnog dt od broja objekata - oktri.}
+	\caption{Zavisnost relativnog $dt$ od broja objekata - oktri.}
 	\label{fig:oktri1}
 \end{figure}
 
@@ -1324,7 +1330,7 @@ Može se uočiti brže udaljavanje od referentne prave linearne zavisnosti,
 	\includegraphics[
 		trim=0 0 0 19,clip,
 		scale=1]{oktri_dt_vs_numobj_zoomout.pdf}
-	\caption{Zavisnost relativnog dt od broja objekata za veći broj objekata - oktri.}
+	\caption{Zavisnost relativnog $dt$ od broja objekata za veći broj objekata - oktri.}
 	\label{fig:oktri2}
 \end{figure}
 
@@ -1337,7 +1343,7 @@ Kao što se vidi na slici \ref{fig:dupvsnodup}, vreme izvršavanja u zavisnosti 
 	\includegraphics[
 		trim=0 0 0 19,clip,
 		scale=1]{octree_dup_vs_nodup.pdf}
-	\caption{Zavisnost relativnog dt od broja objekata za veći broj objekata - oktri sa duplikatima naspram oktrija bez duplikata.}
+	\caption{Zavisnost relativnog $dt$ od broja objekata za veći broj objekata - oktri sa duplikatima naspram oktrija bez duplikata.}
 	\label{fig:dupvsnodup}
 \end{figure}
 
@@ -1366,7 +1372,7 @@ Ova vrednost je izabrana vodeći se logikom da je manja vrednost pogodna zbog iz
 a da nije dobro ni da je sasvim mala, jer bi se listovi previše često delili. 
 Na slici \ref{fig:octree_leaf} se zapaža da ovako odabrana vrednost nije loš izbor i tada je broj slika u sekundi 69 (0.89 relativan $dt$). 
 Ispostavlja se da 1 predstavlja najlošiju vrednost za ovaj parametar pošto dovodi do viška rekurzivnog particionisanja prostora.
-Pokazuje se, takođe, da sa porastom vrednosti maksimalnog broja elemenata u listu relativan dt opada sve do vrednosti 32, od koje počinje da raste.
+Pokazuje se, takođe, da sa porastom vrednosti maksimalnog broja elemenata u listu relativan $dt$ opada sve do vrednosti 32, od koje počinje da raste.
 Najbolje performanse algoritam postiže za vrednost 32, kada je broj slika u sekundi 94 što je čak za 36.2\% bolje (u odnosu na prethodnih 69fps)! 
 Ubrzanje od 36.2\% je u praksi veoma značajno, pogotovo što je postignuto promenom samo jednog koeficijenta.
 U svim ovim merenjima broj objekata je fiksan i iznosi 10 000 objekata i korišćen je oktri sa duplikatima.
@@ -1376,7 +1382,7 @@ U svim ovim merenjima broj objekata je fiksan i iznosi 10 000 objekata i koriš�
 	\includegraphics[
 		trim=0 0 0 19,clip,
 		scale=1]{octree_leaf.pdf}
-	\caption{Relativan dt u zavisnosti od maksimalnog broja elemenata u listu oktrija}
+	\caption{Relativan $dt$ u zavisnosti od maksimalnog broja elemenata u listu oktrija}
 	\label{fig:octree_leaf}
 \end{figure}
 
@@ -1397,7 +1403,7 @@ Algoritam SAP pokazuje dobro ponašanje dok je broj objekata ispod 11 000 (slika
 	\includegraphics[
 		trim=0 0 0 19,clip,
 		scale=1]{sap1.pdf}
-	\caption{Zavisnost relativnog dt od broja objekata - SAP.}
+	\caption{Zavisnost relativnog $dt$ od broja objekata - SAP.}
 	\label{fig:sap1}
 \end{figure}
 
@@ -1418,7 +1424,7 @@ Vidi se direktna veza broja zamena i relativnog $dt$ jer broj zamena kvadratne s
 	\includegraphics[
 		trim=0 0 0 19,clip,
 		scale=1]{dtSapCrawl.pdf}
-	\caption{SAP: povratna sprega povećava dt, iako je fiksan broj objekata.}
+	\caption{SAP: povratna sprega povećava $dt$, iako je fiksan broj objekata.}
 	\label{fig:dtSapCrawl}
 \end{figure}
 
@@ -1435,16 +1441,16 @@ Međutim, izvesno je da će se to u nekom trenutku desiti, tako da u zavisnosti 
 	\includegraphics[
 		trim=0 0 0 19,clip,
 		scale=1]{sap3speeds.pdf}
-	\caption{Upoređivanje rasta relativnog dt u zavisnosti od broja objekta pri njihovim različitim brzinama - SAP.}
+	\caption{Upoređivanje rasta relativnog $dt$ u zavisnosti od broja objekata pri njihovim različitim brzinama - SAP.}
 	\label{fig:sap3speeds}
 \end{figure}
 
 Svi do sada razmatrani algoritmi detekcije kolizije pre 20 000 objekata prelaze granicu od dva relativna $dt$.
 Na slici \ref{fig:sap_great} je prikazan rezultat merenja gde se objekti kreću brzinom 64 puta sporijom od podrazumevane i tada je SAP algoritam ubedljivo najbolji.
 Prilikom merenja je isključeno iscrtavanje pošto u ovom slučaju ono traje duže od samog algoritma detekcije kolizije,
-što se može videti na \ref{fig:drawVsNoDraw}, gde tek za vrednosti bliske 50 000 objekata relativan dt prelazi 2. 
+što se može videti na slici \ref{fig:drawVsNoDraw}, gde tek za vrednosti bliske 50 000 objekata relativan $dt$ prelazi 2. 
 Ovde je SAP višestruko bolji od ostalih, dostižući 60fps tek za 75 000, a 30fps za 92 000 objekata.
-Pritom vrednost relativnog dt ostaje ispod referentne prave koja označava linearnu zavisnost, sve do momenta kada se približava broju objekata koji dovodi 
+Pritom vrednost relativnog $dt$ ostaje ispod referentne prave koja označava linearnu zavisnost, sve do momenta kada se približava broju objekata koji dovodi 
 do akumuliranja usporavanja, koji iznosi oko 100 000.
 
 
@@ -1453,7 +1459,7 @@ do akumuliranja usporavanja, koji iznosi oko 100 000.
 	\includegraphics[
 		trim=0 0 0 19,clip,
 		scale=1]{sap_great.pdf}
-	\caption{Relativan dt u zavisnosti od broja objekta kada se objekti sporo kreću (64 puta sporije od podrazumevane brzine) - SAP.}
+	\caption{Relativan $dt$ u zavisnosti od broja objekata kada se objekti sporo kreću (64 puta sporije od podrazumevane brzine) - SAP.}
 	\label{fig:sap_great}
 \end{figure}
 
