@@ -306,7 +306,7 @@ tek u uskoj fazi može se zaključiti da se objekti ne seku.
 
 \section{Konzistentnost vremena izvršavanja}
 
-\textbf{Konzistentno vreme izvršavanja} znači da je proteklo vreme između svaka dva uzastopna koraka simulacije isto.
+Pod \textbf{konzistentnim vremenom izvršavanja} se podrazumeva jednako proteklo vreme između svaka dva uzastopna koraka simulacije.
 Prilikom razmatranja vremena izvršavanja algoritma, nekada je od interesa 
 samo ukupno vreme koje je potrošeno za izvršavanje većeg broja iteracija provere da li je došlo do kolizije. 
 Međutim, to nije dovoljno dobro za potrebe izvršavanja algoritma u realnom vremenu.
@@ -338,7 +338,6 @@ To zaista jeste 60fps, ali ono što je prikazano na ekranu nije mnogo bolje od 2
 Dakle, sa jedne strane nije dobar višak slika jer se nepotrebno troše resursi na njih iako se ne prikazuju, 
 a sa druge strane manjak slika i njihovo neravnomerno generisanje dovodi do neprijatnosti.
 Zato je bitno da cela simulacija, a samim tim i detekcija kolizije ima što konzistentnije vreme izvršavanja.
-Konzistentno vreme izvršavanja podrazumeva da je vreme između dve prikazane slike isto.
 
 Na slici \ref{fig:fpsdiv2} se vidi da je kreirano 6 slika, tj. da program praktično ima 6fps, iako je prikaz na ekranu 
 ekvivalentan sa 3fps, što je još jedan primer nepoželjne posledice nekonzistentnog vremena izvršavanja. 
