@@ -14,7 +14,7 @@
 % Paket koji definiše sve specifičnosti master rada Matematičkog fakulteta
 \usepackage[latinica,biblatex]{matfmaster} 
 
-\usepackage{amsmath}
+\usepackage{amsmath, nccmath}
 % \usepackage{color}
 % \usepackage{url}
 % \usepackage[utf8]{inputenc} % make weird characters work
@@ -77,7 +77,8 @@
 % Strana sa podacima o mentoru i članovima komisije
 \komisija
 % Strana sa posvetom (u odabranom pismu)
-% \posveta{Mami, tati i dedi}
+\posveta{Zahvaljujem se mentoru doc. Vesni Marinković na pomoći i savetima pri pisanju rada,
+kao i članovima komisije prof. dr Predragu Janičiću i dr Ivanu Čukiću na pažljivom čitanju i komentarima na tezu.}
 % Strana sa podacima o disertaciji na srpskom jeziku
 % \apstrakt
 % Sadržaj teze
@@ -154,7 +155,7 @@ Potrebno je bar 1000 puta u sekundi pružiti povratnu informaciju korisniku da b
 \begin{figure}
 \centering
 \includegraphics[scale=0.22]{batman.jpg}
-\caption{Propadanje ispod modelovanog sveta (\tiny preuzeto sa \url{ https://tinyurl.com/y5g987j5 }).}
+\caption{Propadanje ispod modelovanog sveta (preuzeto sa \url{ https://tinyurl.com/y5g987j5 }).}
 \label{fig:batman}
 \end{figure}
 
@@ -162,7 +163,7 @@ Potrebno je bar 1000 puta u sekundi pružiti povratnu informaciju korisniku da b
 \begin{figure}
 	\centering
 	\includegraphics[scale=0.54]{horse.png}
-	\caption{Levitirajući konj (\tiny preuzeto sa \url{ https://tinyurl.com/y6qbaxqm }).}
+	\caption{Levitirajući konj (preuzeto sa \url{ https://tinyurl.com/y6qbaxqm }).}
 	
 	\label{fig:horse}
 \end{figure}
@@ -232,7 +233,7 @@ i tako mogu uže da opišu tela čije uprošćenje predstavljaju.
 Ipak, zbog složenije provere preseka i zbog nepoznavanja dobrih metoda konstrukcije hijerarhije graničnih
 opsega, rešenje koje koristi OBB nije nikada zaživelo u praksi \cite{obb}. 
 
-Danas se najčešće koriste stabla izgrađena od AABB poput oktrija opisanog u \ref{subsec:octree} i njegovih modifikacija. 
+Danas se najčešće koriste stabla izgrađena od AABB poput oktrija opisanog u sekciji \ref{subsec:octree} i njegovih modifikacija. 
 Teorema o razdvajajućim osama daje inspiraciju za konstrukciju algoritma provere kolizije koristeći AABB.
 
 \begin{teo}
@@ -283,7 +284,7 @@ na neki drugi način, ali se to ostavlja za usku fazu.
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.17]{theorem_counterexample.png}
-	\caption{Projekcija nekonveksne površi na pravu (\tiny preuzeto sa \url{ https://tinyurl.com/yxbqg5hq }).}
+	\caption{Projekcija nekonveksne površi na pravu (preuzeto sa \url{ https://tinyurl.com/yxbqg5hq }).}
 	
 	\label{fig:counter}
 \end{figure}
@@ -305,6 +306,7 @@ tek u uskoj fazi može se zaključiti da se objekti ne seku.
 
 \section{Konzistentnost vremena izvršavanja}
 
+\textbf{Konzistentno vreme izvršavanja} znači da je proteklo vreme između svaka dva uzastopna koraka simulacije isto.
 Prilikom razmatranja vremena izvršavanja algoritma, nekada je od interesa 
 samo ukupno vreme koje je potrošeno za izvršavanje većeg broja iteracija provere da li je došlo do kolizije. 
 Međutim, to nije dovoljno dobro za potrebe izvršavanja algoritma u realnom vremenu.
@@ -328,7 +330,8 @@ Kada nije izračunata nova slika za sledeći ciklus osvežavanja ekrana onda će
 iz prošlog ciklusa. Tada se gubi na glatkoći prikazanog sadržaja i na brzini odziva programa. 
 
 Broj slika po sekundi (eng. {\em frames per second}), skraćeno \textbf{fps}, je broj slika koje program napravi u jednoj sekundi.
-Naizgled ako program ima 60fps to je savršeno za ekran od 60Hz. To ipak ne mora da bude slučaj.
+Ako program generiše 60 slika u sekundi, to je naizgled sigurno optimalno za ekran od 60Hz.
+To ipak ne mora da bude slučaj.
 U toku jedne sekunde u prvih 500 milisekundi može biti kreirano 59 slika, a u preostalih 500 milisekundi samo jedna nova slika. 
 To zaista jeste 60fps, ali ono što je prikazano na ekranu nije mnogo bolje od 2fps, 
 što je praktično nedopustivo. 
@@ -368,7 +371,7 @@ Usled vremenskog aliasinga objekti izgledaju kao da poskakuju umesto da odaju ut
 ili se naizgled kreću u suprotnom smeru od stvarnog.
 Da bi se izbegao vremenski aliasing potrebno je da broj slika scene u sekundi bude bar duplo veći 
 od brzine objekta koji se najbrže kreće \cite{Grant}. 
-Jedan od često viđanih primera vremenskog aliasinga je da se na snimku točkovi automobila naizgled kreću unazad.
+Jedan od često viđanih primera vremenskog aliasinga je da se točkovi automobila naizgled okreću u suprotnom smeru.
 
 Vremenski antialiasing se takođe koristi za smanjenje oštrih ivica koje trepere kada se pomera kamera.
 Na slici \ref{fig:txaa} se vidi jasno poboljšanje izgleda ivica kada se koristi TXAA,
@@ -382,7 +385,7 @@ pošto vreme između dve generisane slike i brzina kretanja objekta ne utiču na
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.65]{txaa.png}
-	\caption{Upoređivanje tehnika antialiasinga (\tiny preuzeto sa \url{ https://tinyurl.com/y2c6nw5l }).}
+	\caption{Upoređivanje tehnika antialiasinga (preuzeto sa \url{ https://tinyurl.com/y2c6nw5l }).}
 	
 	\label{fig:txaa}
 \end{figure}
@@ -403,7 +406,7 @@ Ovaj fenomen se naziva \textbf{tuneliranje} (eng. {\em tunneling}) i ilustrovan 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.55]{tunnel.png}
-	\caption{Tuneliranje (\tiny preuzeto sa \url{ https://tinyurl.com/yxjz7vga }).}
+	\caption{Tuneliranje (preuzeto sa \url{ https://tinyurl.com/yxjz7vga }).}
 	
 	\label{fig:tunnel}
 \end{figure}
@@ -417,7 +420,7 @@ koja se proverava umesto da se proverava samo objekat.
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.55]{tunnel_fixed.png}
-	\caption{Sprečavanje tuneliranja (\tiny preuzeto sa \url{ https://tinyurl.com/yxjz7vga }).}
+	\caption{Sprečavanje tuneliranja (preuzeto sa \url{ https://tinyurl.com/yxjz7vga }).}
 	
 	\label{fig:tunnel_fix}
 \end{figure}
@@ -433,7 +436,7 @@ Nekada se ceo model čoveka aproksimira samo jednom vertikalnom kapsulom
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.55]{hitbox.png}
-	\caption{Reprezentacija modela čoveka (\tiny preuzeto sa \url{ https://tinyurl.com/yyjhzlyo }).}
+	\caption{Reprezentacija modela čoveka (preuzeto sa \url{ https://tinyurl.com/yyjhzlyo }).}
 	
 	\label{fig:hitbox}
 \end{figure}
@@ -446,11 +449,10 @@ Prevelika razlika između dva koraka je svakako nepoželjna jer je onda i prevel
 
 Razmotrimo naredni scenario. Potrebno je objekat pomerati duž $x$ ose za 10 jedinica svake sekunde.
 Ako je interval koraka simulacije 
-$p$ jednak $0.01$ sekund, onda je dovoljno da se u svakom koraku vrednost $x$ koordinate tog objekta ažurira prema sledećoj formuli:
-
+$p$ jednak $0.01$ sekund, onda je dovoljno da se u svakom koraku vrednost $x$ koordinate tog objekta ažurira prema sledećoj formuli: \useshortskip
 
 \begin{equation}
-	x:= x + 10 * 0.01
+	x:= x + 10 \cdot 0.01
 	\label{eq:prx}
 \end{equation}
 
@@ -469,17 +471,17 @@ razlika vremena proteklog između dva uzastopna koraka, u oznaci $dt$ (eng. {\em
 Korišćenjem $dt$ je moguće izvršavanje simulacije čije vreme teče konzistentno nezavisno od broja izvršenih koraka u 
 jedinici vremena. Ako je hardver bolji onda će simulacija imati više koraka, odnosno više slika u sekundi, a ako je 
 sporiji onda će biti manje slika u sekundi, ali vreme u simulaciji neće proticati sporije.
-$dt$ bi u idealnom slučaju bilo jednako recipročnoj vrednosti broja slika u sekundi:
-
+$dt$ bi u idealnom slučaju bilo jednako recipročnoj vrednosti broja slika u sekundi: 
 
 $$dt = \frac{1}{fps}$$
+
 U praksi je ipak proteklo vreme između dve slike promenljivo.
 Može se primetiti da dodavanjem vrednosti $dt$ promenljivoj $x$ u svakom koraku, vrednost $x$ se povećava 
 za 1 svake sekunde, jer vreme svih koraka tokom jedne sekunde mora ukupno biti baš 1.
 Umesto ažuriranja kao u primeru \ref{eq:prx}, sada se vrednost $x$ ažurira na sledeći način:
 \begin{equation}
 	\label{eq:prx2}
-	x:= x + 10 * dt
+	x:= x + 10 \cdot dt
 \end{equation}
 
 Kada se za ažuriranje svih objekata koristi ova formula, onda se simulacija može lako ubrzati $k$ puta
@@ -491,7 +493,7 @@ Tada se često postavlja gornja granica na $dt$, pa
 ako je vreme između dva koraka veće od te gornje granice onda će igra biti u usporenom snimku.
 To je nešto što svakako nije poželjno, ali predstavlja prihvatljiviju varijantu od toga da dođe do pojave tuneliranja.
 
-Pogon igara Unity deli sva ažuriranja na fiksna i opšta ažuriranja. 
+Pogon igara Unity \cite{unity} deli sva ažuriranja na fiksna i opšta ažuriranja. 
 Fiksna ažuriranja se koriste za promene sila nad objektima 
 pošto se koraci u kojima se primenjuju neka pravila fizike izvode u fiksnim intervalima, 
 dok se opšta ažuriranja koriste za operacije koje je potrebno izvršiti pre svakog iscrtavanja slike. 
@@ -564,7 +566,7 @@ $O(n \log^2 n + k)$ \cite{glavna1}.
 U praksi se obično zna u kakvim će okolnostima algoritam detekcije kolizije biti primenjen, pa 
 se na osnovu toga vrši odabir postojećih ili konstruišu novi algoritmi.
 
-\section{Osnovni algoritam}
+\section{Osnovni algoritam za detekciju kolizije}
 \label{subsec:triv}
 
 Do trivijalnog algoritma detekcije kolizije nije teško doći: za svaki element se proverava da li postoji presek sa svakim drugim elementom.
@@ -596,7 +598,7 @@ se provere kolizije vrše samo nad manjim podskupovima svih elemenata.
 \caption{Osnovni algoritam detekcije kolizije}
 \end{figure}
 
-\section{Oktri}
+\section{Oktri detekcija kolicije}
 \label{subsec:octree}
 
 \textbf{Oktri} (eng. {\em Octree}) je prostorna struktura podataka koja se koristi za rekurzivno deljenje trodimenzionog prostora na oktante.
@@ -714,7 +716,7 @@ kolizije jednog objekta koji se kreće sa $n$ statičkih objekata sa $O(n)$ na o
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.22]{octree.png}
-	\caption{Rekurzivno deljenje kocke na oktante (\tiny preuzeto sa \url{ https://tinyurl.com/y4ep88wa }).}
+	\caption{Rekurzivno deljenje kocke na oktante (preuzeto sa \url{ https://tinyurl.com/y4ep88wa }).}
 	
 	\label{fig:oct}
 \end{figure}
@@ -767,7 +769,7 @@ Umesto toga je bolje prvi korak realizovati nekim drugim algoritmom detekcije ko
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.8]{sap.jpg}
-	\caption{Projekcije tela na jednu osu u dva koraka (\tiny preuzeto sa \url{ https://tinyurl.com/y3zetsmj }).}
+	\caption{Projekcije tela na jednu osu u dva koraka (preuzeto sa \url{ https://tinyurl.com/y3zetsmj }).}
 	
 	\label{fig:sap}
 \end{figure}
@@ -825,7 +827,12 @@ da se poredi sa većim brojem ostalih što dovodi do ispoljavanja kvadratne vrem
 Ipak, kada se svi objekti polako kreću, onda je mali broj pomeraja u nizu, i vreme izvršavanja algoritma je praktično 
 linearno, što omogućava veći broj pokretnih objekata i kraće vreme izvršavanja od ostalih razmatranih algoritama.
 
-\section{Ćelije i portali}
+\section{Drugi algoritmi za detekciju kolizije}
+
+U ovoj sekciji biće prikazane alternative koje nisu implementirane u aplikaciji i zato nisu evaluirane u poglavlju \ref{sec:evaluacija},
+ali se opisuju radi razmatranja različitih pristupa rešavanju problema.
+
+\subsection{Ćelije i portali}
 \label{subsec:cells}
 
 Pravljenje dodatnog modela particionisanja prostora samo za detekciju kolizije nije uvek neophodno.
@@ -855,7 +862,7 @@ Primer renderovanja stana predstavljenog preko ćelija i portala je dat na slici
 	\end{center}
 	\caption{
 	Osenčen region predstavlja ono što posmatrač vidi. 
-	Potrebno je da se renderuju samo tri od šest ćelija (\tiny preuzeto sa \cite{glavnaKnjiga}). }
+	Potrebno je da se renderuju samo tri od šest ćelija (preuzeto sa \cite{glavnaKnjiga}). }
 	\label{fig:cellsRooms}
 \end{figure}
 
@@ -892,7 +899,7 @@ Za konstrukciju ćelija i portala uglavnom se koristi algoritam
 	\centering
 	\includegraphics[scale=1]{cellsObj.jpg}
 	\caption{ Objekti B i C redom u potpunosti i delimično pripadaju istoj ćeliji, pa se moraju međusobno testirati na presek,
-	 dok za objekat A nije potrebno izvršiti testiranje ni sa jednim drugim objektom (\tiny preuzeto sa \cite{glavnaKnjiga}). }
+	 dok za objekat A nije potrebno izvršiti testiranje ni sa jednim drugim objektom (preuzeto sa \cite{glavnaKnjiga}). }
 	
 	\label{fig:cellsObj}
 \end{figure}
@@ -902,18 +909,44 @@ broj ćelija proporcionalan broju objekata.
 Takođe, što su portali manji to će se brže zaustaviti rekurzija.
 Tada se velik broj objekata može podeliti u ćelije tako da u svakoj ćeliji bude mali broj objekata,
 pa kvadratni broj provera u okviru jedne ćelije neće doći do izražaja.
-Ova metoda se ne koristi u modernim igarama (pre svega zbog pretpostavke da se radi o sobama sa vratima) i zato nije evaluirana u poglavlju \ref{sec:evaluacija},
+Ova metoda se ne koristi u modernim igarama (pre svega zbog pretpostavke da se radi o sobama sa vratima),
 ali je predstavljena zbog toga što je odlična u scenarijima za
 koje je zamišljena i daje nov način razmatranja konstrukcije rešenja za problem detekcije kolizije.
 
+
+\subsection{\emph{k}-d stabla}
+\label{subsec:grid}
+
+\textbf{\emph{k}-d stablo} (eng. {\em k-d tree}) je hijerarhijska struktura koja opisuje skup tačaka u $k$-dimenzionom prostoru.
+$k$-d stabla su slična oktrima (mogu se smatrati generalizacijom oktrija), a glavna razlika je u načinu particionisanja prostora.
+U izvornom obliku se ciklično menja osa duž koje se vrši particionisanje, dok se u modifikacijama može slobodno birati redosled osa.
+Pored detekcije kolizije, $k$-d stabla se koriste za nalaženje najbližih suseda tačaka i nalaženje regiona kojem data tačka pripada.
+
+
+\subsection{Uniformna mreža}
+\label{subsec:grid}
+
+\textbf{Uniformna mreža} (eng. {\em uniform grid}) je struktura koja deli prostor na jednake ćelije.
+U dvodimenzionalnom slučaju mreža deli prostor na kvadrate (ili pravougaonike), tako da svaka tačka u ravni 
+pripada tačno jednoj ćeliji.
+Na taj način je potrebno samo proveriti da li postoji presek između objekata koji pripadaju istoj ćeliji.
+U slučaju da objekat ima presek sa više kvadrata, svakom od njih se dodeli taj objekat.
+Isti princip je u trodimenzionalnom slucaju, osim što se prostor tada deli na kocke, umesto na kvadrate. 
+Problem sa ovom metodom je taj što svuda ima isti broj ćelija.
+U slučaju da se ne nalazi nijedan objekat u velikom delu prostora, tu će opet biti ćelija koje zauzimaju memoriju.
+Takođe, ako su svi objekti unutar jedne ćelije, onda je vremenska složenost ispitivanja kolizije kvadratna.
+Prednost mreža je brzo dodavanje i brisanje objekata, jednostavnija implementacija,
+prirodna integracija sa dvodimenzionalnim igrama čija logika je zasnovana na mrežama,
+kao i efikasnost kada su ravnomerno rasopređeni objekti u ravni koja ima umeren broj ćelija.
+
 % ==============================================================================
-\chapter{Implementacija}
+\chapter{Implementacija aplikacije}
 \label{sec:implementacija}
 % ==============================================================================
 
 Jedno od prvih pitanja koje je bilo postavljeno na početku rada na ovoj temi odnosilo se na to 
 u kom okruženju ima najviše smisla implementirati algoritme detekcije kolizije.
-Tri glavna kandidata koja su razmatrana su OpenGL, Unity i Unreal Engine.
+Tri glavna kandidata koja su razmatrana su OpenGL, Unity i Unreal Engine \cite{unreal}.
 
 I Unity i Unreal su pogoni igara pa samim tim imaju sve što je neophodno da 
 bi se započeo razvoj igre ili neke druge aplikacije.
@@ -935,9 +968,10 @@ Upravo zbog raznih funkcionalnosti koje pogoni igara pružaju i zbog njihove mas
 za osnovu implementacije ovog projekta. Oni već imaju integrisanu fiziku, detekciju 
 i razrešenje kolizije. Tako bi uobičajeni kanali implementacije u njima 
 bili previše indirektni za funkcionalnost koja čini srž celog sistema.
-Zbog navedenih razloga je projekat napravljen korišćenjem OpenGL pomoćne 
+Zbog navedenih razloga je projekat  napravljen korišćenjem OpenGL pomoćne 
 biblioteke FreeGLUT  koja ima skroman skup pomoćnih
 funkcija od kojih je većina usmerena na grafiku i vrlo su niskog nivoa.
+Izvorni kod implementacije projekta dostupan je na \url{https://github.com/kredenac/collision-detection}.
 
 Ovaj projekat ne implementira algoritme detekcije kolizije u izolaciji pošto 
 se oni ni neće koristiti bez ostalih komponenti kao što su iscrtavanje, ažuriranje pozicije i brzine objekata,
@@ -979,7 +1013,6 @@ U nastavku teksta će biti više reči o svakoj od pomenutih komponenti pojedina
 	\centerfloat
 % https://online.visual-paradigm.com/w/jllvezfo/diagrams.jsp#diagramlist:open&mode=Local
 % \includegraphics[trim=left bottom right top, clip]
-	% \includegraphics[trim=150 50 100 50,clip,scale=0.6]{architecture.pdf}
 	\includegraphics[trim=10 50 100 40,clip,scale=0.9]{archi2.pdf}
 	\caption{Arhitektura implementiranog projekta.}
 	\label{fig:archi}
@@ -1180,10 +1213,9 @@ i vraća sve parove objekata koji jesu u koliziji. Takođe, svaka klasa implemen
 o stanju algoritma specifičnom za njega (npr. broj elemenata u unutrašnjim čvorovima oktrija ili broj 
 zamena u SAP algoritmu). Oni se koriste za merenje i za ispisivanje trenutnih informacija prilikom testiranja.
 
-\section{Vizuelizacija}
+\section{Korisnički interfejs}
 
 U ovoj sekciji biće predstavljen izgled razvijene aplikacije. 
-Izvorni kod implementacije je dostupan na \url{https://github.com/kredenac/collision-detection}.
 Program je namenjen za interaktivno korišćenje. 
 Korisnik može da se kreće, pomera kameru (usmerenje pogleda), menja parametre koji utiču na detekciju kolizije,
 zapaža rezultate posmatranjem objekata na sceni, posmatranjem prikazanih vrednosti ili izvršavanjem odgovarajućih merenja
@@ -1250,8 +1282,7 @@ Pritom se vodilo računa da nisu pokrenuti drugi programi koji bi uticali na rez
 Procesorski takt je postavljen na 4.4 GHz.
 
 Za pretprocesiranje i prikaz podataka korišćen je programski jezik Python,
-biblioteka pandas za obradu podataka i biblioteka matplotlib
-za pravljenje grafika.
+biblioteka pandas za obradu podataka i biblioteka matplotlib za pravljenje grafika.
 
 \section{Opšti zaključci}
 
