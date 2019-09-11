@@ -1282,7 +1282,7 @@ Pritom se vodilo računa da nisu pokrenuti drugi programi koji bi uticali na rez
 Procesorski takt je postavljen na 4.4 GHz.
 
 Za pretprocesiranje i prikaz podataka korišćen je programski jezik Python,
-biblioteka pandas za obradu podataka i biblioteka matplotlib za pravljenje grafika.
+biblioteka pandas \cite{pandas} za obradu podataka i biblioteka matplotlib \cite{plt} za pravljenje grafika.
 
 \section{Opšti zaključci}
 
@@ -1498,11 +1498,22 @@ do akumuliranja usporavanja, koji iznosi oko 100 000.
 
 Na osnovu grafika prikazanih u ovoj glavi se može primetiti da za drugačije
 pozicije, brzine, veličine i brojeve objekata različiti algoritmi detekcije kolizije bivaju najefikasniji.
+Na slici \ref{fig:compare_all} su uporedo prikazane performanse implementiranih algoritama.
 Može se zaključiti i da primenu trivijalnog algoritma, čije performanse su prikazane na slici \ref{fig:basic}, treba izbegavati.
 Njega jedino ima smisla koristiti u slučaju kada je broj objekata manji od 100,
 uz opravdanje da je jednostavan za implementaciju i lakše održiv zbog manje koda.
 Međutim, uglavnom je potrebno imati algoritam detekcije kolizije koji će biti primenljiv i na više hiljada objekata,
 tako da trivijalni algoritam ne dolazi u obzir.
+
+\begin{figure}[h!]
+	\centerfloat
+	\includegraphics[
+		trim=0 0 0 19,clip,
+		scale=1]{compare_all.pdf}
+	\caption{Poređenje performansi kvadratnog algoritma, SAP algoritma, oktrija sa duplikatima i oktrija bez duplikata.}
+	\label{fig:compare_all}
+\end{figure}
+
 
 U najvećem broju slučajeva oktri i njegove varijacije predstavljaju najbolji izbor.
 Na osnovu rezultata prikazanih na grafiku \ref{fig:octree_leaf} preporuka je koristiti oktri sa maksimalnim brojem elemenata u listu 
