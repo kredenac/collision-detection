@@ -908,7 +908,7 @@ broj ćelija proporcionalan broju objekata.
 Takođe, što su portali manji to će se brže zaustaviti rekurzija.
 Tada se velik broj objekata može podeliti u ćelije tako da u svakoj ćeliji bude mali broj objekata,
 pa kvadratni broj provera u okviru jedne ćelije neće doći do izražaja.
-Ova metoda se ne koristi u modernim igarama (pre svega zbog pretpostavke da se radi o sobama sa vratima),
+Ova metoda se ne koristi u modernim igarama (pre svega zbog pretpostavke da se radi o sobama sa vratima, zbog čega nije implementirana u projektu),
 ali je predstavljena zbog toga što je odlična u scenarijima za
 koje je zamišljena i daje nov način razmatranja konstrukcije rešenja za problem detekcije kolizije.
 
@@ -920,23 +920,47 @@ koje je zamišljena i daje nov način razmatranja konstrukcije rešenja za probl
 $k$-d stabla su slična oktrima (mogu se smatrati generalizacijom oktrija), a glavna razlika je u načinu particionisanja prostora.
 U izvornom obliku se ciklično menja osa duž koje se vrši particionisanje, dok se u modifikacijama može slobodno birati redosled osa.
 Pored detekcije kolizije, $k$-d stabla se koriste za nalaženje najbližih suseda tačaka i nalaženje regiona kojem data tačka pripada.
+Primer izgrađenog $k$-d stabla prikazan je na slici \ref{fig:kdtree}.
 
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.5]{kdtree.png}
+	\caption{Particionisanje ravni $k$-d stablom (preuzeto sa \url{ https://tinyurl.com/y62t9flj }). }
+	\label{fig:kdtree}
+\end{figure}
+
+Pošto se za potrebe detekcije kolizije ubacuju objekti u $k$-d stablo, a ne tačke, potrebna je heuristika za odabir razdvajajuće ravni. 
+Najčešći pristupi heuristika podrazumevaju jednaku podelu po osi duž koje je potprostor najduži, 
+ili da se podeli na delove sa jednakim brojem objekata \cite{kdtree}.
+Prednost $k$-d  stabala u odnosu na oktri je garancija $O(\log n )$ dubine stabla, gde je $n$ broj objekata.
+Inkrementalna dodavanja i brisanja se teže implementiraju za $k$-d stabla i te operacije su sporije nego kod oktrija,
+zbog čega se $k$-d stabla ne koriste u video igrama i zato nisu implementirana u projektu.
 
 \subsection{Uniformna mreža}
 \label{subsec:grid}
 
 \textbf{Uniformna mreža} (eng. {\em uniform grid}) je struktura koja deli prostor na jednake ćelije.
 U dvodimenzionalnom slučaju mreža deli prostor na kvadrate (ili pravougaonike), tako da svaka tačka u ravni 
-pripada tačno jednoj ćeliji.
+pripada tačno jednoj ćeliji. Primer uniformne mreže je prikazan na slici \ref{fig:grid}.
 Na taj način je potrebno samo proveriti da li postoji presek između objekata koji pripadaju istoj ćeliji.
-U slučaju da objekat ima presek sa više kvadrata, svakom od njih se dodeli taj objekat.
-Isti princip je u trodimenzionalnom slucaju, osim što se prostor tada deli na kocke, umesto na kvadrate. 
-Problem sa ovom metodom je taj što svuda ima isti broj ćelija.
-U slučaju da se ne nalazi nijedan objekat u velikom delu prostora, tu će opet biti ćelija koje zauzimaju memoriju.
-Takođe, ako su svi objekti unutar jedne ćelije, onda je vremenska složenost ispitivanja kolizije kvadratna.
+U slučaju da objekat preseca veći broj ćelija, svakoj od njih se dodeli taj objekat.
+Isti princip važi i u trodimenzionalnom slučaju, osim što se prostor tada deli na kocke, umesto na kvadrate. 
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=1.2]{grid.png}
+	\caption{Raspodela objekata u ćelije uniformne mreže (preuzeto sa \url{ https://tinyurl.com/yxfg2r9w }).}
+	\label{fig:grid}
+\end{figure}
+
 Prednost mreža je brzo dodavanje i brisanje objekata, jednostavnija implementacija,
 prirodna integracija sa dvodimenzionalnim igrama čija logika je zasnovana na mrežama,
-kao i efikasnost kada su ravnomerno rasopređeni objekti u ravni koja ima umeren broj ćelija.
+kao i efikasnost kada su ravnomerno raspoređeni objekti u ravni koja ima umeren broj ćelija.
+Glavna mana mreže je njena uniformnost, odnosno to što je prostor ravnomerno podeljen na ćelije, nezavisno od sadržaja.
+Čak i u slučaju kada u velikom delu prostora ne postoji nijedan objekat, ovaj deo prostora biće podeljen na ćelije koje zauzimaju memoriju.
+Takođe, ako su svi objekti unutar jedne ćelije, onda je vremenska složenost ispitivanja kolizije kvadratna.
+Zbog navedenih mana uniformna mreža se ne koristi za široku fazu detekcije kolizije u trodimenzionalnom prostoru 
+i zato nije implementirana u projektu.
 
 % ==============================================================================
 \chapter{Implementacija aplikacije}
