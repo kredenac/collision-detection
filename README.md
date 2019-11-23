@@ -1,7 +1,5 @@
 # Collision detection
 
-## When running through VM
+Master thesis on Real-Time Collision Detection.
 
-Go to Edit > Preferences from the VMware Workstation user interface.
-Click the Input tab.
-From the Optimize mouse for games dropdown menu, choose Always.
+Developed application is used to interactively find the most efficient collision detection algorithm and parameters for a given scene.
